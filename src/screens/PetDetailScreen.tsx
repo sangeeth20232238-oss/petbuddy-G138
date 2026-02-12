@@ -36,7 +36,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                             style={styles.backButton}
                             onPress={() => navigation.goBack()}
                         >
-                            <MaterialCommunityIcons name="arrow-left" size={24} color="#000" />
+                            <Text style={styles.backIcon}>←</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -144,12 +144,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     backButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 8,
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    backIcon: {
+        fontSize: 24,
+        color: '#000',
     },
     detailsContainer: {
         flex: 1,
