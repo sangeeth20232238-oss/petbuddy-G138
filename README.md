@@ -1,6 +1,6 @@
 # Pet Adoption App - React Native TypeScript
 
-A beautiful pet adoption mobile application built with React Native, Expo, and TypeScript based on the provided Figma design.
+A beautiful pet adoption mobile application built with React Native, Expo, and TypeScript 
 
 ## 🎨 Features
 
@@ -115,17 +115,7 @@ npm run web
 - Placeholder for user profile
 
 ## 🎨 Design Details
-
-### Color Palette
-- **Primary Orange**: `#FF8C5A`
-- **Light Orange**: `#FF9B6A`
-- **Background**: `#FAFAFA`
-- **White**: `#FFFFFF`
-- **Text Dark**: `#000000`
-- **Text Light**: `#999999`
-- **Category Background**: `#FFE5D9`
-- **Gender Icon Background**: `#E3F2FD`
-- **Gender Icon Color**: `#2196F3`
+`#2196F3`
 
 ### Typography
 - Header Title: 20px, Semi-bold
@@ -203,9 +193,7 @@ Update the color values in the StyleSheet sections of each component file.
 ISC
 
 ## 👤 Author
-
-Your Name
-
+Cheshanth
 ---
 
 **Note**: This is a frontend implementation based on the Figma design. Backend integration and additional features can be added as needed.
