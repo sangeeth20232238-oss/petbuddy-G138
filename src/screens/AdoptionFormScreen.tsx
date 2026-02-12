@@ -136,6 +136,18 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                 <TouchableOpacity
                     style={styles.sendButton}
                     onPress={() => {
+                        if (!outdoorSpace) {
+                            Alert.alert('Validation Error', 'Please answer if you have outdoor space at home.');
+                            return;
+                        }
+                        if (!pastExperience) {
+                            Alert.alert('Validation Error', 'Please answer if you have past experience in pets.');
+                            return;
+                        }
+                        if (!walkies) {
+                            Alert.alert('Validation Error', 'Please answer if you can take your pets on walks.');
+                            return;
+                        }
                         Alert.alert('Success', 'Your adoption request has been sent!', [
                             { text: 'OK', onPress: () => navigation.goBack() }
                         ]);
