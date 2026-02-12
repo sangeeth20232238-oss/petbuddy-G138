@@ -65,8 +65,8 @@ export default function HomeScreen() {
                 {/* Hero Banner */}
                 <View style={styles.bannerContainer}>
                     <LinearGradient
-                        colors={['#FF9B6A', '#FF8C5A']}
-                        start={{ x: 0, y: 0 }}
+                        colors={['#FF9B6A', '#FF741C']}
+                        start={{ x: 0, y: 3 }}
                         end={{ x: 1, y: 1 }}
                         style={styles.banner}
                     >
@@ -218,12 +218,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: '#000',
     },
-    voiceButton: {
-        padding: 5,
-    },
-    voiceIcon: {
-        fontSize: 20,
-    },
     bannerContainer: {
         paddingHorizontal: 20,
         marginBottom: 20,
@@ -305,7 +299,7 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: '#FFE5D9',
+        backgroundColor: '#fcbea1',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -323,7 +317,7 @@ const styles = StyleSheet.create({
     },
     seeAllLink: {
         fontSize: 14,
-        color: '#999',
+        color: '#807f7f',
     },
     petsGrid: {
         flexDirection: 'row',
