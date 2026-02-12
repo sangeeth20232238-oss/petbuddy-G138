@@ -113,17 +113,6 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-
-            {/* Bottom Nav Placeholder (to match the design) */}
-            <View style={styles.bottomNav}>
-                <MaterialCommunityIcons name="home-outline" size={30} color="#FF741C" />
-                <View style={styles.centerFabContainer}>
-                    <TouchableOpacity style={styles.centerFab}>
-                        <MaterialCommunityIcons name="robot-happy-outline" size={30} color="white" />
-                    </TouchableOpacity>
-                </View>
-                <MaterialCommunityIcons name="account-outline" size={30} color="#FF741C" />
-            </View>
         </View>
     );
 }
@@ -302,31 +291,5 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
-    },
-    bottomNav: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 70,
-        backgroundColor: 'white',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        borderTopWidth: 1,
-        borderTopColor: '#EEE',
-    },
-    centerFabContainer: {
-        marginTop: -40,
-    },
-    centerFab: {
-        width: 65,
-        height: 65,
-        borderRadius: 32.5,
-        backgroundColor: '#FF741C',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 5,
-        borderColor: '#FFF5EF',
     },
 });

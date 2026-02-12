@@ -1,12 +1,25 @@
 import React from 'react';
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
+import PetDetailScreen from '../screens/PetDetailScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import { BottomTabParamList } from '../types';
+import { BottomTabParamList, RootStackParamList } from '../types';
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function HomeStack() {
+    return (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="PetDetails" component={PetDetailScreen} />
+        </Stack.Navigator>
+    );
+}
 
 const HomeIcon = ({ focused }: { focused: boolean }) => (
     <View style={[styles.iconContainer, focused ? styles.iconContainerActive : null]}>
@@ -56,7 +69,7 @@ export default function BottomTabNavigator() {
         >
             <Tab.Screen
                 name="HomeTab"
-                component={HomeScreen}
+                component={HomeStack}
                 options={{
                     tabBarIcon: ({ focused }: { focused: boolean }) => <HomeIcon focused={focused} />,
                     tabBarButton: (props: any) => <CustomTabButton {...props} />,
@@ -72,9 +85,10 @@ export default function BottomTabNavigator() {
                             {...props}
                             style={styles.centerButtonContainer}
                             activeOpacity={0.8}
+                            onPress={() => Alert.alert("PetBot AI", "I am your pet assistant! Ask me anything.")}
                         >
                             <View style={styles.centerButton}>
-                                <MessagesIcon focused={true} />
+                                <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />
                             </View>
                         </TouchableOpacity>
                     ),
@@ -133,14 +147,16 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 35,
-        backgroundColor: '#FF741C',
+        backgroundColor: '#FF8C5A',
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#FF741C',
+        shadowColor: '#FF8C5A',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 8,
+        borderWidth: 5,
+        borderColor: '#FFFFFF',
     },
     // Home Icon
     homeIcon: {

@@ -156,18 +156,6 @@ export default function HomeScreen() {
                     </View>
                 </View>
             </ScrollView>
-
-            {/* --- CLEAN BOTTOM NAVIGATION (ONLY AI BOT) --- */}
-            <View style={styles.bottomNav}>
-                <View style={styles.fabContainer}>
-                    <TouchableOpacity
-                        style={styles.fab}
-                        onPress={() => Alert.alert("PetBot AI", "I am your pet assistant! Ask me anything.")}
-                    >
-                        <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />
-                    </TouchableOpacity>
-                </View>
-            </View>
         </View>
     );
 }
@@ -376,36 +364,5 @@ const styles = StyleSheet.create({
     petBreed: {
         fontSize: 12,
         color: '#999',
-    },
-    bottomNav: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 80,
-        backgroundColor: '#FFFFFF',
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 8,
-    },
-    fabContainer: {
-        marginBottom: 45,
-    },
-    fab: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: '#FF8C5A',
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: '#FF8C5A',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 8,
     },
 });
