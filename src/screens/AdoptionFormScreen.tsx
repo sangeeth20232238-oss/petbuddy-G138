@@ -7,12 +7,11 @@ import {
     TextInput,
     ScrollView,
     StatusBar,
-    SafeAreaView,
     Dimensions,
+    Alert,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
@@ -34,7 +33,7 @@ export default function AdoptionFormScreen({ navigation }: Props) {
     const [reason, setReason] = useState('');
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
 
             {/* Header */}
@@ -46,7 +45,7 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                     <Text style={styles.backIcon}>←</Text>
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>
-                    Pet Adoption <Text style={styles.headerTitleOrange}>Request</Text>
+                    Pet Adoption Request
                 </Text>
                 <View style={styles.placeholder} />
             </View>
@@ -134,18 +133,26 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                 </View>
 
                 {/* Send Button */}
-                <TouchableOpacity style={styles.sendButton} onPress={() => navigation.goBack()} activeOpacity={0.8}>
+                <TouchableOpacity
+                    style={styles.sendButton}
+                    onPress={() => {
+                        Alert.alert('Success', 'Your adoption request has been sent!', [
+                            { text: 'OK', onPress: () => navigation.goBack() }
+                        ]);
+                    }}
+                    activeOpacity={0.8}
+                >
                     <Text style={styles.sendButtonText}>Send</Text>
                 </TouchableOpacity>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FCF8F5',
+        backgroundColor: '#FFEFE5',
     },
     header: {
         flexDirection: 'row',
@@ -169,10 +176,7 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 20,
         fontWeight: '600',
-        color: '#222',
-    },
-    headerTitleOrange: {
-        color: '#FF741C',
+        color: '#000',
     },
     placeholder: {
         width: 40,
@@ -185,7 +189,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFEFE5',
         paddingVertical: 30,
         paddingHorizontal: 20,
-        marginBottom: 30,
+        marginBottom:-30,
     },
     sectionTitle: {
         fontSize: 36,

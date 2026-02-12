@@ -12,7 +12,6 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
@@ -104,7 +103,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
 
                     {/* Description Section */}
                     <Text style={styles.description}>
-                        {pet.name} is a gentle, curious {pet.type === 'cat' ? 'cat' : 'dog'} with bright eyes and a soft coat. She loves sunny windows, quiet naps, and playful moments with string toys.
+                        {pet.description || "No description available for this pet."}
                     </Text>
 
                     {/* Adopt Button */}

@@ -8,6 +8,7 @@ export interface Pet {
     gender: 'male' | 'female';
     color?: string;
     weight?: string;
+    description?: string;
 }
 
 export interface PetCategory {
