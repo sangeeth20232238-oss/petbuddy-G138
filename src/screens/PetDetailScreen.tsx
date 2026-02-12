@@ -108,7 +108,10 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                     </Text>
 
                     {/* Adopt Button */}
-                    <TouchableOpacity style={styles.adoptButton}>
+                    <TouchableOpacity
+                        style={styles.adoptButton}
+                        onPress={() => navigation.navigate('AdoptionForm')}
+                    >
                         <Text style={styles.adoptButtonText}>Adopt Me</Text>
                     </TouchableOpacity>
                 </View>

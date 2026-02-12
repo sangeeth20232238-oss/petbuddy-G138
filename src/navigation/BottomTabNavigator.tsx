@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import PetDetailScreen from '../screens/PetDetailScreen';
+import AdoptionFormScreen from '../screens/AdoptionFormScreen';
 import { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -14,11 +15,12 @@ export default function BottomTabNavigator() {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="Home" component={HomeScreen} />
                 <Stack.Screen name="PetDetails" component={PetDetailScreen} />
+                <Stack.Screen name="AdoptionForm" component={AdoptionFormScreen} />
             </Stack.Navigator>
             <View style={styles.bottomNav}>
                 <View style={styles.fabContainer}>
-                    <TouchableOpacity 
-                        style={styles.fab} 
+                    <TouchableOpacity
+                        style={styles.fab}
                         onPress={() => Alert.alert("PetBot AI")}
                     >
                         <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />
