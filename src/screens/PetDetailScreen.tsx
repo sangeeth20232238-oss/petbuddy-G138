@@ -80,7 +80,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                     <View style={styles.shelterSection}>
                         <View style={styles.shelterInfo}>
                             <Image
-                                source={{ uri: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop' }}
+                                source={require('../../assets/pets/sh.jpg')}
                                 style={styles.shelterAvatar}
                             />
                             <View>
@@ -88,7 +88,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                                 <Text style={styles.shelterName}>Shelter Wish</Text>
                                 <View style={styles.locationRow}>
                                     <MaterialCommunityIcons name="map-marker" size={14} color="#FF741C" />
-                                    <Text style={styles.locationText}>Colombo ( 2,5km )</Text>
+                                    <Text style={styles.locationText}>Colombo ( 2.5km )</Text>
                                 </View>
                             </View>
                         </View>

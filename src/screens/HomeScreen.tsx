@@ -34,7 +34,10 @@ export default function HomeScreen() {
 
     const filteredPets = PETS_DATA.filter((pet) => {
         const matchesCategory = !selectedCategory || selectedCategory === 'all' || pet.type === selectedCategory;
-        const matchesSearch = pet.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const query = searchQuery.toLowerCase();
+        const matchesSearch = !query || 
+            pet.name.toLowerCase().includes(query) || 
+            pet.type.toLowerCase() === query;
         return matchesCategory && matchesSearch;
     });
 
