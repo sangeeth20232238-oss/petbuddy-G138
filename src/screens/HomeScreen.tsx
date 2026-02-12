@@ -13,7 +13,9 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Pet, PetCategory } from '../types';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Pet, PetCategory, RootStackParamList } from '../types';
 import { PETS_DATA } from '../data/pets';
 
 const { width } = Dimensions.get('window');
@@ -25,6 +27,7 @@ const CATEGORIES: PetCategory[] = [
 ];
 
 export default function HomeScreen() {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [showAllPets, setShowAllPets] = useState(false);
@@ -129,7 +132,11 @@ export default function HomeScreen() {
 
                     <View style={styles.petsGrid}>
                         {displayedPets.map((pet) => (
-                            <TouchableOpacity key={pet.id} style={styles.petCard}>
+                            <TouchableOpacity
+                                key={pet.id}
+                                style={styles.petCard}
+                                onPress={() => navigation.navigate('PetDetails', { pet })}
+                            >
                                 <Image source={pet.image} style={styles.petImage} />
                                 <View style={styles.petInfo}>
                                     <View style={styles.petNameRow}>
@@ -149,12 +156,12 @@ export default function HomeScreen() {
                     </View>
                 </View>
             </ScrollView>
-            
+
             {/* --- CLEAN BOTTOM NAVIGATION (ONLY AI BOT) --- */}
             <View style={styles.bottomNav}>
                 <View style={styles.fabContainer}>
-                    <TouchableOpacity 
-                        style={styles.fab} 
+                    <TouchableOpacity
+                        style={styles.fab}
                         onPress={() => Alert.alert("PetBot AI", "I am your pet assistant! Ask me anything.")}
                     >
                         <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />

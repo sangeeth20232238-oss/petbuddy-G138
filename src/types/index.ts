@@ -6,6 +6,8 @@ export interface Pet {
     age: string;
     image: any; // Can be require() or { uri: string }
     gender: 'male' | 'female';
+    color?: string;
+    weight?: string;
 }
 
 export interface PetCategory {

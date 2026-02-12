@@ -6,8 +6,10 @@ export const PETS_DATA: Pet[] = [
         name: 'Samantha',
         type: 'cat',
         breed: 'Persian',
-        age: '6 Mos',
+        age: '6 Months',
         gender: 'female',
+        color: 'Brown',
+        weight: '1.2kg',
         image: require('../../assets/pets/cat_samantha.jpg'),
     },
     {
@@ -17,6 +19,8 @@ export const PETS_DATA: Pet[] = [
         breed: 'Sphynx',
         age: '1 year',
         gender: 'female',
+        color: 'Grey',
+        weight: '0.8kg',
         image: require('../../assets/pets/cat_tigri.jpg'),
     },
     {
