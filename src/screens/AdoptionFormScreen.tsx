@@ -43,24 +43,21 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                     style={styles.backButton}
                     onPress={() => navigation.goBack()}
                 >
-                    <MaterialCommunityIcons name="arrow-left" size={24} color="#666" />
+                    <Text style={styles.backIcon}>←</Text>
                 </TouchableOpacity>
+                <Text style={styles.headerTitle}>
+                    Pet Adoption <Text style={styles.headerTitleOrange}>Request</Text>
+                </Text>
+                <View style={styles.placeholder} />
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-                {/* Title Section */}
-                <View style={styles.titleContainer}>
-                    <Text style={styles.title}>
-                        Pet Adoption <Text style={styles.orangeTitle}>Request</Text>
-                    </Text>
-                    <Text style={styles.subtitle}>
-                        We will ask you some questions for finding you pets of your choice
-                    </Text>
-                </View>
-
                 {/* Form Card */}
                 <View style={styles.formCard}>
                     <Text style={styles.sectionTitle}>Lifestyle</Text>
+                    <Text style={styles.lifestyleSubtitle}>
+                        We will ask you some questions for finding you pets of your choice...
+                    </Text>
 
                     {/* Question 1 */}
                     <View style={styles.questionSection}>
@@ -151,63 +148,59 @@ const styles = StyleSheet.create({
         backgroundColor: '#FCF8F5',
     },
     header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         paddingHorizontal: 20,
-        paddingTop: 10,
-        height: 60,
-        justifyContent: 'center',
+        paddingTop: 50,
+        paddingBottom: 15,
+        backgroundColor: '#FFFFFF',
     },
     backButton: {
         width: 40,
         height: 40,
-        borderRadius: 10,
-        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
     },
-    scrollContent: {
-        paddingHorizontal: 20,
-        paddingBottom: 110, // Extra space for persistent bottom tab
+    backIcon: {
+        fontSize: 24,
+        color: '#000',
     },
-    titleContainer: {
-        alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 30,
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: '600',
         color: '#222',
-        textAlign: 'center',
     },
-    orangeTitle: {
+    headerTitleOrange: {
         color: '#FF741C',
     },
-    subtitle: {
-        fontSize: 16,
-        color: '#999',
-        textAlign: 'center',
-        marginTop: 20,
-        paddingHorizontal: 30,
-        lineHeight: 24,
+    placeholder: {
+        width: 40,
     },
+    scrollContent: {
+        paddingBottom: 110,
+    },
+
     formCard: {
         backgroundColor: '#FFEFE5',
         paddingVertical: 30,
         paddingHorizontal: 20,
         marginBottom: 30,
-        marginHorizontal: -20,
     },
     sectionTitle: {
         fontSize: 36,
         fontWeight: 'bold',
         color: '#FF741C',
         textAlign: 'center',
+        marginBottom: 15,
+    },
+    lifestyleSubtitle: {
+        fontSize: 16,
+        color: '#999',
+        textAlign: 'center',
         marginBottom: 30,
+        paddingHorizontal: 10,
+        lineHeight: 24,
     },
     questionSection: {
         marginBottom: 25,
