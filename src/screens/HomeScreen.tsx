@@ -61,7 +61,7 @@ export default function HomeScreen() {
                     <View style={styles.searchBar}>
                         <TextInput
                             style={styles.searchInput}
-                            placeholder="Search your pet"
+                            placeholder="Search your pet / breed / type"
                             placeholderTextColor="#999"
                             value={searchQuery}
                             onChangeText={setSearchQuery}
