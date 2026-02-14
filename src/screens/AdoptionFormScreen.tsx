@@ -36,7 +36,7 @@ export default function AdoptionFormScreen({ navigation }: Props) {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
 
-            {/* Header */}
+            {/* Fixed Header */}
             <View style={styles.header}>
                 <TouchableOpacity
                     style={styles.backButton}
@@ -167,6 +167,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFEFE5',
     },
     header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -174,6 +178,8 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         paddingBottom: 15,
         backgroundColor: '#FFFFFF',
+        zIndex: 1000,
+        elevation: 5,
     },
     backButton: {
         width: 40,
@@ -194,6 +200,7 @@ const styles = StyleSheet.create({
         width: 40,
     },
     scrollContent: {
+        paddingTop: 105,
         paddingBottom: 110,
     },
 

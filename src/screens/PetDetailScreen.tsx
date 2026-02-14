@@ -24,20 +24,20 @@ export default function PetDetailScreen({ route, navigation }: Props) {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" />
 
+            {/* Fixed Header Overlay */}
+            <View style={styles.header}>
+                <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Text style={styles.backIcon}>←</Text>
+                </TouchableOpacity>
+            </View>
+
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
                 {/* Image Section */}
                 <View style={styles.imageContainer}>
                     <Image source={pet.image} style={styles.image} resizeMode="cover" />
-
-                    {/* Header Overlay */}
-                    <View style={styles.header}>
-                        <TouchableOpacity
-                            style={styles.backButton}
-                            onPress={() => navigation.goBack()}
-                        >
-                            <Text style={styles.backIcon}>←</Text>
-                        </TouchableOpacity>
-                    </View>
                 </View>
 
                 {/* Content Section */}
@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        zIndex: 1000,
     },
     backButton: {
         justifyContent: 'center',

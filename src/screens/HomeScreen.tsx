@@ -46,15 +46,16 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
+            <StatusBar barStyle="dark-content" />
+            {/* Fixed Header */}
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton}>
+                    <Text style={styles.backIcon}>←</Text>
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Pet Adoption</Text>
+                <View style={styles.placeholder} />
+            </View>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.backButton}>
-                        <Text style={styles.backIcon}>←</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Pet Adoption</Text>
-                    <View style={styles.placeholder} />
-                </View>
                 {/* Search Bar */}
                 <View style={styles.searchContainer}>
                     <View style={styles.searchBar}>
@@ -170,6 +171,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#FAFAFA',
     },
     header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -177,6 +182,8 @@ const styles = StyleSheet.create({
         paddingTop: 50,
         paddingBottom: 15,
         backgroundColor: '#FFFFFF',
+        zIndex: 1000,
+        elevation: 5,
     },
     backButton: {
         width: 40,
@@ -199,6 +206,7 @@ const styles = StyleSheet.create({
     searchContainer: {
         paddingHorizontal: 20,
         paddingVertical: 15,
+        marginTop: 105,
     },
     searchBar: {
         flexDirection: 'row',
