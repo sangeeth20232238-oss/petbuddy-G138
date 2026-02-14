@@ -103,7 +103,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
 
                     {/* Description Section */}
                     <Text style={styles.description}>
-                        {pet.description || "No description available for this pet."}
+                        {pet.description}
                     </Text>
 
                     {/* Adopt Button */}
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     chatButton: {
-        // can add specific styling or handle with style array
+        
     },
     description: {
         fontSize: 15,

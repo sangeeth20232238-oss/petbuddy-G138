@@ -37,6 +37,7 @@ export default function HomeScreen() {
         const query = searchQuery.toLowerCase();
         const matchesSearch = !query || 
             pet.name.toLowerCase().includes(query) || 
+            pet.breed.toLowerCase().includes(query) ||
             pet.type.toLowerCase() === query;
         return matchesCategory && matchesSearch;
     });
