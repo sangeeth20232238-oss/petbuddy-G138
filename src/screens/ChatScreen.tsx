@@ -139,12 +139,12 @@ const EmptyState: React.FC<{ onSuggestionPress: (text: string) => void }> = ({ o
                     colors={['#FF9A5C', '#FF741C']}
                     style={styles.emptyIconGradient}
                 >
-                    <MaterialCommunityIcons name="robot-excited-outline" size={48} color="#FFF" />
+                    <MaterialCommunityIcons name="robot-excited-outline" size={60} color="#FFF" />
                 </LinearGradient>
             </Animated.View>
             <Text style={styles.emptyTitle}>AI Chat Bot 🐾</Text>
-            <Text style={styles.emptySubtitle}>Your smart pet companion</Text>
-            <Text style={styles.emptySubtitle}>ask me anything about your furry friends!</Text>
+            <Text style={styles.emptySubtitle}>Your smart pet companion , 
+                ask me anything about your furry friends!</Text>
             <View style={styles.suggestionsGrid}>
                 {suggestions.map((s, i) => (
                     <TouchableOpacity
@@ -306,7 +306,7 @@ export default function ChatScreen() {
                                 value={inputText}
                                 onChangeText={setInputText}
                                 placeholder="Ask about your pet..."
-                                placeholderTextColor="#AAAAAA"
+                                placeholderTextColor="#787878"
                                 multiline
                                 maxLength={1000}
                                 returnKeyType="send"
@@ -329,7 +329,7 @@ export default function ChatScreen() {
                                         <Ionicons
                                             name="arrow-up"
                                             size={20}
-                                            color="#FFF"
+                                            color="#3e3d3d"
                                         />
                                     </LinearGradient>
                                 </TouchableOpacity>
@@ -491,7 +491,7 @@ const styles = StyleSheet.create({
     emptyContainer: {
         alignItems: 'center',
         paddingHorizontal: 24,
-        paddingVertical: 40,
+        paddingTop: 10,
     },
     emptyIconWrapper: {
         marginBottom: 20,
@@ -552,6 +552,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         paddingHorizontal: 16,
         paddingTop: 8,
+        marginBottom: 15,
     },
     inputBar: {
         flexDirection: 'row',
@@ -583,11 +584,11 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        fontSize: 15,
+        fontSize: 16,
         color: '#1A1A1A',
         paddingHorizontal: 8,
         paddingVertical: 6,
-        maxHeight: 120,
+        maxHeight: 500,
         lineHeight: 22,
     },
     sendBtn: {
@@ -605,10 +606,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     disclaimer: {
-        fontSize: 11,
-        color: 'rgba(100,100,100,0.7)',
+        fontSize: 14,
+        color: 'rgba(37, 36, 36, 0.7)',
         textAlign: 'center',
-        marginTop: 8,
-        marginBottom: 4,
+        marginTop: 15,
+        marginBottom: -1,
     },
 });
