@@ -112,7 +112,7 @@ const MessageBubble: React.FC<{ message: Message; index: number }> = ({ message,
 };
 
 // ─── Empty State ─────────────────────────────────────────────────────────────
-const EmptyState: React.FC = () => {
+const EmptyState: React.FC<{ onSuggestionPress: (text: string) => void }> = ({ onSuggestionPress }) => {
     const pulseAnim = useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
@@ -143,12 +143,18 @@ const EmptyState: React.FC = () => {
                 </LinearGradient>
             </Animated.View>
             <Text style={styles.emptyTitle}>AI Chat Bot 🐾</Text>
-            <Text style={styles.emptySubtitle}>Your smart pet companion — ask me anything about your furry friends!</Text>
+            <Text style={styles.emptySubtitle}>Your smart pet companion</Text>
+            <Text style={styles.emptySubtitle}>ask me anything about your furry friends!</Text>
             <View style={styles.suggestionsGrid}>
                 {suggestions.map((s, i) => (
-                    <View key={i} style={styles.suggestionChip}>
+                    <TouchableOpacity
+                        key={i}
+                        style={styles.suggestionChip}
+                        activeOpacity={0.7}
+                        onPress={() => onSuggestionPress(s)}
+                    >
                         <Text style={styles.suggestionText}>{s}</Text>
-                    </View>
+                    </TouchableOpacity>
                 ))}
             </View>
         </View>
@@ -159,7 +165,7 @@ const EmptyState: React.FC = () => {
 async function fetchAIResponse(_userMessage: string): Promise<string> {
     // Demo delay to simulate a real API call
     await new Promise(resolve => setTimeout(resolve, 1200));
-    return 'This is a demo message. 🐾 Connect your AI backend to get real responses!';
+    return 'This is a demo message. 🐾 ';
 }
 
 // ─── Main Chat Screen ─────────────────────────────────────────────────────────
@@ -184,25 +190,21 @@ export default function ChatScreen() {
         ]).start();
     };
 
-    const handleSend = useCallback(async () => {
-        if (!inputText.trim()) return;
-        animateSendButton();
-        Keyboard.dismiss();
+    const sendMessage = useCallback(async (text: string) => {
+        if (!text.trim()) return;
 
         const userMsg: Message = {
             id: `u-${Date.now()}`,
-            text: inputText.trim(),
+            text: text.trim(),
             sender: 'user',
             timestamp: new Date(),
         };
-        const currentInput = inputText.trim();
         setMessages(prev => [...prev, userMsg]);
-        setInputText('');
         setIsTyping(true);
         scrollToBottom();
 
         try {
-            const responseText = await fetchAIResponse(currentInput);
+            const responseText = await fetchAIResponse(text.trim());
             const aiMsg: Message = {
                 id: `a-${Date.now()}`,
                 text: responseText,
@@ -222,7 +224,20 @@ export default function ChatScreen() {
             setIsTyping(false);
             scrollToBottom();
         }
-    }, [inputText, scrollToBottom]);
+    }, [scrollToBottom]);
+
+    const handleSend = useCallback(async () => {
+        if (!inputText.trim()) return;
+        animateSendButton();
+        Keyboard.dismiss();
+        const text = inputText;
+        setInputText('');
+        await sendMessage(text);
+    }, [inputText, sendMessage]);
+
+    const handleSuggestionPress = useCallback(async (text: string) => {
+        await sendMessage(text);
+    }, [sendMessage]);
 
     return (
         <View style={styles.root}>
@@ -273,7 +288,7 @@ export default function ChatScreen() {
                             messages.length === 0 && styles.chatContentEmpty,
                         ]}
                         showsVerticalScrollIndicator={false}
-                        ListEmptyComponent={<EmptyState />}
+                        ListEmptyComponent={<EmptyState onSuggestionPress={handleSuggestionPress} />}
                         ListFooterComponent={isTyping ? <TypingIndicator /> : null}
                         onContentSizeChange={scrollToBottom}
                         renderItem={({ item, index }) => <MessageBubble message={item} index={index} />}
