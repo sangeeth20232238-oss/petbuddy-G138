@@ -6,7 +6,7 @@ A beautiful pet adoption mobile application built with React Native, Expo, and T
 
 - **Modern UI**: Clean, intuitive interface matching the Figma design
 - **Pet Categories**: Browse pets by category (Cat, Dog, Rabbit, Hamster)
-- **Search Functionality**: Search for pets by name with voice search option
+- **Search Functionality**: Search for pets by name, breed, or type
 - **Hero Banner**: Eye-catching banner with call-to-action
 - **Pet Grid**: Beautiful card-based layout for pet listings
 - **Bottom Navigation**: Custom tab bar with floating center button
@@ -100,7 +100,7 @@ npm run web
 
 ### Home Screen
 - Header with back button and title
-- Search bar with voice search
+- Search bar for finding pets by name, breed, or type
 - Hero banner "Find Your Perfect Companion"
 - Pet category filters (Cat, Dog, Rabbit, Hams)
 - Pet grid with cards showing:
