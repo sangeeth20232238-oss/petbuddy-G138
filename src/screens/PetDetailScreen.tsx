@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     chatButton: {
-        
+        opacity: undefined,
     },
     description: {
         fontSize: 15,
