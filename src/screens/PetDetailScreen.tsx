@@ -46,7 +46,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                         <View>
                             <Text style={styles.name}>{pet.name}</Text>
                             <Text style={styles.breedText}>
-                                {pet.breed} cat ( {pet.age} ) <Text style={styles.genderSymbol}>{pet.gender === 'male' ? '♂' : '♀'}</Text>
+                                {pet.breed} {pet.type} ( {pet.age} ) <Text style={styles.genderSymbol}>{pet.gender === 'male' ? '♂' : '♀'}</Text>
                             </Text>
                         </View>
                         <View style={styles.statusContainer}>
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     chatButton: {
-        
+        opacity: undefined,
     },
     description: {
         fontSize: 15,

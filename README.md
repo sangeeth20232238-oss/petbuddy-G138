@@ -115,8 +115,9 @@ npm run web
 - Placeholder for user profile
 
 ## 🎨 Design Details
-`#2196F3`
 
+### Color Palette
+- Primary Blue: `#2196F3` (used for primary buttons, highlights, and key UI accents)
 ### Typography
 - Header Title: 20px, Semi-bold
 - Section Title: 18px, Semi-bold

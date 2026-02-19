@@ -21,7 +21,12 @@ export default function BottomTabNavigator() {
                 <View style={styles.fabContainer}>
                     <TouchableOpacity
                         style={styles.fab}
-                        onPress={() => Alert.alert("PetBot AI")}
+                        onPress={() =>
+                            Alert.alert(
+                                "PetBot AI",
+                                "Ask PetBot AI questions about pet adoption and care. This feature is coming soon."
+                            )
+                        }
                     >
                         <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />
                     </TouchableOpacity>
