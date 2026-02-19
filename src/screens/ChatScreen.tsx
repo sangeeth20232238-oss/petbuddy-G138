@@ -144,8 +144,8 @@ const EmptyState: React.FC<{ onSuggestionPress: (text: string) => void }> = ({ o
                 </LinearGradient>
             </Animated.View>
             <Text style={styles.emptyTitle}>AI Chat Bot 🐾</Text>
-            <Text style={styles.emptySubtitle}>Your smart pet companion , 
-                ask me anything about your furry friends!</Text>
+            <Text style={styles.emptySubtitle}>Your smart pet companion .</Text>
+            <Text style={[styles.emptySubtitle, { marginBottom: 28 }]}>ask me anything about your furry friends!</Text>
             <View style={styles.suggestionsGrid}>
                 {suggestions.map((s, i) => (
                     <TouchableOpacity
@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
         color: '#666',
         textAlign: 'center',
         lineHeight: 21,
-        marginBottom: 32,
+        marginBottom: 4,
         maxWidth: 260,
     },
     suggestionsGrid: {
