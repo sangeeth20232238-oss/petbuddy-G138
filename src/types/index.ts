@@ -1,10 +1,12 @@
+import { ImageSourcePropType } from 'react-native';
+
 export interface Pet {
     id: string;
     name: string;
-    type: 'cat' | 'dog' | 'all';
+    type: 'cat' | 'dog';
     breed: string;
     age: string;
-    image: any; // Can be require() or { uri: string }
+    image: ImageSourcePropType;
     gender: 'male' | 'female';
     color?: string;
     weight?: string;

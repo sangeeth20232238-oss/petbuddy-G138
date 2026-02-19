@@ -8,6 +8,7 @@ import {
     ScrollView,
     Dimensions,
     StatusBar,
+    Alert,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
@@ -92,10 +93,16 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                             </View>
                         </View>
                         <View style={styles.actionButtons}>
-                            <TouchableOpacity style={styles.actionButton}>
+                            <TouchableOpacity
+                                style={styles.actionButton}
+                                onPress={() => Alert.alert('Call Shelter', 'Calling Shelter Wish...')}
+                            >
                                 <MaterialCommunityIcons name="phone" size={24} color="white" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.actionButton, styles.chatButton]}>
+                            <TouchableOpacity
+                                style={styles.actionButton}
+                                onPress={() => Alert.alert('Chat', 'Chat with Shelter Wish is coming soon.')}
+                            >
                                 <MaterialCommunityIcons name="message-text" size={24} color="white" />
                             </TouchableOpacity>
                         </View>
@@ -268,9 +275,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#FF741C',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    chatButton: {
-        opacity: undefined,
     },
     description: {
         fontSize: 15,

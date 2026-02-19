@@ -98,18 +98,18 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                         <View style={styles.optionsRow}>
                             <Checkbox
                                 label="Yes"
-                                selected={walkies === 'yes'}
-                                onSelect={() => setWalkies('yes')}
+                                selected={walks === 'yes'}
+                                onSelect={() => setWalks('yes')}
                             />
                             <Checkbox
                                 label="No"
-                                selected={walkies === 'no'}
-                                onSelect={() => setWalkies('no')}
+                                selected={walks === 'no'}
+                                onSelect={() => setWalks('no')}
                             />
                             <Checkbox
                                 label="Not sure"
-                                selected={walkies === 'notSure'}
-                                onSelect={() => setWalkies('notSure')}
+                                selected={walks === 'notSure'}
+                                onSelect={() => setWalks('notSure')}
                             />
                         </View>
                     </View>
@@ -136,16 +136,20 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                 <TouchableOpacity
                     style={styles.sendButton}
                     onPress={() => {
-                        if (!outdoorSpace) {
+                        if (outdoorSpace === null) {
                             Alert.alert('Validation Error', 'Please answer if you have outdoor space at home.');
                             return;
                         }
-                        if (!pastExperience) {
+                        if (pastExperience === null) {
                             Alert.alert('Validation Error', 'Please answer if you have past experience in pets.');
                             return;
                         }
-                        if (!walkies) {
+                        if (walks === null) {
                             Alert.alert('Validation Error', 'Please answer if you can take your pets on walks.');
+                            return;
+                        }
+                        if (!reason.trim()) {
+                            Alert.alert('Validation Error', 'Please provide a reason for adopting this pet.');
                             return;
                         }
                         Alert.alert('Success', 'Your adoption request has been sent!', [

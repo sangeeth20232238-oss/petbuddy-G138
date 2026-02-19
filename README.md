@@ -5,8 +5,8 @@ A beautiful pet adoption mobile application built with React Native, Expo, and T
 ## 🎨 Features
 
 - **Modern UI**: Clean, intuitive interface matching the Figma design
-- **Pet Categories**: Browse pets by category (Cat, Dog, Rabbit, Hamster)
-- **Search Functionality**: Search for pets by name with voice search option
+- **Pet Categories**: Browse pets by category (Cat, Dog)
+- **Search Functionality**: Search for pets by name, breed, or type
 - **Hero Banner**: Eye-catching banner with call-to-action
 - **Pet Grid**: Beautiful card-based layout for pet listings
 - **Bottom Navigation**: Custom tab bar with floating center button
@@ -18,9 +18,9 @@ A beautiful pet adoption mobile application built with React Native, Expo, and T
 pet-adoption/
 ├── src/
 │   ├── screens/
-│   │   ├── HomeScreen.tsx       # Main home screen with pet listings
-│   │   ├── MessagesScreen.tsx   # Messages/chat screen
-│   │   └── ProfileScreen.tsx    # User profile screen
+│   │   ├── HomeScreen.tsx          # Main home screen with pet listings
+│   │   ├── PetDetailScreen.tsx     # Pet detail view
+│   │   └── AdoptionFormScreen.tsx  # Adoption request form
 │   ├── navigation/
 │   │   └── BottomTabNavigator.tsx  # Bottom tab navigation
 │   ├── types/
@@ -100,19 +100,26 @@ npm run web
 
 ### Home Screen
 - Header with back button and title
-- Search bar with voice search
+- Search bar for filtering pets by name, breed, or type
 - Hero banner "Find Your Perfect Companion"
-- Pet category filters (Cat, Dog, Rabbit, Hams)
+- Pet category filters (Cat, Dog)
 - Pet grid with cards showing:
   - Pet image
   - Name and gender icon
   - Breed and age
 
-### Messages Screen
-- Placeholder for chat/messaging functionality
+### Pet Details Screen
+- Full-screen pet image
+- Pet breed, type, age, and gender info
+- Stats row (sex, color, breed, weight)
+- Shelter info with phone and chat action buttons
+- Pet description
+- "Adopt Me" button leading to the adoption form
 
-### Profile Screen
-- Placeholder for user profile
+### Adoption Form Screen
+- Lifestyle questionnaire (outdoor space, past experience, walks)
+- Free-text reason for adoption
+- Form validation before submission
 
 ## 🎨 Design Details
 
@@ -140,7 +147,7 @@ Edit `src/data/pets.ts`:
 {
   id: '5',
   name: 'Your Pet Name',
-  type: 'cat', // or 'dog', 'rabbit', 'hamster'
+  type: 'cat', // or 'dog'
   breed: 'Breed Name',
   age: '2 years',
   gender: 'male', // or 'female'
