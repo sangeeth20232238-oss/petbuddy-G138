@@ -8,6 +8,7 @@ import {
     ScrollView,
     Dimensions,
     StatusBar,
+    Alert,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
@@ -19,6 +20,14 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PetDetails'>;
 
 export default function PetDetailScreen({ route, navigation }: Props) {
     const { pet } = route.params;
+
+    const handlePhoneCall = () => {
+        Alert.alert('Phone Call', 'Phone call functionality is coming soon!');
+    };
+
+    const handleChat = () => {
+        Alert.alert('Chat', 'Chat functionality is coming soon!');
+    };
 
     return (
         <View style={styles.container}>
@@ -92,10 +101,10 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                             </View>
                         </View>
                         <View style={styles.actionButtons}>
-                            <TouchableOpacity style={styles.actionButton}>
+                            <TouchableOpacity style={styles.actionButton} onPress={handlePhoneCall}>
                                 <MaterialCommunityIcons name="phone" size={24} color="white" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.actionButton, styles.chatButton]}>
+                            <TouchableOpacity style={[styles.actionButton, styles.chatButton]} onPress={handleChat}>
                                 <MaterialCommunityIcons name="message-text" size={24} color="white" />
                             </TouchableOpacity>
                         </View>
