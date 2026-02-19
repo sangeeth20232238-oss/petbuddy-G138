@@ -98,18 +98,18 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                         <View style={styles.optionsRow}>
                             <Checkbox
                                 label="Yes"
-                                selected={walkies === 'yes'}
-                                onSelect={() => setWalkies('yes')}
+                                selected={walks === 'yes'}
+                                onSelect={() => setWalks('yes')}
                             />
                             <Checkbox
                                 label="No"
-                                selected={walkies === 'no'}
-                                onSelect={() => setWalkies('no')}
+                                selected={walks === 'no'}
+                                onSelect={() => setWalks('no')}
                             />
                             <Checkbox
                                 label="Not sure"
-                                selected={walkies === 'notSure'}
-                                onSelect={() => setWalkies('notSure')}
+                                selected={walks === 'notSure'}
+                                onSelect={() => setWalks('notSure')}
                             />
                         </View>
                     </View>
@@ -144,7 +144,7 @@ export default function AdoptionFormScreen({ navigation }: Props) {
                             Alert.alert('Validation Error', 'Please answer if you have past experience in pets.');
                             return;
                         }
-                        if (!walkies) {
+                        if (!walks) {
                             Alert.alert('Validation Error', 'Please answer if you can take your pets on walks.');
                             return;
                         }
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFEFE5',
         paddingVertical: 30,
         paddingHorizontal: 20,
-        marginBottom: 20,
+        marginBottom: -40,
     },
     sectionTitle: {
         fontSize: 36,
