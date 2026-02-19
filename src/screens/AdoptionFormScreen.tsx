@@ -29,7 +29,7 @@ const Checkbox = ({ label, selected, onSelect }: { label: string; selected: bool
 export default function AdoptionFormScreen({ navigation }: Props) {
     const [outdoorSpace, setOutdoorSpace] = useState<'yes' | 'no' | null>(null);
     const [pastExperience, setPastExperience] = useState<'yes' | 'no' | null>(null);
-    const [walkies, setWalkies] = useState<'yes' | 'no' | 'notSure' | null>(null);
+    const [walks, setWalks] = useState<'yes' | 'no' | 'notSure' | null>(null);
     const [reason, setReason] = useState('');
 
     return (
