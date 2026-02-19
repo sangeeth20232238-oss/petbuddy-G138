@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'rgba(37, 36, 36, 0.7)',
         textAlign: 'center',
-        marginTop: 15,
+        marginTop: 12,
         marginBottom: -1,
     },
 });
