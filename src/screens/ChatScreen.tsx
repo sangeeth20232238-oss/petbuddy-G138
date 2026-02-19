@@ -12,6 +12,7 @@ import {
     Dimensions,
     StatusBar,
     Keyboard,
+    Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -174,6 +175,7 @@ export default function ChatScreen() {
     const [inputText, setInputText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
 
@@ -239,6 +241,11 @@ export default function ChatScreen() {
         await sendMessage(text);
     }, [sendMessage]);
 
+    const handleNewChat = () => {
+        setMessages([]);
+        setShowMenu(false);
+    };
+
     return (
         <View style={styles.root}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
@@ -268,10 +275,22 @@ export default function ChatScreen() {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7}>
+                    <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7} onPress={() => setShowMenu(true)}>
                         <Feather name="more-vertical" size={20} color="#1A1A1A" />
                     </TouchableOpacity>
                 </View>
+
+                {/* ── Menu Modal ── */}
+                <Modal visible={showMenu} transparent animationType="fade" onRequestClose={() => setShowMenu(false)}>
+                    <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowMenu(false)}>
+                        <View style={styles.menuContainer}>
+                            <TouchableOpacity style={styles.menuItem} onPress={handleNewChat}>
+                                <Feather name="plus-circle" size={20} color="#1A1A1A" />
+                                <Text style={styles.menuText}>New Chat</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
 
                 {/* ── Chat Area ── */}
                 <KeyboardAvoidingView
@@ -611,5 +630,37 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 12,
         marginBottom: -1,
+    },
+
+    // Menu
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
+        paddingTop: 60,
+        paddingRight: 16,
+    },
+    menuContainer: {
+        backgroundColor: '#FFFFFF',
+        borderRadius: 12,
+        padding: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 8,
+    },
+    menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+    },
+    menuText: {
+        fontSize: 15,
+        color: '#1A1A1A',
+        fontWeight: '500',
     },
 });
