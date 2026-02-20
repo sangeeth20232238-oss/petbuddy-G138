@@ -19,6 +19,7 @@ export interface PetCategory {
 }
 
 export type RootStackParamList = {
+    Main: undefined;
     Home: undefined;
     PetDetails: { pet: Pet };
     AdoptionForm: undefined;
