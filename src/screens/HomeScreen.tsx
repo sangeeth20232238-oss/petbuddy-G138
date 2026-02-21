@@ -133,7 +133,10 @@ export default function HomeScreen() {
                 <View style={styles.adoptSection}>
                     <View style={styles.sectionHeader}>
                         <Text style={styles.sectionTitle}>Adopt Companion</Text>
-                        <TouchableOpacity onPress={() => setShowAllPets(!showAllPets)}>
+                        <TouchableOpacity 
+                            style={styles.seeAllButton}
+                            onPress={() => setShowAllPets(!showAllPets)}
+                        >
                             <Text style={styles.seeAllLink}>{showAllPets ? 'Show less' : 'See all'}</Text>
                         </TouchableOpacity>
                     </View>
@@ -320,6 +323,12 @@ const styles = StyleSheet.create({
     adoptSection: {
         paddingHorizontal: 20,
         paddingBottom: 100,
+    },
+    seeAllButton: {
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        backgroundColor: '#dddcdc',
+        borderRadius: 8,
     },
     seeAllLink: {
         fontSize: 14,
