@@ -35,8 +35,8 @@ export default function HomeScreen() {
     const filteredPets = PETS_DATA.filter((pet) => {
         const matchesCategory = !selectedCategory || selectedCategory === 'all' || pet.type === selectedCategory;
         const query = searchQuery.toLowerCase();
-        const matchesSearch = !query || 
-            pet.name.toLowerCase().includes(query) || 
+        const matchesSearch = !query ||
+            pet.name.toLowerCase().includes(query) ||
             pet.breed.toLowerCase().includes(query) ||
             pet.type.toLowerCase() === query;
         return matchesCategory && matchesSearch;
@@ -288,10 +288,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '600',
         color: '#000',
-    },
-    moreLink: {
-        fontSize: 14,
-        color: '#FF8C5A',
     },
     categoriesContainer: {
         flexDirection: 'row',

@@ -13,6 +13,8 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 
+import { ENDPOINTS } from '../config/api';
+
 const { width } = Dimensions.get('window');
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AdoptionForm'>;
@@ -40,16 +42,14 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
             return;
         }
 
+        const API_URL = ENDPOINTS.ADOPTIONS;
         setIsLoading(true);
         try {
-            // Using your actual local IP: 192.168.8.100
-            const API_URL = 'http://192.168.8.100:5000/api/adoptions';
 
             // Add a 10-second timeout
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            const timeoutId = setTimeout(() => controller.abort(), 20000);
 
-            console.log('Sending request to:', API_URL);
 
             const response = await fetch(API_URL, {
                 method: 'POST',
@@ -69,8 +69,6 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
             clearTimeout(timeoutId);
 
             const responseData = await response.json().catch(() => ({}));
-            console.log('Response Status:', response.status);
-            console.log('Response Data:', responseData);
 
             if (response.ok) {
                 Alert.alert('Success', 'Your adoption request has been sent!', [
@@ -81,11 +79,10 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
                 Alert.alert('Server Error', `Error ${response.status}: ${errorMessage}`);
             }
         } catch (error: any) {
-            console.error('Submission Error:', error);
             if (error.name === 'AbortError') {
                 Alert.alert('Timeout', 'The server is taking too long to respond. Is your PC and Phone on the same Wi-Fi?');
             } else if (error.message === 'Network request failed') {
-                Alert.alert('Connection Error', 'Could not reach the server (192.168.8.100). \n\n1. Make sure your PC and Phone are on the same Wi-Fi.\n2. Check if the backend is running.\n3. Verify your PC\'s IP address is still 192.168.8.100.');
+                Alert.alert('Connection Error', `Could not reach the server at ${API_URL}. \n\n1. Make sure your PC and Phone are on the same Wi-Fi.\n2. Check if the backend is running.\n3. Verify your PC\'s IP address in src/config/api.ts.`);
             } else {
                 Alert.alert('Error', error.message || 'An unexpected error occurred.');
             }
