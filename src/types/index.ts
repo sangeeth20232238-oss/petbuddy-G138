@@ -9,6 +9,7 @@ export interface Pet {
     color?: string;
     weight?: string;
     description?: string;
+    contactPhone?: string;
 }
 
 export interface PetCategory {
