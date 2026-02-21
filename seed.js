@@ -110,7 +110,7 @@ const seedDatabase = async () => {
         const batch = db.batch();
         PETS_DATA.forEach((pet) => {
             const docRef = petsCollection.doc();
-            batch.set(docRef, pet);
+            batch.set(docRef, { ...pet, contactPhone: '0765743454' });
         });
 
         await batch.commit();
