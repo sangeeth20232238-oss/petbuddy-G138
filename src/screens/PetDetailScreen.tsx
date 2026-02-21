@@ -109,7 +109,7 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                     {/* Adopt Button */}
                     <TouchableOpacity
                         style={styles.adoptButton}
-                        onPress={() => navigation.navigate('AdoptionForm')}
+                        onPress={() => navigation.navigate('AdoptionForm', { pet })}
                     >
                         <Text style={styles.adoptButtonText}>Adopt Me</Text>
                     </TouchableOpacity>

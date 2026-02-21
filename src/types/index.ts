@@ -22,7 +22,7 @@ export type RootStackParamList = {
     Main: undefined;
     Home: undefined;
     PetDetails: { pet: Pet };
-    AdoptionForm: undefined;
+    AdoptionForm: { pet: Pet };
 };
 
 export type BottomTabParamList = {

@@ -26,11 +26,73 @@ const Checkbox = ({ label, selected, onSelect }: { label: string; selected: bool
     </TouchableOpacity>
 );
 
-export default function AdoptionFormScreen({ navigation }: Props) {
+export default function AdoptionFormScreen({ route, navigation }: Props) {
+    const { pet } = route.params;
     const [outdoorSpace, setOutdoorSpace] = useState<'yes' | 'no' | null>(null);
     const [pastExperience, setPastExperience] = useState<'yes' | 'no' | null>(null);
     const [walks, setWalks] = useState<'yes' | 'no' | 'notSure' | null>(null);
     const [reason, setReason] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = async () => {
+        if (!outdoorSpace || !pastExperience || !walks) {
+            Alert.alert('Validation Error', 'Please answer all lifestyle questions.');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            // Using your actual local IP: 192.168.8.100
+            const API_URL = 'http://192.168.8.100:5000/api/adoptions';
+
+            // Add a 10-second timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            console.log('Sending request to:', API_URL);
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                signal: controller.signal,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    petId: pet.id,
+                    outdoorSpace,
+                    pastExperience,
+                    walks,
+                    reason,
+                }),
+            });
+
+            clearTimeout(timeoutId);
+
+            const responseData = await response.json().catch(() => ({}));
+            console.log('Response Status:', response.status);
+            console.log('Response Data:', responseData);
+
+            if (response.ok) {
+                Alert.alert('Success', 'Your adoption request has been sent!', [
+                    { text: 'OK', onPress: () => navigation.goBack() }
+                ]);
+            } else {
+                const errorMessage = responseData.message || responseData.error || 'Server responded with an error';
+                Alert.alert('Server Error', `Error ${response.status}: ${errorMessage}`);
+            }
+        } catch (error: any) {
+            console.error('Submission Error:', error);
+            if (error.name === 'AbortError') {
+                Alert.alert('Timeout', 'The server is taking too long to respond. Is your PC and Phone on the same Wi-Fi?');
+            } else if (error.message === 'Network request failed') {
+                Alert.alert('Connection Error', 'Could not reach the server (192.168.8.100). \n\n1. Make sure your PC and Phone are on the same Wi-Fi.\n2. Check if the backend is running.\n3. Verify your PC\'s IP address is still 192.168.8.100.');
+            } else {
+                Alert.alert('Error', error.message || 'An unexpected error occurred.');
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -134,27 +196,14 @@ export default function AdoptionFormScreen({ navigation }: Props) {
 
                 {/* Send Button */}
                 <TouchableOpacity
-                    style={styles.sendButton}
-                    onPress={() => {
-                        if (!outdoorSpace) {
-                            Alert.alert('Validation Error', 'Please answer if you have outdoor space at home.');
-                            return;
-                        }
-                        if (!pastExperience) {
-                            Alert.alert('Validation Error', 'Please answer if you have past experience in pets.');
-                            return;
-                        }
-                        if (!walks) {
-                            Alert.alert('Validation Error', 'Please answer if you can take your pets on walks.');
-                            return;
-                        }
-                        Alert.alert('Success', 'Your adoption request has been sent!', [
-                            { text: 'OK', onPress: () => navigation.goBack() }
-                        ]);
-                    }}
+                    style={[styles.sendButton, isLoading && styles.disabledButton]}
+                    onPress={handleSubmit}
                     activeOpacity={0.8}
+                    disabled={isLoading}
                 >
-                    <Text style={styles.sendButtonText}>Send</Text>
+                    <Text style={styles.sendButtonText}>
+                        {isLoading ? 'Sending...' : 'Send'}
+                    </Text>
                 </TouchableOpacity>
             </ScrollView>
         </View>
@@ -297,5 +346,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    disabledButton: {
+        backgroundColor: '#CCC',
+        shadowColor: 'transparent',
+        elevation: 0,
     },
 });
