@@ -27,9 +27,28 @@ exports.createAdoptionRequest = async (req, res) => {
             console.log('No petId or id provided in request body');
         }
 
+        const {
+            applicantName,
+            applicantPhone,
+            outdoorSpace,
+            pastExperience,
+            walks,
+            reason,
+            petName // Pet name passed from frontend
+        } = req.body;
+
         const newRequest = {
-            ...req.body,
+            petId: petId,
+            petName: petName || petData.petName || 'Unknown', // Use frontend name, fallback to lookup
             ...petData,
+            applicantName: applicantName || 'N/A',
+            applicantPhone: applicantPhone || 'N/A',
+            lifestyle: {
+                outdoorSpace,
+                pastExperience,
+                walks
+            },
+            reason: reason || '',
             status: 'pending',
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         };
