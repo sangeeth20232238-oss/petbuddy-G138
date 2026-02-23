@@ -10,6 +10,8 @@ export interface Pet {
     weight?: string;
     description?: string;
     contactPhone?: string;
+    shelterName?: string;
+    location?: string;
 }
 
 export interface PetCategory {

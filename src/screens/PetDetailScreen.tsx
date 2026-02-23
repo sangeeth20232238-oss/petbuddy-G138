@@ -23,15 +23,21 @@ export default function PetDetailScreen({ route, navigation }: Props) {
     const { pet } = route.params;
 
     const handlePhoneCall = () => {
-        const phoneNumber = pet.contactPhone || '0765743454';
-        Linking.openURL(`tel:${phoneNumber}`).catch(() => {
+        if (!pet.contactPhone) {
+            Alert.alert('Not Available', 'Contact phone number is not available for this pet.');
+            return;
+        }
+        Linking.openURL(`tel:${pet.contactPhone}`).catch(() => {
             Alert.alert('Error', 'Unable to open phone dialer');
         });
     };
 
     const handleMessage = () => {
-        const phoneNumber = pet.contactPhone || '0765743454';
-        Linking.openURL(`sms:${phoneNumber}`).catch(() => {
+        if (!pet.contactPhone) {
+            Alert.alert('Not Available', 'Contact phone number is not available for this pet.');
+            return;
+        }
+        Linking.openURL(`sms:${pet.contactPhone}`).catch(() => {
             Alert.alert('Error', 'Unable to open messaging app');
         });
     };
@@ -100,10 +106,10 @@ export default function PetDetailScreen({ route, navigation }: Props) {
                             />
                             <View>
                                 <Text style={styles.shelterLabel}>Shelter by:</Text>
-                                <Text style={styles.shelterName}>Shelter Wish</Text>
+                                <Text style={styles.shelterName}>{pet.shelterName || 'PetBuddy Shelter'}</Text>
                                 <View style={styles.locationRow}>
                                     <MaterialCommunityIcons name="map-marker" size={14} color="#FF741C" />
-                                    <Text style={styles.locationText}>Colombo ( 2.5km )</Text>
+                                    <Text style={styles.locationText}>{pet.location || 'Unknown Location'}</Text>
                                 </View>
                             </View>
                         </View>

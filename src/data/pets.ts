@@ -1,148 +1,23 @@
 import { Pet } from '../types';
 
-export const PETS_DATA: Pet[] = [
-    {
-        id: '1',
-        name: 'Samantha',
-        type: 'cat',
-        breed: 'Persian',
-        age: '6 Months',
-        gender: 'female',
-        color: 'Brown',
-        weight: '1.2kg',
-        image: require('../../assets/pets/cat_samantha.jpg'),
-        description: "A fluffy and calm kitten who enjoys being pampered. Samantha is looking for a quiet home where she can show off her beautiful brown coat and receive all the love she deserves.",
-    },
-    {
-        id: '2',
-        name: 'Tigri',
-        type: 'cat',
-        breed: 'Sphynx',
-        age: '1 year',
-        gender: 'female',
-        color: 'Grey',
-        weight: '0.8kg',
-        image: require('../../assets/pets/cat_tigri.jpg'),
-        description: "Unique and energetic, Tigri is a social butterfly who loves warmth and head scratches. Despite her lack of fur, she has a huge heart and a playful spirit that brightens every room.",
-    },
-    {
-        id: '3',
-        name: 'Max',
-        type: 'dog',
-        breed: 'Golden Retriever',
-        age: '2 years',
-        gender: 'male',
-        image: require('../../assets/pets/dog_max.jpg'),
-        description: "The ultimate companion! Max is a loyal, friendly dog who loves long walks and playing fetch. He's a social boy who gets along perfectly with children and other pets.",
-    },
-    {
-        id: '4',
-        name: 'Bella',
-        type: 'dog',
-        breed: 'Labrador',
-        age: '1 year',
-        gender: 'female',
-        image: require('../../assets/pets/dog_bella.jpg'),
-        description: "Bella is a sweet and gentle soul with a heart of gold. She's highly intelligent, easy to train, and always ready for a game of frisbee or a cozy cuddle on the couch.",
-    },
-    {
-        id: '5',
-        name: 'Luna',
-        type: 'cat',
-        breed: 'Siamese',
-        age: '2 years',
-        gender: 'female',
-        image: require('../../assets/pets/cat_luna.jpg'),
-        description: "Elegant and vocal, Luna is a smart cat who loves to 'talk' to her owners. She's highly curious and enjoys high perches where she can observe her kingdom with her striking blue eyes.",
-    },
-    {
-        id: '6',
-        name: 'Charlie',
-        type: 'dog',
-        breed: 'Beagle',
-        age: '3 years',
-        gender: 'male',
-        image: require('../../assets/pets/dog_charlie.jpg'),
-        description: "Charlie is a curious explorer with a fantastic sense of smell. He's a happy-go-lucky dog who enjoys outdoor adventures and has a tail that never stops wagging.",
-    },
-    {
-        id: '7',
-        name: 'Daisy',
-        type: 'dog',
-        breed: 'Corgi',
-        age: '8 months',
-        gender: 'female',
-        image: require('../../assets/pets/dog_daisy.jpg'),
-        description: "Small in size but big in personality! Daisy is a spunky puppy who loves to run and play. Her short legs don't stop her from being the fastest one at the park.",
-    },
-    {
-        id: '8',
-        name: 'Oliver',
-        type: 'cat',
-        breed: 'Maine Coon',
-        age: '4 years',
-        gender: 'male',
-        image: require('../../assets/pets/cat_oliver.jpg'),
-        description: "A gentle giant with a majestic presence. Oliver is a laid-back cat who enjoys being brushed and lounging in sunbeams. He's more like a dog than a cat in his loyalty.",
-    },
-    {
-        id: '9',
-        name: 'Milo',
-        type: 'dog',
-        breed: 'French Bulldog',
-        age: '1.5 years',
-        gender: 'male',
-        image: require('../../assets/pets/dog_milo.jpg'),
-        description: "Milo is a charming little fellow who is full of energy. He loves sitting on laps and being the center of attention. He's the perfect apartment companion with a big personality.",
-    },
-    {
-        id: '10',
-        name: 'Rosie',
-        type: 'dog',
-        breed: 'Poodle',
-        age: '2 years',
-        gender: 'female',
-        image: require('../../assets/pets/dog_rosie.jpg'),
-        description: "Highly intelligent and stylish, Rosie is a graceful dog who loves learning new tricks. She's very affectionate and thrives in a home where she can be part of every activity.",
-    },
-    {
-        id: '11',
-        name: 'Simba',
-        type: 'cat',
-        breed: 'Bengal',
-        age: '3 years',
-        gender: 'male',
-        image: require('../../assets/pets/cat_simba.jpg'),
-        description: "Simba has a wild look and a courageous heart. He's an active cat who needs plenty of play and interaction. He's particularly fond of water and chasing feather toys.",
-    },
-    {
-        id: '12',
-        name: 'Cooper',
-        type: 'dog',
-        breed: 'German Shepherd',
-        age: '4 years',
-        gender: 'male',
-        image: require('../../assets/pets/dog_cooper.jpg'),
-        description: "Cooper is a brave and disciplined dog with strong protective instincts. He's a loyal partner who is always ready for a hike or a training session. He's a true hero at heart.",
-    },
-    {
-        id: '13',
-        name: 'Nala',
-        type: 'cat',
-        breed: 'Ragdoll',
-        age: '1 year',
-        gender: 'female',
-        image: require('../../assets/pets/cat_nala.jpg'),
-        description: "True to her breed name, Nala goes limp with affection when held. She's a peaceful cat who loves quiet afternoons and follow her favorite humans from room to room.",
-    },
-    {
-        id: '14',
-        name: 'Buddy',
-        type: 'dog',
-        breed: 'Boxer',
-        age: '2 years',
-        gender: 'male',
-        image: require('../../assets/pets/dog_buddy.jpg'),
-        description: "Buddy is a bundle of joy with a constant wagging tail. He's a playful, goofy dog who will keep you laughing with his antics and is always ready for a new friend.",
-    },
-];
+export const PETS_DATA: Pet[] = [];
+
+export const getPetImage = (imagePath: string) => {
+    switch (imagePath) {
+        case 'cat_samantha.jpg': return require('../../assets/pets/cat_samantha.jpg');
+        case 'cat_tigri.jpg': return require('../../assets/pets/cat_tigri.jpg');
+        case 'dog_max.jpg': return require('../../assets/pets/dog_max.jpg');
+        case 'dog_bella.jpg': return require('../../assets/pets/dog_bella.jpg');
+        case 'cat_luna.jpg': return require('../../assets/pets/cat_luna.jpg');
+        case 'dog_charlie.jpg': return require('../../assets/pets/dog_charlie.jpg');
+        case 'dog_daisy.jpg': return require('../../assets/pets/dog_daisy.jpg');
+        case 'cat_oliver.jpg': return require('../../assets/pets/cat_oliver.jpg');
+        case 'dog_milo.jpg': return require('../../assets/pets/dog_milo.jpg');
+        case 'dog_rosie.jpg': return require('../../assets/pets/dog_rosie.jpg');
+        case 'cat_simba.jpg': return require('../../assets/pets/cat_simba.jpg');
+        case 'dog_cooper.jpg': return require('../../assets/pets/dog_cooper.jpg');
+        case 'cat_nala.jpg': return require('../../assets/pets/cat_nala.jpg');
+        case 'dog_buddy.jpg': return require('../../assets/pets/dog_buddy.jpg');
+        default: return require('../../assets/pets/dog.png'); // Fallback
+    }
+};

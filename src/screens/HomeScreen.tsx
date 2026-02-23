@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -10,13 +10,15 @@ import {
     Dimensions,
     StatusBar,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Pet, PetCategory, RootStackParamList } from '../types';
-import { PETS_DATA } from '../data/pets';
+import { PETS_DATA, getPetImage } from '../data/pets';
+import { ENDPOINTS } from '../config/api';
 
 const { width } = Dimensions.get('window');
 
@@ -31,8 +33,40 @@ export default function HomeScreen() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [showAllPets, setShowAllPets] = useState(false);
+    const [pets, setPets] = useState<Pet[]>(PETS_DATA);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const filteredPets = PETS_DATA.filter((pet) => {
+    useEffect(() => {
+        fetchPets();
+    }, []);
+
+    const fetchPets = async () => {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+            const response = await fetch(ENDPOINTS.PETS, {
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (response.ok) {
+                const data = await response.json();
+                // Map background string images to frontend require calls
+                const mappedPets = data.map((pet: any) => ({
+                    ...pet,
+                    image: typeof pet.image === 'string' ? getPetImage(pet.image) : pet.image
+                }));
+                setPets(mappedPets);
+            }
+        } catch (error) {
+            console.log('Error fetching pets, using local data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const filteredPets = pets.filter((pet) => {
         const matchesCategory = !selectedCategory || selectedCategory === 'all' || pet.type === selectedCategory;
         const query = searchQuery.toLowerCase();
         const matchesSearch = !query ||
@@ -133,7 +167,7 @@ export default function HomeScreen() {
                 <View style={styles.adoptSection}>
                     <View style={styles.sectionHeader}>
                         <Text style={styles.sectionTitle}>Adopt Companion</Text>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={styles.seeAllButton}
                             onPress={() => setShowAllPets(!showAllPets)}
                         >
@@ -142,28 +176,39 @@ export default function HomeScreen() {
                     </View>
 
                     <View style={styles.petsGrid}>
-                        {displayedPets.map((pet) => (
-                            <TouchableOpacity
-                                key={pet.id}
-                                style={styles.petCard}
-                                onPress={() => navigation.navigate('PetDetails', { pet })}
-                            >
-                                <Image source={pet.image} style={styles.petImage} />
-                                <View style={styles.petInfo}>
-                                    <View style={styles.petNameRow}>
-                                        <Text style={styles.petName}>{pet.name}</Text>
-                                        <View style={styles.genderIcon}>
-                                            <Text style={styles.genderText}>
-                                                {pet.gender === 'male' ? '♂' : '♀'}
-                                            </Text>
+                        {isLoading ? (
+                            <View style={{ width: '100%', padding: 40, alignItems: 'center' }}>
+                                <ActivityIndicator size="large" color="#FF741C" />
+                                <Text style={{ color: '#999', marginTop: 10 }}>Fetching latest pets...</Text>
+                            </View>
+                        ) : displayedPets.length > 0 ? (
+                            displayedPets.map((pet) => (
+                                <TouchableOpacity
+                                    key={pet.id}
+                                    style={styles.petCard}
+                                    onPress={() => navigation.navigate('PetDetails', { pet })}
+                                >
+                                    <Image source={pet.image} style={styles.petImage} />
+                                    <View style={styles.petInfo}>
+                                        <View style={styles.petNameRow}>
+                                            <Text style={styles.petName}>{pet.name}</Text>
+                                            <View style={styles.genderIcon}>
+                                                <Text style={styles.genderText}>
+                                                    {pet.gender === 'male' ? '♂' : '♀'}
+                                                </Text>
+                                            </View>
                                         </View>
+                                        <Text style={styles.petBreed}>
+                                            {pet.breed} ({pet.age})
+                                        </Text>
                                     </View>
-                                    <Text style={styles.petBreed}>
-                                        {pet.breed} ({pet.age})
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        ))}
+                                </TouchableOpacity>
+                            ))
+                        ) : (
+                            <View style={{ width: '100%', padding: 40, alignItems: 'center' }}>
+                                <Text style={{ color: '#999' }}>No pets found matching your criteria</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
             </ScrollView>

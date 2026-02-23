@@ -30,6 +30,8 @@ const Checkbox = ({ label, selected, onSelect }: { label: string; selected: bool
 
 export default function AdoptionFormScreen({ route, navigation }: Props) {
     const { pet } = route.params;
+    const [fullName, setFullName] = useState('');
+    const [phone, setPhone] = useState('');
     const [outdoorSpace, setOutdoorSpace] = useState<'yes' | 'no' | null>(null);
     const [pastExperience, setPastExperience] = useState<'yes' | 'no' | null>(null);
     const [walks, setWalks] = useState<'yes' | 'no' | 'notSure' | null>(null);
@@ -37,6 +39,11 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
+        if (!fullName.trim() || !phone.trim()) {
+            Alert.alert('Validation Error', 'Please provide your name and phone number.');
+            return;
+        }
+
         if (!outdoorSpace || !pastExperience || !walks) {
             Alert.alert('Validation Error', 'Please answer all lifestyle questions.');
             return;
@@ -46,7 +53,7 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
         setIsLoading(true);
         try {
 
-            // Add a 10-second timeout
+            // Add a 20-second timeout
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 20000);
 
@@ -59,6 +66,9 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
                 },
                 body: JSON.stringify({
                     petId: pet.id,
+                    petName: pet.name,
+                    applicantName: fullName,
+                    applicantPhone: phone,
                     outdoorSpace,
                     pastExperience,
                     walks,
@@ -112,7 +122,38 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
                 {/* Form Card */}
                 <View style={styles.formCard}>
-                    <Text style={styles.sectionTitle}>Lifestyle</Text>
+                    <Text style={styles.sectionTitle}>Contact Info</Text>
+
+                    {/* Full Name */}
+                    <View style={styles.questionSection}>
+                        <Text style={styles.questionText}>Full Name</Text>
+                        <View style={styles.textAreaContainer}>
+                            <TextInput
+                                style={[styles.textArea, { height: 50 }]}
+                                placeholder="Enter your full name"
+                                placeholderTextColor="#999"
+                                value={fullName}
+                                onChangeText={setFullName}
+                            />
+                        </View>
+                    </View>
+
+                    {/* Phone Number */}
+                    <View style={styles.questionSection}>
+                        <Text style={styles.questionText}>Phone Number</Text>
+                        <View style={styles.textAreaContainer}>
+                            <TextInput
+                                style={[styles.textArea, { height: 50 }]}
+                                placeholder="Enter your phone number"
+                                placeholderTextColor="#999"
+                                value={phone}
+                                onChangeText={setPhone}
+                                keyboardType="phone-pad"
+                            />
+                        </View>
+                    </View>
+
+                    <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Lifestyle</Text>
                     <Text style={styles.lifestyleSubtitle}>
                         We will ask you some questions for finding you pets of your choice...
                     </Text>
