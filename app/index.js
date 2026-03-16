@@ -1,19 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, 
-  ActivityIndicator, useWindowDimensions, StatusBar, Platform 
+  ActivityIndicator, useWindowDimensions, StatusBar, Platform, BackHandler, Image, Alert 
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
   ChevronLeft, Syringe, Pill, Cpu, 
-  Stethoscope, MessageSquare 
+  Stethoscope, MessageSquare, Camera, User 
 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
 import { COLORS } from '../src/theme/colors';
+
+// Import all components directly
+import VaccinationList from '../src/features/pet-wallet/vaccination-list';
+import PrescriptionList from '../src/features/pet-wallet/prescription-list';
+import MicrochipDetails from '../src/features/pet-wallet/microchip-details';
+import VetVisitList from '../src/features/pet-wallet/vet-visit-list';
+import AddVaccination from '../src/features/pet-wallet/add-vaccination';
+import AddPrescription from '../src/features/pet-wallet/add-prescription';
+import AddVetVisit from '../src/features/pet-wallet/add-vet-visit';
+import EditVaccination from '../src/features/pet-wallet/edit-vaccination';
+import EditPrescription from '../src/features/pet-wallet/edit-prescription';
+import EditVetVisit from '../src/features/pet-wallet/edit-vet-visit';
+import RecordDetails from '../src/features/pet-wallet/record-details';
 
 // 1. Firebase Imports - Ensuring we use Firestore instead of localhost
 import { db } from '../src/services/firebaseConfig';
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc, setDoc } from "firebase/firestore";
 
 const CategoryCard = ({ icon: Icon, title, width, onPress }) => (
   <TouchableOpacity 
@@ -35,17 +49,139 @@ export default function MedicalWallet() {
   // Default data in case Firebase document hasn't been created yet
   const [petData, setPetData] = useState({ id: "2045288AE", name: "Bunny" });
   const [loading, setLoading] = useState(true);
+  const [currentView, setCurrentView] = useState('main');
+  const [navigationParams, setNavigationParams] = useState({});
+
+  // Navigation helper function
+  const navigate = (view, params = {}) => {
+    setCurrentView(view);
+    setNavigationParams(params);
+  };
+
+  // Go back function
+  const goBack = () => {
+    setCurrentView('main');
+    setNavigationParams({});
+  };
+
+  const handleImagePick = async () => {
+    Alert.alert(
+      'Select Pet Photo',
+      'Choose how you want to add a photo',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { 
+          text: 'Camera', 
+          onPress: () => pickImage('camera')
+        },
+        { 
+          text: 'Gallery', 
+          onPress: () => pickImage('gallery')
+        }
+      ]
+    );
+  };
+
+  const pickImage = async (source) => {
+    try {
+      // Request permissions first
+      if (source === 'camera') {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission Required', 'Camera permission is required to take photos.');
+          return;
+        }
+      } else {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission Required', 'Gallery permission is required to select photos.');
+          return;
+        }
+      }
+
+      let result;
+      
+      if (source === 'camera') {
+        result = await ImagePicker.launchCameraAsync({
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0.8,
+        });
+      } else {
+        result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0.8,
+        });
+      }
+
+      if (!result.canceled && result.assets && result.assets[0]) {
+        const imageUri = result.assets[0].uri;
+        console.log('Selected image URI:', imageUri);
+        await updatePetImage(imageUri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Error', `Failed to select image: ${error.message}`);
+    }
+  };
+
+  const updatePetImage = async (imageUri) => {
+    try {
+      const petDocRef = doc(db, "pets", "bunny_profile");
+      
+      // Try to update first, if document doesn't exist, create it
+      try {
+        await updateDoc(petDocRef, {
+          profileImage: imageUri,
+          updatedAt: new Date()
+        });
+      } catch (updateError) {
+        // If document doesn't exist, create it with setDoc
+        console.log('Document does not exist, creating new one...');
+        await setDoc(petDocRef, {
+          name: petData?.name || 'Bunny',
+          profileImage: imageUri,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+      }
+      
+      // Update local state immediately
+      setPetData(prev => ({ ...prev, profileImage: imageUri }));
+      
+      Alert.alert('Success', 'Pet photo updated successfully!');
+    } catch (error) {
+      console.error('Error updating pet image:', error);
+      console.error('Error details:', error.message);
+      Alert.alert('Error', `Failed to update pet photo: ${error.message}`);
+    }
+  };
+
+  // Handle hardware back button
+  useEffect(() => {
+    const backAction = () => {
+      if (currentView !== 'main') {
+        goBack();
+        return true; // Prevent default behavior
+      }
+      return false; // Allow default behavior (close app)
+    };
+
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+    return () => backHandler.remove();
+  }, [currentView]);
 
   useEffect(() => {
-    /** * FIXED: Removed http://localhost:3000 fetch.
-     * We now listen directly to Bunny's profile in Firestore.
-     * Document Path: pets/bunny_profile
-     */
     const petDocRef = doc(db, "pets", "bunny_profile");
     
     const unsubscribe = onSnapshot(petDocRef, (docSnap) => {
       if (docSnap.exists()) {
-        setPetData({ id: docSnap.id, ...docSnap.data() });
+        const data = docSnap.data();
+        console.log('Pet data from Firebase:', data);
+        console.log('Profile image URI:', data.profileImage);
+        setPetData({ id: docSnap.id, ...data });
       } else {
         console.log("No such pet profile found in Firestore. Using defaults.");
       }
@@ -66,6 +202,41 @@ export default function MedicalWallet() {
     );
   }
 
+  // Render different views based on currentView state
+  if (currentView === 'vaccinations') {
+    return <VaccinationList onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'prescriptions') {
+    return <PrescriptionList onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'microchip') {
+    return <MicrochipDetails onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'vetvisits') {
+    return <VetVisitList onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'add-vaccination') {
+    return <AddVaccination onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'add-prescription') {
+    return <AddPrescription onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'add-vet-visit') {
+    return <AddVetVisit onBack={goBack} navigate={navigate} />;
+  }
+  if (currentView === 'edit-vaccination') {
+    return <EditVaccination onBack={goBack} navigate={navigate} params={navigationParams} />;
+  }
+  if (currentView === 'edit-prescription') {
+    return <EditPrescription onBack={goBack} navigate={navigate} params={navigationParams} />;
+  }
+  if (currentView === 'edit-vet-visit') {
+    return <EditVetVisit onBack={goBack} navigate={navigate} params={navigationParams} />;
+  }
+  if (currentView === 'record-details') {
+    return <RecordDetails onBack={goBack} navigate={navigate} params={navigationParams} />;
+  }
+
   const cardSize = (width - 60) / 2;
 
   return (
@@ -84,10 +255,45 @@ export default function MedicalWallet() {
           </View>
 
           <View style={styles.profileCard}>
-            <View style={styles.avatarPlaceholder} />
+            <TouchableOpacity 
+              style={styles.avatarContainer} 
+              onPress={handleImagePick}
+              activeOpacity={0.7}
+            >
+              {petData?.profileImage ? (
+                <>
+                  <Image 
+                    source={{ uri: petData.profileImage }} 
+                    style={styles.avatarImage}
+                    onError={(error) => {
+                      console.log('Image load error:', error.nativeEvent.error);
+                    }}
+                    onLoad={() => {
+                      console.log('Image loaded successfully:', petData.profileImage);
+                    }}
+                  />
+                  <View style={styles.cameraOverlay}>
+                    <Camera size={12} color="#999" />
+                  </View>
+                </>
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <User size={30} color="#999" />
+                  <Camera size={16} color="#999" style={styles.cameraIcon} />
+                </View>
+              )}
+            </TouchableOpacity>
             <View style={styles.profileInfo}>
               <Text style={styles.petName}>{petData?.name}</Text>
-              <Text style={styles.petId}>ID : {petData?.id || "N/A"}</Text>
+              <TouchableOpacity onPress={handleImagePick}>
+                <Text style={styles.changePhotoText}>Tap to change photo</Text>
+              </TouchableOpacity>
+              {/* Debug info - remove this later */}
+              {__DEV__ && (
+                <Text style={styles.debugText}>
+                  Image: {petData?.profileImage ? 'YES' : 'NO'}
+                </Text>
+              )}
             </View>
           </View>
         </SafeAreaView>
@@ -100,13 +306,13 @@ export default function MedicalWallet() {
             icon={Syringe} 
             title="Vaccinations" 
             width={cardSize} 
-            onPress={() => router.push('/vaccination-details')} 
+            onPress={() => setCurrentView('vaccinations')} 
           />
           <CategoryCard 
             icon={Pill} 
             title="Prescriptions" 
             width={cardSize} 
-            onPress={() => router.push('/prescription-list')} 
+            onPress={() => setCurrentView('prescriptions')} 
           />
         </View>
         <View style={styles.row}>
@@ -114,13 +320,13 @@ export default function MedicalWallet() {
             icon={Cpu} 
             title="Microchip ID" 
             width={cardSize} 
-            onPress={() => router.push('/microchip-details')} 
+            onPress={() => setCurrentView('microchip')} 
           />
           <CategoryCard 
             icon={Stethoscope} 
             title="Vet Visits" 
             width={cardSize} 
-            onPress={() => router.push('/vet-visit-list')} 
+            onPress={() => setCurrentView('vetvisits')} 
           />
         </View>
       </View>
@@ -170,12 +376,57 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 8,
   },
-  avatarPlaceholder: {
-    width: 60, height: 60, borderRadius: 30,
-    backgroundColor: '#E0E0E0', borderWidth: 2, borderColor: '#FFF'
+  avatarContainer: {
+    position: 'relative'
   },
-  profileInfo: { marginLeft: 15 },
+  avatarImage: {
+    width: 60, 
+    height: 60, 
+    borderRadius: 30,
+    borderWidth: 2, 
+    borderColor: '#FFF'
+  },
+  avatarPlaceholder: {
+    width: 60, 
+    height: 60, 
+    borderRadius: 30,
+    backgroundColor: '#E0E0E0', 
+    borderWidth: 2, 
+    borderColor: '#FFF',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  cameraIcon: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    padding: 2
+  },
+  cameraOverlay: {
+    position: 'absolute',
+    bottom: 2,
+    right: 2,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    padding: 2,
+    elevation: 2
+  },
+  profileInfo: { marginLeft: 15, flex: 1 },
   petName: { color: 'white', fontSize: 22, fontWeight: 'bold' },
+  changePhotoText: {
+    color: 'white',
+    fontSize: 12,
+    opacity: 0.8,
+    marginTop: 2
+  },
+  debugText: {
+    color: 'white',
+    fontSize: 10,
+    opacity: 0.6,
+    marginTop: 2
+  },
   petId: { color: 'white', fontSize: 13, opacity: 0.9 },
   gridContainer: { paddingHorizontal: 20, marginTop: 40 },
   row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 20 },

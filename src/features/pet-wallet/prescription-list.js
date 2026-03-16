@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, ScrollView, 
-  StatusBar, ActivityIndicator 
+  StatusBar, ActivityIndicator, Alert 
 } from 'react-native';
-// useSafeAreaInsets handles dynamic padding for notches and status bars on modern devices
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, Plus, ChevronRight, MessageSquare, Pill } from 'lucide-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChevronLeft, Plus, ChevronRight, MessageSquare, Pill, Trash2, Edit } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { COLORS } from '../src/theme/colors';
+import { COLORS } from '../../theme/colors';
 
 // Firebase Imports: Importing the database and Firestore query tools
-import { db } from '../src/services/firebaseConfig';
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from '../../services/firebaseConfig';
+import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from "firebase/firestore";
 
 /**
  * REUSABLE COMPONENT: RecordCard
  * Renders an individual medication entry in the list with a consistent UI.
  */
-const RecordCard = ({ title, dosage, onPress }) => (
+const RecordCard = ({ title, dosage, onPress, onDelete, onEdit }) => (
   <TouchableOpacity style={styles.recordCard} onPress={onPress} activeOpacity={0.7}>
     <View style={styles.cardInfo}>
-      {/* Visual Icon for Medication with a branded circle background */}
       <View style={styles.iconCircle}>
         <Pill size={20} color={COLORS.primary} />
       </View>
@@ -29,14 +27,18 @@ const RecordCard = ({ title, dosage, onPress }) => (
         <Text style={styles.recordDate}>{dosage}</Text>
       </View>
     </View>
-    {/* Visual indicator (chevron) that the card is clickable */}
-    <View style={styles.arrowCircle}>
-      <ChevronRight size={20} color="#333" />
+    <View style={styles.actionButtons}>
+      <TouchableOpacity style={styles.editButton} onPress={onEdit}>
+        <Edit size={16} color={COLORS.primary} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+        <Trash2 size={16} color="#FF4444" />
+      </TouchableOpacity>
     </View>
   </TouchableOpacity>
 );
 
-export default function PrescriptionList() {
+export default function PrescriptionList({ onBack, navigate }) {
   const router = useRouter(); // Expo router hook for navigation
   const insets = useSafeAreaInsets(); // FIX: Dynamically handles the status bar / notch height
   
@@ -68,22 +70,45 @@ export default function PrescriptionList() {
     return () => unsubscribe();
   }, []);
 
-  /**
-   * HANDLER: handleRecordPress
-   * Navigates to 'record-details' and passes the specific parameters required for the
-   * Prescription UI style (hiding pet name, reports, etc.)
-   */
+  const handleDelete = async (id) => {
+    Alert.alert(
+      'Delete Record',
+      'Are you sure you want to delete this prescription?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteDoc(doc(db, 'prescriptions', id));
+            } catch (error) {
+              Alert.alert('Error', 'Failed to delete record');
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const handleRecordPress = (item) => {
-    router.push({
-      pathname: '/record-details',
-      params: { 
-        id: item.id, 
-        type: 'prescriptions', // CRITICAL: This triggers the Prescription style in record-details.js
-        title: item.medName, 
-        dosage: item.dosage,
-        date: item.startDate,    // Maps startDate to generic 'date' param
-        endDate: item.endDate    // Passes the duration specific to prescriptions
-      }
+    navigate('record-details', { 
+      id: item.id, 
+      type: 'prescriptions',
+      title: item.medName, 
+      dosage: item.dosage,
+      date: item.startDate,
+      endDate: item.endDate
+    });
+  };
+
+  const handleEdit = (item) => {
+    navigate('edit-prescription', { 
+      id: item.id,
+      medName: item.medName,
+      dosage: item.dosage,
+      startDate: item.startDate,
+      endDate: item.endDate
     });
   };
 
@@ -98,7 +123,7 @@ export default function PrescriptionList() {
       <View style={[styles.headerBackground, { paddingTop: insets.top + 10 }]}>
         <View style={styles.headerRow}>
           {/* Back Button */}
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <TouchableOpacity onPress={onBack} style={styles.backButton}>
             <ChevronLeft color="#333" size={24} />
           </TouchableOpacity>
           
@@ -113,7 +138,7 @@ export default function PrescriptionList() {
         {/* ACTION BUTTON: Entry point for adding new medication */}
         <TouchableOpacity 
           style={styles.addButton} 
-          onPress={() => router.push('/add-prescription')}
+          onPress={() => navigate('add-prescription')}
         >
           <Plus color="white" size={24} style={{ marginRight: 10 }} />
           <Text style={styles.addButtonText}>Add New Prescription</Text>
@@ -132,7 +157,9 @@ export default function PrescriptionList() {
               key={item.id}
               title={item.medName} 
               dosage={item.dosage} 
-              onPress={() => handleRecordPress(item)} 
+              onPress={() => handleRecordPress(item)}
+              onDelete={() => handleDelete(item.id)}
+              onEdit={() => handleEdit(item)}
             />
           ))
         )}
@@ -188,14 +215,18 @@ const styles = StyleSheet.create({
   recordTitle: { fontSize: 18, fontWeight: '600', color: '#333' },
   recordDate: { fontSize: 14, color: '#888', marginTop: 5 },
   emptyText: { textAlign: 'center', color: '#999', marginTop: 40, fontSize: 16 },
-  arrowCircle: { 
-    width: 36, 
-    height: 36, 
-    borderRadius: 18, 
-    borderWidth: 1, 
-    borderColor: '#EEE', 
-    alignItems: 'center', 
-    justifyContent: 'center' 
+  actionButtons: { flexDirection: 'row', gap: 8 },
+  editButton: {
+    backgroundColor: '#FFF0E6',
+    padding: 8,
+    borderRadius: 12,
+    elevation: 1
+  },
+  deleteButton: {
+    backgroundColor: '#FFE6E6',
+    padding: 8,
+    borderRadius: 12,
+    elevation: 1
   },
   fabContainer: { position: 'absolute', width: '100%', alignItems: 'center' },
   fab: { 

@@ -5,10 +5,10 @@ import {
 } from 'react-native';
 import { ChevronLeft, Plus, ChevronRight, MessageSquare, FileText } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
-import { COLORS } from '../src/theme/colors';
+import { COLORS } from '../../theme/colors';
 
 // --- FIREBASE IMPORTS ---
-import { db } from '../src/services/firebaseConfig';
+import { db } from '../../services/firebaseConfig';
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
 /**
