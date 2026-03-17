@@ -29,7 +29,7 @@ const homeStyles = StyleSheet.create({
     marginTop: 8,
   },
   heroCard: {
-    backgroundColor: '#F5B87A',
+    backgroundColor: '#FF741C',
     borderRadius: 24,
     overflow: 'hidden',
     alignItems: 'center',
