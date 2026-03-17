@@ -29,7 +29,7 @@ const homeStyles = StyleSheet.create({
     marginTop: 8,
   },
   heroCard: {
-    backgroundColor: '#FF741C',
+    backgroundColor: '#F5B87A',
     borderRadius: 24,
     overflow: 'hidden',
     alignItems: 'center',
@@ -92,7 +92,7 @@ const homeStyles = StyleSheet.create({
     paddingRight: 8,
   },
   seeAllButton: {
-    backgroundColor: '#E87A3A',
+    backgroundColor: '#FF741C',
     paddingHorizontal: 24,
     paddingVertical: 8,
     borderRadius: 20,
