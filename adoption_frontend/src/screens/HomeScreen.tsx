@@ -67,6 +67,10 @@ export default function HomeScreen() {
     };
 
     const filteredPets = pets.filter((pet) => {
+        // Only allow 'cat' and 'dog' types to be shown on the frontend
+        const isValidType = pet.type === 'cat' || pet.type === 'dog';
+        if (!isValidType) return false;
+
         const matchesCategory = !selectedCategory || selectedCategory === 'all' || pet.type === selectedCategory;
         const query = searchQuery.toLowerCase();
         const matchesSearch = !query ||
