@@ -17,7 +17,7 @@ function getIPAddress() {
 }
 
 const currentIP = getIPAddress();
-const frontendConfigPath = path.resolve(__dirname, '../../../../Documents/petbuddy-G138/src/config/api.ts');
+const frontendConfigPath = path.resolve(__dirname, '../../../Documents/petbuddy-G138/src/config/api.ts');
 
 // Check if file exists before trying to write
 if (fs.existsSync(frontendConfigPath)) {
