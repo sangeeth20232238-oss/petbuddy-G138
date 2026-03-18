@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView,
+  StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, SafeAreaView, Modal,
 } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
@@ -9,6 +9,15 @@ const TIME_SLOTS = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'];
 const REASONS = ['Bathing', 'Hair Trimming', 'Ear Cleaning', 'Nail Trimming', 'Teeth Brushing', 'Flea Treatment'];
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+const SERVICES = [
+  { name: 'Bathing', price: 'LKR 2,500' },
+  { name: 'Hair Trimming', price: 'LKR 1,800' },
+  { name: 'Nail Trimming', price: 'LKR 800' },
+  { name: 'Ear Cleaning', price: 'LKR 600' },
+  { name: 'Teeth Brushing', price: 'LKR 1,000' },
+  { name: 'Flea Treatment', price: 'LKR 3,200' },
+];
+
 const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 const getFirstDay = (year, month) => new Date(year, month, 1).getDay();
 
@@ -16,18 +25,29 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
   const salon = {
     name: location?.name || 'The Groom Room',
     address: location?.address || 'No. 12, Flower Road, Colombo 07, Sri Lanka',
+    landmark: location?.landmark || 'Near Colombo City Centre Mall, Colombo 07',
+    phone: location?.phone || '+94 11 234 5678',
     hours: location?.hours || 'Mon-Fri: 10 am – 6 pm, Sat: 9 am – 1 pm',
     image: location?.image || 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80',
-    services: location?.services || ['Bathing', 'Hair Trimming', 'Nail Trimming', 'Ear Cleaning', 'Teeth Brushing', 'Flea Treatment'],
+    services: SERVICES,
   };
 
   const [step, setStep] = useState(1);
+  const [showCallModal, setShowCallModal] = useState(false);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDate, setSelectedDate] = useState(today.getDate());
   const [selectedTime, setSelectedTime] = useState('10:00 AM');
-  const [selectedReason, setSelectedReason] = useState('Bathing');
+  const [selectedReason, setSelectedReason] = useState(['Bathing']);
+
+  const toggleReason = (r) => {
+    setSelectedReason(prev =>
+      prev.includes(r) ? prev.filter(x => x !== r) : [...prev, r]
+    );
+  };
 
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDay(year, month);
@@ -61,18 +81,17 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           <Image source={{ uri: salon.image }} style={styles.salonImage} />
 
           <View style={styles.actionRow}>
-            <TouchableOpacity style={styles.actionBtn}>
+            <TouchableOpacity style={styles.actionBtn} onPress={() => setShowCallModal(true)}>
               <Ionicons name="call" size={22} color="#FFFFFF" />
               <Text style={styles.actionLabel}>Call</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionBtn}>
+            <TouchableOpacity style={styles.actionBtn} onPress={() => setShowLocationModal(true)}>
               <Ionicons name="location" size={22} color="#FFFFFF" />
               <Text style={styles.actionLabel}>Directions</Text>
             </TouchableOpacity>
           </View>
 
           <Text style={styles.sectionTitle}>Details</Text>
-
           <View style={styles.detailCard}>
             <View style={styles.detailRow}>
               <View style={styles.detailIconBox}>
@@ -96,7 +115,6 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </View>
 
           <Text style={styles.sectionTitle}>Services</Text>
-
           <View style={styles.servicesCard}>
             {salon.services.map((s, i) => (
               <View key={i}>
@@ -104,8 +122,8 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
                   <View style={styles.serviceIconBox}>
                     <FontAwesome5 name="paw" size={13} color="#F48C06" />
                   </View>
-                  <Text style={styles.serviceText}>{s}</Text>
-                  <Ionicons name="chevron-forward" size={16} color="#CCCCCC" />
+                  <Text style={styles.serviceText}>{s.name}</Text>
+                  <Text style={styles.servicePrice}>{s.price}</Text>
                 </View>
                 {i < salon.services.length - 1 && <View style={styles.divider} />}
               </View>
@@ -117,6 +135,39 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
             <Ionicons name="arrow-forward" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
           </TouchableOpacity>
         </ScrollView>
+
+        {/* Call Modal */}
+        <Modal transparent visible={showCallModal} animationType="fade" onRequestClose={() => setShowCallModal(false)}>
+          <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowCallModal(false)}>
+            <View style={styles.modalBox}>
+              <View style={styles.modalIconBox}>
+                <Ionicons name="call" size={28} color="#F48C06" />
+              </View>
+              <Text style={styles.modalTitle}>{salon.name}</Text>
+              <Text style={styles.modalPhone}>{salon.phone}</Text>
+              <TouchableOpacity style={styles.modalBtn} onPress={() => setShowCallModal(false)}>
+                <Text style={styles.modalBtnText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+
+        {/* Location Modal */}
+        <Modal transparent visible={showLocationModal} animationType="fade" onRequestClose={() => setShowLocationModal(false)}>
+          <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowLocationModal(false)}>
+            <View style={styles.modalBox}>
+              <View style={styles.modalIconBox}>
+                <Ionicons name="location" size={28} color="#F48C06" />
+              </View>
+              <Text style={styles.modalTitle}>Location</Text>
+              <Text style={styles.modalAddress}>{salon.address}</Text>
+              <Text style={styles.modalLandmark}>{salon.landmark}</Text>
+              <TouchableOpacity style={styles.modalBtn} onPress={() => setShowLocationModal(false)}>
+                <Text style={styles.modalBtnText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       </SafeAreaView>
     );
   }
@@ -145,11 +196,9 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
               </TouchableOpacity>
             </View>
           </View>
-
           <View style={styles.dayLabels}>
             {DAYS.map(d => <Text key={d} style={styles.dayLabel}>{d}</Text>)}
           </View>
-
           <View style={styles.calendarGrid}>
             {calendarCells.map((day, i) => (
               <TouchableOpacity
@@ -182,15 +231,15 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
 
         <Text style={styles.sectionTitle}>Reason for Visit</Text>
         {REASONS.map((r) => (
-          <TouchableOpacity key={r} style={styles.reasonRow} onPress={() => setSelectedReason(r)}>
+          <TouchableOpacity key={r} style={styles.reasonRow} onPress={() => toggleReason(r)}>
             <View style={styles.reasonLeft}>
               <View style={styles.reasonIconBox}>
                 <MaterialIcons name="pets" size={16} color="#F48C06" />
               </View>
               <Text style={styles.reasonText}>{r}</Text>
             </View>
-            <View style={[styles.radio, selectedReason === r && styles.radioSelected]}>
-              {selectedReason === r && <View style={styles.radioDot} />}
+            <View style={[styles.checkbox, selectedReason.includes(r) && styles.checkboxSelected]}>
+              {selectedReason.includes(r) && <Ionicons name="checkmark" size={14} color="#FFFFFF" />}
             </View>
           </TouchableOpacity>
         ))}
@@ -226,8 +275,18 @@ const styles = StyleSheet.create({
   serviceRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 12 },
   serviceIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
   serviceText: { flex: 1, fontSize: 14, color: '#1A1A1A' },
+  servicePrice: { fontSize: 13, fontWeight: '600', color: '#F48C06' },
   bookBtn: { flexDirection: 'row', backgroundColor: '#F48C06', borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
   bookBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
+  modalBox: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 28, width: '78%', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10, elevation: 10 },
+  modalIconBox: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center', marginBottom: 14 },
+  modalTitle: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 8, textAlign: 'center' },
+  modalPhone: { fontSize: 20, fontWeight: 'bold', color: '#F48C06', marginBottom: 20 },
+  modalAddress: { fontSize: 13, color: '#444444', textAlign: 'center', lineHeight: 20, marginBottom: 6 },
+  modalLandmark: { fontSize: 12, color: '#888888', textAlign: 'center', marginBottom: 20 },
+  modalBtn: { backgroundColor: '#F48C06', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 36 },
+  modalBtnText: { color: '#FFFFFF', fontWeight: '600', fontSize: 14 },
   calendarBox: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 5, elevation: 2 },
   calendarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   monthLabel: { fontSize: 15, fontWeight: '600', color: '#1A1A1A' },
@@ -249,9 +308,8 @@ const styles = StyleSheet.create({
   reasonLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   reasonIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
   reasonText: { fontSize: 14, color: '#1A1A1A' },
-  radio: { width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
-  radioSelected: { borderColor: '#F48C06' },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#F48C06' },
+  checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
+  checkboxSelected: { backgroundColor: '#F48C06', borderColor: '#F48C06' },
 });
 
 export default GroomingApt;
