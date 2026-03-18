@@ -244,7 +244,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={onConfirm}>
+        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason })}>
           <Text style={styles.bookBtnText}>Confirm Booking</Text>
           <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
