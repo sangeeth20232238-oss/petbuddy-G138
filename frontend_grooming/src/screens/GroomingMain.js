@@ -55,14 +55,9 @@ const GroomingMain = () => {
         </View>
       </ScrollView>
 
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIconActive}>⌂</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>👤</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity style={styles.floatingChat}>
+        <Text style={styles.floatingChatIcon}>💬</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -84,10 +79,8 @@ const styles = StyleSheet.create({
   cardContainer: { width: '47%', backgroundColor: '#FFFFFF', borderRadius: 15, padding: 12, alignItems: 'center', marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
   cardImage: { width: '100%', height: 90, borderRadius: 10, marginBottom: 10 },
   cardTitle: { fontSize: 13, fontWeight: '500', color: '#1A1A1A', textAlign: 'center' },
-  bottomNav: { position: 'absolute', bottom: 0, width: '100%', flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#FFFFFF', paddingVertical: 15, borderTopWidth: 1, borderTopColor: '#F0E5DB' },
-  navItem: { justifyContent: 'center', alignItems: 'center' },
-  navIconActive: { fontSize: 28, color: '#F48C06' },
-  navIcon: { fontSize: 24, color: '#F48C06' },
+  floatingChat: { position: 'absolute', bottom: 30, alignSelf: 'center', left: '50%', marginLeft: -28, width: 56, height: 56, borderRadius: 28, backgroundColor: '#F48C06', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 6, elevation: 8 },
+  floatingChatIcon: { fontSize: 26 },
 });
 
 export default GroomingMain;
