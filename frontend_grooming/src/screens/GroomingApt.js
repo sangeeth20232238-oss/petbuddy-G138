@@ -12,12 +12,12 @@ const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 const getFirstDay = (year, month) => new Date(year, month, 1).getDay();
 
 const GroomingApt = ({ onBack, onConfirm, location }) => {
-  const salon = location || {
-    name: 'The Groom Room',
-    address: 'No. 12, Flower Road, Colombo 07, Sri Lanka',
-    hours: 'Mon-Fri: 10 am – 6 pm, Sat: 9 am – 1 pm',
-    image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80',
-    services: ['Bathing', 'Hair Trimming', 'Nail Trimming', 'Ear Cleaning', 'Teeth Brushing', 'Flea Treatment'],
+  const salon = {
+    name: location?.name || 'The Groom Room',
+    address: location?.address || 'No. 12, Flower Road, Colombo 07, Sri Lanka',
+    hours: location?.hours || 'Mon-Fri: 10 am – 6 pm, Sat: 9 am – 1 pm',
+    image: location?.image || 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&q=80',
+    services: location?.services || ['Bathing', 'Hair Trimming', 'Nail Trimming', 'Ear Cleaning', 'Teeth Brushing', 'Flea Treatment'],
   };
 
   const [step, setStep] = useState(1);
@@ -97,7 +97,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           ))}
 
           <TouchableOpacity style={styles.bookBtn} onPress={() => setStep(2)}>
-            <Text style={styles.bookBtnText}>Book Appointment</Text>
+            <Text style={styles.bookBtnText}>Continue</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
