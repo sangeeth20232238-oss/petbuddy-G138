@@ -18,7 +18,7 @@ const SERVICES = [
   { id: '6', title: 'Flea Treatment', image: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&q=80' },
 ];
 
-const GroomingMain = () => {
+const GroomingMain = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -47,7 +47,11 @@ const GroomingMain = () => {
 
         <View style={styles.gridContainer}>
           {SERVICES.map((service) => (
-            <TouchableOpacity key={service.id} style={styles.cardContainer}>
+            <TouchableOpacity 
+              key={service.id} 
+              style={styles.cardContainer}
+              onPress={() => navigation.navigate('GroomingLocation')}
+            >
               <Image source={{ uri: service.image }} style={styles.cardImage} />
               <Text style={styles.cardTitle}>{service.title}</Text>
             </TouchableOpacity>
