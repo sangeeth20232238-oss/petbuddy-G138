@@ -16,9 +16,15 @@ const SERVICES = [
   { id: '4', title: 'Ear Cleaning', image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?w=300&q=80' },
   { id: '5', title: 'Teeth Brushing', image: 'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=300&q=80' },
   { id: '6', title: 'Flea Treatment', image: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&q=80' },
+  { id: '7', title: 'Full Grooming Package', image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&q=80' },
+  { id: '8', title: 'Coat Brushing', image: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=300&q=80' },
+  { id: '9', title: 'Paw Massage', image: 'https://images.unsplash.com/photo-1601758124510-52d02ddb7cbd?w=300&q=80' },
+  { id: '10', title: 'De-shedding', image: 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=300&q=80' },
+  { id: '11', title: 'Skin Treatment', image: 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=300&q=80' },
+  { id: '12', title: 'Perfume & Styling', image: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&q=80' },
 ];
 
-const GroomingMain = () => {
+const GroomingMain = ({ onServicePress }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -47,7 +53,7 @@ const GroomingMain = () => {
 
         <View style={styles.gridContainer}>
           {SERVICES.map((service) => (
-            <TouchableOpacity key={service.id} style={styles.cardContainer}>
+            <TouchableOpacity key={service.id} style={styles.cardContainer} onPress={onServicePress}>
               <Image source={{ uri: service.image }} style={styles.cardImage} />
               <Text style={styles.cardTitle}>{service.title}</Text>
             </TouchableOpacity>
