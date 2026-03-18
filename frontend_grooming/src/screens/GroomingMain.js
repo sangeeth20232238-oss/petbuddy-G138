@@ -18,7 +18,7 @@ const SERVICES = [
   { id: '6', title: 'Flea Treatment', image: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&q=80' },
 ];
 
-const GroomingMain = ({ navigation }) => {
+const GroomingMain = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -47,18 +47,13 @@ const GroomingMain = ({ navigation }) => {
 
         <View style={styles.gridContainer}>
           {SERVICES.map((service) => (
-            <TouchableOpacity 
-              key={service.id} 
-              style={styles.cardContainer}
-              onPress={() => navigation.navigate('GroomingLocation')}
-            >
+            <TouchableOpacity key={service.id} style={styles.cardContainer}>
               <Image source={{ uri: service.image }} style={styles.cardImage} />
               <Text style={styles.cardTitle}>{service.title}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-
 
     </SafeAreaView>
   );
@@ -81,7 +76,6 @@ const styles = StyleSheet.create({
   cardContainer: { width: '47%', backgroundColor: '#FFFFFF', borderRadius: 15, padding: 12, alignItems: 'center', marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
   cardImage: { width: '100%', height: 90, borderRadius: 10, marginBottom: 10 },
   cardTitle: { fontSize: 13, fontWeight: '500', color: '#1A1A1A', textAlign: 'center' },
-
 });
 
 export default GroomingMain;
