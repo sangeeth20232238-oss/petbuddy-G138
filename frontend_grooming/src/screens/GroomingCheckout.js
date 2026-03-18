@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, TextInput, Alert,
+  StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Alert,
 } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
@@ -14,19 +14,14 @@ const SERVICE_PRICES = {
 };
 
 const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
-  const [petName, setPetName] = useState('');
-  const [petDob, setPetDob] = useState('');
-  const [gender, setGender] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState(null);
 
   const services = bookingData?.services || [];
   const total = services.reduce((sum, s) => sum + (SERVICE_PRICES[s] || 0), 0);
 
   const handleConfirm = () => {
-    if (!petName.trim()) { Alert.alert('Missing Info', 'Please enter your pet\'s name.'); return; }
-    if (!petDob.trim()) { Alert.alert('Missing Info', 'Please enter your pet\'s date of birth.'); return; }
-    if (!gender) { Alert.alert('Missing Info', 'Please select your pet\'s gender.'); return; }
-    if (services.length === 0) { Alert.alert('Missing Info', 'No services selected.'); return; }
-    onConfirm({ petName, petDob, gender, services, total });
+    if (!paymentMethod) { Alert.alert('Payment Required', 'Please select a payment method.'); return; }
+    onConfirm({ ...bookingData, paymentMethod, total });
   };
 
   return (
@@ -41,54 +36,62 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
 
-        {/* Pet Details */}
-        <Text style={styles.sectionTitle}>Pet Details</Text>
+        {/* Pet Info */}
+        <Text style={styles.sectionTitle}>Pet Information</Text>
         <View style={styles.card}>
-          <View style={styles.inputRow}>
-            <View style={styles.inputIconBox}>
-              <FontAwesome5 name="paw" size={14} color="#F48C06" />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIconBox}>
+              {bookingData?.petType === 'Cat'
+                ? <FontAwesome5 name="cat" size={14} color="#F48C06" />
+                : <FontAwesome5 name="dog" size={14} color="#F48C06" />}
             </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Pet's Name"
-              placeholderTextColor="#AAAAAA"
-              value={petName}
-              onChangeText={setPetName}
-            />
+            <Text style={styles.infoLabel}>Type</Text>
+            <Text style={styles.infoValue}>{bookingData?.petType || '—'}</Text>
           </View>
           <View style={styles.divider} />
-          <View style={styles.inputRow}>
-            <View style={styles.inputIconBox}>
-              <Ionicons name="calendar-outline" size={16} color="#F48C06" />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIconBox}>
+              <FontAwesome5 name="paw" size={13} color="#F48C06" />
             </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Date of Birth (DD/MM/YYYY)"
-              placeholderTextColor="#AAAAAA"
-              value={petDob}
-              onChangeText={setPetDob}
-              keyboardType="numeric"
-            />
+            <Text style={styles.infoLabel}>Name</Text>
+            <Text style={styles.infoValue}>{bookingData?.petName || '—'}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIconBox}>
+              <Ionicons name="calendar-outline" size={15} color="#F48C06" />
+            </View>
+            <Text style={styles.infoLabel}>DOB</Text>
+            <Text style={styles.infoValue}>{bookingData?.petDob || '—'}</Text>
           </View>
         </View>
 
-        {/* Gender */}
-        <Text style={styles.sectionTitle}>Gender</Text>
-        <View style={styles.genderRow}>
-          <TouchableOpacity
-            style={[styles.genderBtn, gender === 'Male' && styles.genderBtnSelected]}
-            onPress={() => setGender('Male')}
-          >
-            <Ionicons name="male" size={20} color={gender === 'Male' ? '#FFFFFF' : '#F48C06'} />
-            <Text style={[styles.genderText, gender === 'Male' && styles.genderTextSelected]}>Male</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.genderBtn, gender === 'Female' && styles.genderBtnSelected]}
-            onPress={() => setGender('Female')}
-          >
-            <Ionicons name="female" size={20} color={gender === 'Female' ? '#FFFFFF' : '#F48C06'} />
-            <Text style={[styles.genderText, gender === 'Female' && styles.genderTextSelected]}>Female</Text>
-          </TouchableOpacity>
+        {/* Appointment Info */}
+        <Text style={styles.sectionTitle}>Appointment Info</Text>
+        <View style={styles.card}>
+          <View style={styles.infoRow}>
+            <View style={styles.infoIconBox}>
+              <Ionicons name="storefront-outline" size={15} color="#F48C06" />
+            </View>
+            <Text style={styles.infoLabel}>Salon</Text>
+            <Text style={styles.infoValue}>{bookingData?.salon || '—'}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIconBox}>
+              <Ionicons name="calendar-outline" size={15} color="#F48C06" />
+            </View>
+            <Text style={styles.infoLabel}>Date</Text>
+            <Text style={styles.infoValue}>{bookingData?.date || '—'}</Text>
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.infoRow}>
+            <View style={styles.infoIconBox}>
+              <Ionicons name="time-outline" size={15} color="#F48C06" />
+            </View>
+            <Text style={styles.infoLabel}>Time</Text>
+            <Text style={styles.infoValue}>{bookingData?.time || '—'}</Text>
+          </View>
         </View>
 
         {/* Selected Services */}
@@ -100,7 +103,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
             {services.map((s, i) => (
               <View key={i}>
                 <View style={styles.serviceRow}>
-                  <View style={styles.serviceIconBox}>
+                  <View style={styles.infoIconBox}>
                     <MaterialIcons name="pets" size={14} color="#F48C06" />
                   </View>
                   <Text style={styles.serviceText}>{s}</Text>
@@ -112,27 +115,39 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           </View>
         )}
 
-        {/* Appointment Info */}
-        <Text style={styles.sectionTitle}>Appointment Info</Text>
-        <View style={styles.card}>
-          <View style={styles.infoRow}>
-            <Ionicons name="storefront-outline" size={16} color="#F48C06" />
-            <Text style={styles.infoLabel}>Salon</Text>
-            <Text style={styles.infoValue}>{bookingData?.salon || '—'}</Text>
+        {/* Payment Method */}
+        <Text style={styles.sectionTitle}>Payment Method</Text>
+        <TouchableOpacity
+          style={[styles.paymentOption, paymentMethod === 'card' && styles.paymentOptionSelected]}
+          onPress={() => setPaymentMethod('card')}
+        >
+          <View style={[styles.paymentIconBox, paymentMethod === 'card' && styles.paymentIconBoxSelected]}>
+            <Ionicons name="card-outline" size={22} color={paymentMethod === 'card' ? '#FFFFFF' : '#F48C06'} />
           </View>
-          <View style={styles.divider} />
-          <View style={styles.infoRow}>
-            <Ionicons name="calendar-outline" size={16} color="#F48C06" />
-            <Text style={styles.infoLabel}>Date</Text>
-            <Text style={styles.infoValue}>{bookingData?.date || '—'}</Text>
+          <View style={styles.paymentInfo}>
+            <Text style={[styles.paymentTitle, paymentMethod === 'card' && styles.paymentTitleSelected]}>Card Payment</Text>
+            <Text style={[styles.paymentSub, paymentMethod === 'card' && styles.paymentSubSelected]}>Credit / Debit card</Text>
           </View>
-          <View style={styles.divider} />
-          <View style={styles.infoRow}>
-            <Ionicons name="time-outline" size={16} color="#F48C06" />
-            <Text style={styles.infoLabel}>Time</Text>
-            <Text style={styles.infoValue}>{bookingData?.time || '—'}</Text>
+          <View style={[styles.radio, paymentMethod === 'card' && styles.radioSelected]}>
+            {paymentMethod === 'card' && <View style={styles.radioDot} />}
           </View>
-        </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.paymentOption, paymentMethod === 'cash' && styles.paymentOptionSelected]}
+          onPress={() => setPaymentMethod('cash')}
+        >
+          <View style={[styles.paymentIconBox, paymentMethod === 'cash' && styles.paymentIconBoxSelected]}>
+            <Ionicons name="cash-outline" size={22} color={paymentMethod === 'cash' ? '#FFFFFF' : '#F48C06'} />
+          </View>
+          <View style={styles.paymentInfo}>
+            <Text style={[styles.paymentTitle, paymentMethod === 'cash' && styles.paymentTitleSelected]}>Pay at Visit</Text>
+            <Text style={[styles.paymentSub, paymentMethod === 'cash' && styles.paymentSubSelected]}>Pay in cash at the salon</Text>
+          </View>
+          <View style={[styles.radio, paymentMethod === 'cash' && styles.radioSelected]}>
+            {paymentMethod === 'cash' && <View style={styles.radioDot} />}
+          </View>
+        </TouchableOpacity>
 
         {/* Total */}
         <View style={styles.totalRow}>
@@ -157,24 +172,28 @@ const styles = StyleSheet.create({
   scroll: { paddingHorizontal: 20, paddingBottom: 36 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 12, marginTop: 8 },
   card: { backgroundColor: '#FFFFFF', borderRadius: 14, paddingHorizontal: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, gap: 12 },
-  inputIconBox: { width: 34, height: 34, borderRadius: 10, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
-  input: { flex: 1, fontSize: 14, color: '#1A1A1A' },
   divider: { height: 1, backgroundColor: '#F5F5F5' },
-  genderRow: { flexDirection: 'row', gap: 14, marginBottom: 20 },
-  genderBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 14, borderRadius: 12, borderWidth: 2, borderColor: '#F48C06', backgroundColor: '#FFFFFF' },
-  genderBtnSelected: { backgroundColor: '#F48C06' },
-  genderText: { fontSize: 15, fontWeight: '600', color: '#F48C06' },
-  genderTextSelected: { color: '#FFFFFF' },
+  infoRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 12 },
+  infoIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
+  infoLabel: { fontSize: 13, color: '#888888', width: 44 },
+  infoValue: { flex: 1, fontSize: 13, fontWeight: '600', color: '#1A1A1A', textAlign: 'right' },
   serviceRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 12 },
-  serviceIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
   serviceText: { flex: 1, fontSize: 14, color: '#1A1A1A' },
   servicePrice: { fontSize: 13, fontWeight: '600', color: '#F48C06' },
   emptyText: { fontSize: 13, color: '#999999', marginBottom: 20 },
-  infoRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 10 },
-  infoLabel: { fontSize: 13, color: '#888888', width: 50 },
-  infoValue: { flex: 1, fontSize: 13, fontWeight: '600', color: '#1A1A1A', textAlign: 'right' },
-  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#FFF4E6', borderRadius: 14, paddingVertical: 16, paddingHorizontal: 20, marginBottom: 24 },
+  paymentOption: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 14, padding: 16, marginBottom: 12, borderWidth: 2, borderColor: '#EEEEEE', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 3, elevation: 1 },
+  paymentOptionSelected: { borderColor: '#F48C06', backgroundColor: '#FFFAF4' },
+  paymentIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center', marginRight: 14 },
+  paymentIconBoxSelected: { backgroundColor: '#F48C06' },
+  paymentInfo: { flex: 1 },
+  paymentTitle: { fontSize: 14, fontWeight: '600', color: '#1A1A1A' },
+  paymentTitleSelected: { color: '#F48C06' },
+  paymentSub: { fontSize: 12, color: '#999999', marginTop: 2 },
+  paymentSubSelected: { color: '#F48C06' },
+  radio: { width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
+  radioSelected: { borderColor: '#F48C06' },
+  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#F48C06' },
+  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#FFF4E6', borderRadius: 14, paddingVertical: 16, paddingHorizontal: 20, marginBottom: 24, marginTop: 8 },
   totalLabel: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A' },
   totalValue: { fontSize: 20, fontWeight: 'bold', color: '#F48C06' },
   confirmBtn: { flexDirection: 'row', backgroundColor: '#F48C06', borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
