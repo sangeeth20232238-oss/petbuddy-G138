@@ -36,19 +36,6 @@ const GroomingMain = ({ onServicePress }) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.bannerContainer}>
-          <View style={styles.bannerTextContainer}>
-            <Text style={styles.bannerText}>60% off on</Text>
-            <Text style={styles.bannerText}>New Customers</Text>
-          </View>
-          <View style={styles.bannerImageContainer}>
-            <Image
-              source={{ uri: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400&q=80' }}
-              style={styles.bannerImage}
-            />
-          </View>
-        </View>
-
         <Text style={styles.sectionTitle}>Our Services</Text>
 
         <View style={styles.gridContainer}>
@@ -72,11 +59,11 @@ const styles = StyleSheet.create({
   backButtonText: { fontSize: 20, color: '#000' },
   headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#1A1A1A' },
   scrollContent: { paddingHorizontal: 20, paddingBottom: 80 },
-  bannerContainer: { flexDirection: 'row', backgroundColor: '#A3D611', borderRadius: 15, padding: 20, alignItems: 'center', justifyContent: 'space-between', marginBottom: 25 },
-  bannerTextContainer: { flex: 1 },
-  bannerText: { fontSize: 18, fontWeight: 'bold', color: '#FFFFFF', lineHeight: 24 },
-  bannerImageContainer: { width: 70, height: 70, backgroundColor: '#FFFFFF', borderRadius: 12, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' },
-  bannerImage: { width: 60, height: 60, borderRadius: 10 },
+  bannerContainer: {},
+  bannerTextContainer: {},
+  bannerText: {},
+  bannerImageContainer: {},
+  bannerImage: {},
   sectionTitle: { fontSize: 14, color: '#333333', textAlign: 'center', marginBottom: 20 },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   cardContainer: { width: '47%', backgroundColor: '#FFFFFF', borderRadius: 15, padding: 12, alignItems: 'center', marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
