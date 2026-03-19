@@ -90,7 +90,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
         {/* Payment Summary */}
         <Text style={styles.sectionTitle}>Payment</Text>
         <View style={styles.card}>
-          {maskedCard && (
+          {maskedCard ? (
             <>
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
@@ -100,9 +100,31 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
                 <Text style={styles.infoValue}>{maskedCard}</Text>
               </View>
               <View style={styles.divider} />
+              <View style={styles.infoRow}>
+                <View style={styles.iconBox}>
+                  <Ionicons name="receipt-outline" size={14} color="#F48C06" />
+                </View>
+                <Text style={styles.infoLabel}>Sub Total</Text>
+                <Text style={styles.infoValue}>LKR {subTotal.toLocaleString()}</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.infoRow}>
+                <View style={styles.iconBox}>
+                  <Ionicons name="pricetag-outline" size={14} color="#F48C06" />
+                </View>
+                <Text style={styles.infoLabel}>Service fee</Text>
+                <Text style={styles.infoValue}>LKR {serviceFee.toLocaleString()}</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.infoRow}>
+                <View style={styles.iconBox}>
+                  <Ionicons name="wallet-outline" size={14} color="#F48C06" />
+                </View>
+                <Text style={styles.totalLabel}>Total</Text>
+                <Text style={styles.totalValue}>LKR {total.toLocaleString()}</Text>
+              </View>
             </>
-          )}
-          {!maskedCard && (
+          ) : (
             <>
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
@@ -112,31 +134,15 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
                 <Text style={styles.infoValue}>Pay at Visit</Text>
               </View>
               <View style={styles.divider} />
+              <View style={styles.infoRow}>
+                <View style={styles.iconBox}>
+                  <Ionicons name="wallet-outline" size={14} color="#F48C06" />
+                </View>
+                <Text style={styles.totalLabel}>Total</Text>
+                <Text style={styles.totalValue}>LKR {total.toLocaleString()}</Text>
+              </View>
             </>
           )}
-          <View style={styles.infoRow}>
-            <View style={styles.iconBox}>
-              <Ionicons name="receipt-outline" size={14} color="#F48C06" />
-            </View>
-            <Text style={styles.infoLabel}>Sub Total</Text>
-            <Text style={styles.infoValue}>LKR {subTotal.toLocaleString()}</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.infoRow}>
-            <View style={styles.iconBox}>
-              <Ionicons name="pricetag-outline" size={14} color="#F48C06" />
-            </View>
-            <Text style={styles.infoLabel}>Service fee</Text>
-            <Text style={styles.infoValue}>LKR {serviceFee.toLocaleString()}</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.infoRow}>
-            <View style={styles.iconBox}>
-              <Ionicons name="wallet-outline" size={14} color="#F48C06" />
-            </View>
-            <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>LKR {total.toLocaleString()}</Text>
-          </View>
         </View>
 
         <TouchableOpacity style={styles.homeBtn} onPress={onHome}>
