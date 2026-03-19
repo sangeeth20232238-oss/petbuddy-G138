@@ -30,7 +30,7 @@ export default function ClinicDetailScreen({ route, navigation }) {
                     <View><Text style={styles.label}>Hours</Text><Text style={styles.value}>Mon-Fri: 8am-6pm, Sat: 9am-1pm</Text></View>
                 </View>
             </View>
-            <TouchableOpacity style={styles.bookBtn} onPress={() => navigation.navigate('DoctorList')}>
+            <TouchableOpacity style={styles.bookBtn} onPress={() => navigation.navigate('DoctorList', { clinic })}>
                 <Text style={styles.bookText}>Book Appointment</Text>
             </TouchableOpacity>
         </SafeAreaView>
