@@ -190,4 +190,88 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  
+  // Full Card Styles — Enhanced
+  fullCard: {
+    backgroundColor: '#FFF8F0',
+    borderRadius: 22,
+    padding: 18,
+    marginBottom: 18,
+    marginHorizontal: 4,
+    // Enhanced shadow
+    shadowColor: '#C47A3A',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.14,
+    shadowRadius: 12,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#F5E6D6',
+  },
+  fullHeader: {
+    marginBottom: 10,
+  },
+  ownerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ownerName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#3D2514',
+    marginLeft: 10,
+  },
+  fullDescription: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: '#2D1A0E',
+    marginBottom: 12,
+    lineHeight: 21,
+  },
+  fullImage: {
+    width: '100%',
+    height: 180,
+    borderRadius: 16,
+    marginBottom: 12,
+  },
+  placeholderImage: {
+    backgroundColor: '#FAEADC',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    fontSize: 11,
+    color: '#C9A07B',
+    fontWeight: '600',
+    marginTop: 4,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 10,
+  },
+  dateLost: {
+    fontSize: 13,
+    color: '#E87A3A',
+    fontWeight: '700',
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 18,
+    paddingTop: 6,
+    borderTopWidth: 1,
+    borderTopColor: '#F0E4D8',
+  },
+  actionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  actionText: {
+    fontSize: 12,
+    color: '#7A6554',
+    fontWeight: '600',
+  },
+});
+
+export default AlertCard;
