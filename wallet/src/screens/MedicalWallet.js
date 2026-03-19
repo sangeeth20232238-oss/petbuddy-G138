@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, 
-  SafeAreaView, ActivityIndicator, Alert, StatusBar 
+  SafeAreaView, ActivityIndicator, Alert, StatusBar, 
+  TextInput, Modal, Keyboard 
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { 
   ChevronLeft, Syringe, Pill, Cpu, 
-  Stethoscope, Home, User, MessageSquare 
+  Stethoscope, Home, User, MessageSquare, Edit3, Save, X 
 } from 'lucide-react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router'; // Added useLocalSearchParams
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 
@@ -27,10 +29,41 @@ export default function MedicalWallet() {
   const insets = useSafeAreaInsets();
   
   const params = useLocalSearchParams();
-  const petName = params.name || "Bunny"; 
+  const initialPetName = params.name || "Enter Pet Name"; 
   const petId = params.id || "2045288AE";
 
   const [loading, setLoading] = useState(false);
+  const [petName, setPetName] = useState(initialPetName);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempName, setTempName] = useState(initialPetName);
+
+  useEffect(() => {
+    loadPetName();
+  }, []);
+
+  const loadPetName = async () => {
+    try {
+      const savedName = await AsyncStorage.getItem('@pet_name');
+      if (savedName) setPetName(savedName);
+    } catch (e) {
+      console.log('Error loading pet name', e);
+    }
+  };
+
+  const savePetName = async () => {
+    if (!tempName.trim()) {
+      Alert.alert('Error', 'Pet name cannot be empty');
+      return;
+    }
+    try {
+      await AsyncStorage.setItem('@pet_name', tempName.trim());
+      setPetName(tempName.trim());
+      setIsEditing(false);
+    } catch (e) {
+      console.log('Error saving pet name', e);
+      Alert.alert('Error', 'Failed to save pet name');
+    }
+  };
 
   // Navigation Handlers for the Grid
   const navigateTo = (path) => {
@@ -58,7 +91,12 @@ export default function MedicalWallet() {
           <View style={styles.avatarPlaceholder} />
           <View style={styles.profileInfo}>
             {/* UPDATED: Displays dynamic name and ID */}
-            <Text style={styles.petName}>{petName}</Text>
+            <View style={styles.nameRow}>
+              <Text style={styles.petName}>{petName}</Text>
+              <TouchableOpacity onPress={() => { setTempName(petName); setIsEditing(true); }} style={styles.editIconBtn}>
+                <Edit3 color="white" size={18} />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.petId}>ID : {petId}</Text>
           </View>
         </View>
@@ -100,6 +138,30 @@ export default function MedicalWallet() {
         </TouchableOpacity>
         <TouchableOpacity><User color={COLORS.primary} size={28} /></TouchableOpacity>
       </View>
+
+      {/* Edit Name Modal */}
+      <Modal visible={isEditing} transparent animationType="fade" onRequestClose={() => setIsEditing(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit Pet Name</Text>
+              <TouchableOpacity onPress={() => setIsEditing(false)}>
+                <X color="#333" size={24} />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.modalInput}
+              value={tempName}
+              onChangeText={setTempName}
+              placeholder="Enter pet name"
+              autoFocus
+            />
+            <TouchableOpacity style={styles.saveBtn} onPress={savePetName}>
+              <Text style={styles.saveBtnText}>Save Name</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -143,6 +205,8 @@ const styles = StyleSheet.create({
     borderColor: '#FFF'
   },
   profileInfo: { marginLeft: 15 },
+  nameRow: { flexDirection: 'row', alignItems: 'center' },
+  editIconBtn: { marginLeft: 10, padding: 6, backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: 12 },
   petName: { color: 'white', fontSize: 24, fontWeight: 'bold' },
   petId: { color: 'white', fontSize: 14, opacity: 0.85, marginTop: 4 },
   
@@ -184,5 +248,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: -60,
     elevation: 5,
-  }
+  },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: 'white', width: '85%', borderRadius: 20, padding: 25, elevation: 10 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', color: '#333' },
+  modalInput: { borderWidth: 1, borderColor: '#DDD', borderRadius: 12, padding: 15, fontSize: 16, marginBottom: 20 },
+  saveBtn: { backgroundColor: COLORS.primary, padding: 15, borderRadius: 12, alignItems: 'center' },
+  saveBtnText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
 });

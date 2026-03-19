@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, 
-  ActivityIndicator, useWindowDimensions, StatusBar, Platform, BackHandler, Image, Alert 
+  ActivityIndicator, useWindowDimensions, StatusBar, Platform, BackHandler, Image, Alert, TextInput, Modal
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
   ChevronLeft, Syringe, Pill, Cpu, 
-  Stethoscope, MessageSquare, Camera, User 
+  Stethoscope, MessageSquare, Camera, User, Edit3, X
 } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
@@ -47,10 +47,13 @@ export default function MedicalWallet() {
   const router = useRouter();
   
   // Default data in case Firebase document hasn't been created yet
-  const [petData, setPetData] = useState({ id: "2045288AE", name: "Bunny" });
+  const [petData, setPetData] = useState({ id: "2045288AE", name: "Enter Name" });
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState('main');
   const [navigationParams, setNavigationParams] = useState({});
+
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState('');
 
   // Navigation helper function
   const navigate = (view, params = {}) => {
@@ -62,6 +65,33 @@ export default function MedicalWallet() {
   const goBack = () => {
     setCurrentView('main');
     setNavigationParams({});
+  };
+
+  const updatePetName = async () => {
+    if (!tempName.trim()) {
+      Alert.alert('Error', 'Pet name cannot be empty');
+      return;
+    }
+    try {
+      const petDocRef = doc(db, "pets", "bunny_profile");
+      try {
+        await updateDoc(petDocRef, {
+          name: tempName.trim(),
+          updatedAt: new Date()
+        });
+      } catch (e) {
+        await setDoc(petDocRef, {
+          name: tempName.trim(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+      }
+      setPetData(prev => ({ ...prev, name: tempName.trim() }));
+      setIsEditingName(false);
+    } catch (error) {
+      console.error('Error updating name:', error);
+      Alert.alert('Error', 'Failed to save name');
+    }
   };
 
   const handleImagePick = async () => {
@@ -141,7 +171,7 @@ export default function MedicalWallet() {
         // If document doesn't exist, create it with setDoc
         console.log('Document does not exist, creating new one...');
         await setDoc(petDocRef, {
-          name: petData?.name || 'Bunny',
+          name: petData?.name || 'Enter Name',
           profileImage: imageUri,
           createdAt: new Date(),
           updatedAt: new Date()
@@ -284,7 +314,12 @@ export default function MedicalWallet() {
               )}
             </TouchableOpacity>
             <View style={styles.profileInfo}>
-              <Text style={styles.petName}>{petData?.name}</Text>
+              <View style={styles.nameRow}>
+                <Text style={styles.petName}>{petData?.name || 'Enter Name'}</Text>
+                <TouchableOpacity onPress={() => { setTempName(petData?.name || ''); setIsEditingName(true); }} style={styles.editIconBtn}>
+                  <Edit3 color="white" size={16} />
+                </TouchableOpacity>
+              </View>
               <TouchableOpacity onPress={handleImagePick}>
                 <Text style={styles.changePhotoText}>Tap to change photo</Text>
               </TouchableOpacity>
@@ -337,6 +372,30 @@ export default function MedicalWallet() {
           <MessageSquare color="white" size={30} fill="white" />
         </TouchableOpacity>
       </View>
+
+      {/* Edit Name Modal */}
+      <Modal visible={isEditingName} transparent animationType="fade" onRequestClose={() => setIsEditingName(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Enter pet name</Text>
+              <TouchableOpacity onPress={() => setIsEditingName(false)}>
+                <X color="#333" size={24} />
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.modalInput}
+              value={tempName}
+              onChangeText={setTempName}
+              placeholder="E.g. Fluffy"
+              autoFocus
+            />
+            <TouchableOpacity style={styles.saveBtn} onPress={updatePetName}>
+              <Text style={styles.saveBtnText}>Save</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -456,5 +515,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 10,
-  }
+  },
+  editIconBtn: { marginLeft: 10, padding: 5, backgroundColor: 'rgba(255,255,255,0.25)', borderRadius: 12 },
+  nameRow: { flexDirection: 'row', alignItems: 'center' },
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  modalContent: { backgroundColor: 'white', width: '85%', borderRadius: 20, padding: 25, elevation: 10 },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  modalTitle: { fontSize: 20, fontWeight: 'bold', color: '#333' },
+  modalInput: { borderWidth: 1, borderColor: '#DDD', borderRadius: 12, padding: 15, fontSize: 16, marginBottom: 20 },
+  saveBtn: { backgroundColor: COLORS.primary, padding: 15, borderRadius: 12, alignItems: 'center' },
+  saveBtnText: { color: 'white', fontSize: 16, fontWeight: 'bold' }
 });
