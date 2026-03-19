@@ -66,3 +66,49 @@ const homeStyles = StyleSheet.create({
     marginHorizontal: -6,
     zIndex: 3,
   },
+
+  // Paw watermark
+  pawWatermarkContainer: {
+    position: 'absolute',
+    top: 60,
+    right: -10,
+    transform: [{ rotate: '25deg' }],
+    zIndex: 0,
+  },
+
+  pawIcon: {
+    marginVertical: 6,
+    zIndex: 1,
+  },
+
+  // Animated Emergency Button
+  emergencyButtonWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    width: 130,
+    height: 130,
+  },
+  glowRing: {
+    position: 'absolute',
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    backgroundColor: '#E87A3A',
+  },
+  emergencyButton: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Elevated shadow
+    shadowColor: '#E87A3A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    elevation: 8,
+    borderWidth: 3,
+    borderColor: 'rgba(232, 122, 58, 0.15)',
+  },
