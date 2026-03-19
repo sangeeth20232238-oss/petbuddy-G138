@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 var admin = require("firebase-admin");
 
 const serviceAccount = {
@@ -18,10 +17,12 @@ const serviceAccount = {
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: "petbuddy-138.firebasestorage.app"
+  storageBucket: "petbuddy-138.appspot.com"
 });
 
-const db = admin.firestore();
-const storage = admin.storage();
-
-module.exports = { admin, db, storage };
+const bucket = admin.storage().bucket();
+bucket.getFiles().then((data) => {
+   console.log("Success! Found files:", data[0].length);
+}).catch(e => {
+   console.log("Error:", e.message);
+});
