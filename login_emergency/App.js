@@ -28,6 +28,7 @@ import VolunteerOnboardingScreen from './src/features/pet-buddy/VolunteerOnboard
 
 // Profile 
 import EditProfileScreen from './src/features/profile/EditProfileScreen';
+import AppointmentsScreen from './src/screens/AppointmentsScreen';
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
@@ -69,6 +70,7 @@ export default function App() {
 
         {/* Profile */}
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="Appointments" component={AppointmentsScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
