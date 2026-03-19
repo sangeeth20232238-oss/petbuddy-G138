@@ -1,6 +1,7 @@
-const { db } = require('../firebaseAdmin');
+const { admin, db, storage } = require('../firebaseAdmin');
 
 const petsCollection = db.collection('pets');
+const bucket = storage ? storage.bucket() : null;
 
 exports.getAllPets = async (req, res) => {
     try {
@@ -30,7 +31,32 @@ exports.createPet = async (req, res) => {
         if (!name) {
             return res.status(400).json({ error: 'Pet name is required' });
         }
-        const newPet = { name, ...rest };
+
+        let uploadedUrl = null;
+
+        // If an image file was uploaded via FormData, upload it securely to Firebase Storage
+        if (req.file && bucket) {
+            const filename = `pets/${Date.now()}_${req.file.originalname}`;
+            const file = bucket.file(filename);
+
+            await file.save(req.file.buffer, {
+                metadata: {
+                    contentType: req.file.mimetype,
+                    cacheControl: 'public, max-age=31536000',
+                }
+            });
+
+            await file.makePublic();
+            uploadedUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+        }
+
+        const newPet = { 
+            name, 
+            ...rest,
+            ...(uploadedUrl && { image: uploadedUrl }), // Store new Firebase Storage link if file attached
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+
         const docRef = await petsCollection.add(newPet);
         res.status(201).json({ id: docRef.id, ...newPet });
     } catch (error) {
