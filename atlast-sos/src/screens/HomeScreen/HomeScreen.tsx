@@ -31,6 +31,11 @@ const bulldogImg = require('../../../assets/peeking-pets/bulldog.png');
 const labradorImg = require('../../../assets/peeking-pets/labrador.png');
 const catImg = require('../../../assets/peeking-pets/cat.png');
 
+// Demo pet images for alert cards
+const goldyImg = require('../../../assets/demo-pets/goldy.png');
+const maxImg = require('../../../assets/demo-pets/max.png');
+const lunaImg = require('../../../assets/demo-pets/luna.png');
+
 // Mock data for demo (used when Firebase is not configured)
 const MOCK_ALERTS: LostPetAlert[] = [
   {
@@ -46,7 +51,7 @@ const MOCK_ALERTS: LostPetAlert[] = [
     location: 'Colombo 06',
     description: 'This is my Lost Pet named Goldy!',
     additionalDescription: 'A friendly golden retriever, very playful and responds to the name Goldy.',
-    imageUrl: '',
+    imageUrl: goldyImg,
     likes: 1000,
     comments: 24,
   },
@@ -63,7 +68,7 @@ const MOCK_ALERTS: LostPetAlert[] = [
     location: 'Colombo 03',
     description: 'This is my Lost Pet named Max!',
     additionalDescription: 'Brown labrador with blue collar, very gentle.',
-    imageUrl: '',
+    imageUrl: maxImg,
     likes: 850,
     comments: 15,
   },
@@ -80,7 +85,7 @@ const MOCK_ALERTS: LostPetAlert[] = [
     location: 'Colombo 07',
     description: 'This is my Lost Pet named Luna!',
     additionalDescription: 'White persian cat with pink collar.',
-    imageUrl: '',
+    imageUrl: lunaImg,
     likes: 620,
     comments: 10,
   },

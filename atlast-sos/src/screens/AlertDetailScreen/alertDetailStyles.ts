@@ -56,7 +56,7 @@ const alertDetailStyles = StyleSheet.create({
     paddingTop: 28,
     paddingBottom: 20,
   },
-  
+
   // ---------- Name Row ----------
   nameRow: {
     flexDirection: 'row',

@@ -41,15 +41,14 @@ const CreatePostScreen: React.FC = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const openCamera = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Please allow access to your photo library.');
+      Alert.alert('Permission needed', 'Please allow access to your camera.');
       return;
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
       quality: 0.8,
@@ -58,6 +57,32 @@ const CreatePostScreen: React.FC = () => {
     if (!result.canceled && result.assets[0]) {
       setImageUri(result.assets[0].uri);
     }
+  };
+
+  const openGallery = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission needed', 'Please allow access to your photo library.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setImageUri(result.assets[0].uri);
+    }
+  };
+
+  const pickImage = () => {
+    Alert.alert('Upload Pet Photo', 'Choose an option', [
+      { text: '📷 Take Photo', onPress: openCamera },
+      { text: '🖼️ Choose from Gallery', onPress: openGallery },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
   };
 
   const handleCreatePost = async () => {

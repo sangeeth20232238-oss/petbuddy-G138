@@ -26,7 +26,7 @@ const AlertCard: React.FC<AlertCardProps> = ({ alert, onPress, variant = 'compac
           {alert.description || `This is my Lost Pet named ${alert.petName}!`}
         </Text>
         {alert.imageUrl ? (
-          <Image source={{ uri: alert.imageUrl }} style={styles.fullImage} />
+          <Image source={typeof alert.imageUrl === 'string' ? { uri: alert.imageUrl } : alert.imageUrl} style={styles.fullImage} />
         ) : (
           <View style={[styles.fullImage, styles.placeholderImage]}>
             <Ionicons name="paw" size={42} color="#D4A574" />
@@ -73,7 +73,7 @@ const AlertCard: React.FC<AlertCardProps> = ({ alert, onPress, variant = 'compac
       </Text>
 
       {alert.imageUrl ? (
-        <Image source={{ uri: alert.imageUrl }} style={styles.compactImage} />
+        <Image source={typeof alert.imageUrl === 'string' ? { uri: alert.imageUrl } : alert.imageUrl} style={styles.compactImage} />
       ) : (
         <View style={[styles.compactImage, styles.placeholderImage]}>
           <Ionicons name="paw" size={28} color="#D4A574" />

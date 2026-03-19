@@ -26,7 +26,7 @@ export interface LostPetAlert {
   location: string;
   description: string;
   additionalDescription: string;
-  imageUrl: string;
+  imageUrl: string | number;
   likes: number;
   comments: number;
   createdAt?: any;
