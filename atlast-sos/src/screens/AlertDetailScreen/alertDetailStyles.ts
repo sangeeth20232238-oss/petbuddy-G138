@@ -158,3 +158,76 @@ const alertDetailStyles = StyleSheet.create({
     color: '#1A1A1A',
     marginBottom: 10,
   },
+  descriptionText: {
+    fontSize: 14,
+    color: '#777',
+    lineHeight: 22,
+  },
+
+  // ---------- Details Section ----------
+  detailsSection: {
+    marginBottom: 24,
+  },
+  detailsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  detailCard: {
+    width: (SCREEN_WIDTH - 48 - 12) / 2,
+    backgroundColor: '#FFF5EC',
+    borderRadius: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 14,
+    alignItems: 'center',
+    gap: 6,
+  },
+  detailLabel: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '600',
+    marginTop: 4,
+  },
+  detailValue: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    textAlign: 'center',
+  },
+
+  // ---------- Buttons ----------
+  contactButton: {
+    flexDirection: 'row',
+    backgroundColor: '#E87A3A',
+    borderRadius: 30,
+    paddingVertical: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 12,
+  },
+  contactButtonText: {
+    color: '#FFF',
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  shareButton: {
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    borderRadius: 30,
+    paddingVertical: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+    borderWidth: 2,
+    borderColor: '#E87A3A',
+  },
+  shareButtonText: {
+    color: '#E87A3A',
+    fontSize: 17,
+    fontWeight: '700',
+  },
+});
+
+export default alertDetailStyles;
