@@ -112,3 +112,48 @@ const homeStyles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'rgba(232, 122, 58, 0.15)',
   },
+  emergencyText: {
+    fontSize: 20,
+    fontWeight: '900',
+    color: '#422b1aff',
+    marginTop: 30,
+    letterSpacing: 1,
+  },
+
+  // Section Title
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#222',
+    textAlign: 'center',
+    marginTop: 26,
+    marginBottom: 14,
+  },
+  alertsRow: {
+    paddingLeft: 20,
+    paddingRight: 8,
+  },
+
+  // See All Button
+  seeAllButton: {
+    backgroundColor: '#E87A3A',
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+    borderRadius: 22,
+    alignSelf: 'center',
+    marginTop: 16,
+    shadowColor: '#E87A3A',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  seeAllText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+});
+
+export default homeStyles;
