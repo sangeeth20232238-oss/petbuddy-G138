@@ -87,3 +87,107 @@ const AlertCard: React.FC<AlertCardProps> = ({ alert, onPress, variant = 'compac
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  // Top accent line
+  topAccent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: '#E87A3A',
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+  },
+
+  // Avatar circles
+  avatarCircle: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#FFF3EA',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#F0C9A8',
+  },
+  avatarCircleSmall: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#FFF3EA',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#F0C9A8',
+  },
+
+  // Compact Card Styles — Enhanced
+  compactCard: {
+    backgroundColor: '#FFF8F0',
+    borderRadius: 18,
+    padding: 14,
+    paddingTop: 16,
+    width: 175,
+    marginRight: 14,
+    // Enhanced shadow
+    shadowColor: '#C47A3A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#F5E6D6',
+  },
+  compactHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  compactOwner: {
+    fontSize: 12,
+    color: '#444',
+    fontWeight: '700',
+    flex: 1,
+    marginLeft: 6,
+  },
+  likeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: '#FFF3EA',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  likeCount: {
+    fontSize: 10,
+    color: '#E87A3A',
+    fontWeight: '700',
+  },
+  compactDescription: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#2D1A0E',
+    marginBottom: 10,
+    lineHeight: 17,
+  },
+  compactImage: {
+    width: '100%',
+    height: 85,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  compactFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  compactDate: {
+    fontSize: 10,
+    color: '#8B6B4D',
+    fontWeight: '600',
+  },
+
+  
