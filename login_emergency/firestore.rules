@@ -2,12 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can read/write their own data
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Clinics and doctors are public read, no write from app
     match /clinics/{clinicId} {
       allow read: if true;
       allow write: if false;
@@ -17,14 +15,12 @@ service cloud.firestore {
       }
     }
 
-    // Bookings: users can create and read their own
     match /bookings/{bookingId} {
       allow read: if request.auth != null && request.auth.uid == resource.data.userId;
       allow create: if request.auth != null;
       allow update, delete: if false;
     }
 
-    // Volunteers: anyone can create, authenticated users can read
     match /volunteers/{volunteerId} {
       allow read: if true;
       allow create: if true;
