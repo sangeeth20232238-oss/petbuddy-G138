@@ -7,6 +7,7 @@ import GroomingApt from './src/screens/GroomingApt';
 import GroomingCheckout from './src/screens/GroomingCheckout';
 import CardPayment from './src/screens/CardPayment';
 import CardPaymentFinal from './src/screens/CardPaymentFinal';
+import AptConfirmation from './src/screens/AptConfirmation';
 
 export default function App() {
   const [screen, setScreen] = useState('main');
@@ -38,8 +39,9 @@ export default function App() {
           bookingData={bookingData}
           onBack={() => setScreen('apt')}
           onConfirm={(data) => {
+            setBookingData(data);
             if (data.paymentMethod === 'card') setScreen('cardPayment');
-            else setScreen('main');
+            else setScreen('confirmation');
           }}
         />
       )}
@@ -52,9 +54,16 @@ export default function App() {
       {screen === 'cardPaymentFinal' && (
         <CardPaymentFinal
           onBack={() => setScreen('cardPayment')}
-          onPay={() => setScreen('main')}
+          onPay={() => setScreen('confirmation')}
           cardData={cardData}
           bookingData={bookingData}
+        />
+      )}
+      {screen === 'confirmation' && (
+        <AptConfirmation
+          onHome={() => setScreen('main')}
+          bookingData={bookingData}
+          cardData={cardData}
         />
       )}
     </SafeAreaProvider>
