@@ -43,7 +43,7 @@ const CardPayment = ({ onBack, onAdd }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          <Ionicons name="chevron-back" size={20} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Card Payment</Text>
         <View style={{ width: 40 }} />
@@ -154,12 +154,12 @@ const CardPayment = ({ onBack, onAdd }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FCF8F4' },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10, marginBottom: 12 },
   backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A1A1A' },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#000000' },
   scroll: { paddingHorizontal: 20, paddingBottom: 36 },
-  cardPreview: { backgroundColor: '#F48C06', borderRadius: 20, padding: 24, marginBottom: 28, shadowColor: '#F48C06', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.35, shadowRadius: 12, elevation: 10 },
+  cardPreview: { backgroundColor: '#FF741C', borderRadius: 20, padding: 24, marginBottom: 28, shadowColor: '#FF741C', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.35, shadowRadius: 12, elevation: 10 },
   cardTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
   cardBrandBox: { flexDirection: 'row' },
   brandCircle1: { width: 32, height: 32, borderRadius: 16, backgroundColor: 'rgba(255,255,255,0.6)' },
@@ -169,21 +169,21 @@ const styles = StyleSheet.create({
   cardBottomLabel: { fontSize: 9, color: 'rgba(255,255,255,0.7)', letterSpacing: 1 },
   cardBottomValue: { fontSize: 13, fontWeight: '600', color: '#FFFFFF' },
   cardHolderName: { fontSize: 13, fontWeight: '700', color: '#FFFFFF', textTransform: 'uppercase' },
-  formTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 4 },
-  formSubtitle: { fontSize: 13, color: '#888888', marginBottom: 20 },
-  label: { fontSize: 13, fontWeight: '600', color: '#1A1A1A', marginBottom: 8 },
+  formTitle: { fontSize: 18, fontWeight: 'bold', color: '#000000', marginBottom: 4 },
+  formSubtitle: { fontSize: 13, color: '#666666', marginBottom: 20 },
+  label: { fontSize: 13, fontWeight: '600', color: '#000000', marginBottom: 8 },
   inputBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14, marginBottom: 16, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 },
-  input: { flex: 1, fontSize: 14, color: '#1A1A1A' },
+  input: { flex: 1, fontSize: 14, color: '#000000' },
   rowInputs: { flexDirection: 'row', gap: 14 },
   halfCol: { flex: 1 },
   defaultRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 28, marginTop: 4 },
   checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
-  checkboxSelected: { backgroundColor: '#F48C06', borderColor: '#F48C06' },
-  defaultText: { fontSize: 14, color: '#1A1A1A' },
+  checkboxSelected: { backgroundColor: '#FF741C', borderColor: '#FF741C' },
+  defaultText: { fontSize: 14, color: '#000000' },
   btnRow: { flexDirection: 'row', gap: 14 },
   cancelBtn: { flex: 1, paddingVertical: 15, borderRadius: 12, borderWidth: 2, borderColor: '#E0E0E0', alignItems: 'center', backgroundColor: '#FFFFFF' },
-  cancelBtnText: { fontSize: 15, fontWeight: '600', color: '#1A1A1A' },
-  addBtn: { flex: 1, paddingVertical: 15, borderRadius: 12, backgroundColor: '#F48C06', alignItems: 'center' },
+  cancelBtnText: { fontSize: 15, fontWeight: '600', color: '#000000' },
+  addBtn: { flex: 1, paddingVertical: 15, borderRadius: 12, backgroundColor: '#FF741C', alignItems: 'center' },
   addBtnText: { fontSize: 15, fontWeight: '600', color: '#FFFFFF' },
 });
 

@@ -38,8 +38,8 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
           <View style={styles.infoRow}>
             <View style={styles.iconBox}>
               {bookingData?.petType === 'Cat'
-                ? <FontAwesome5 name="cat" size={13} color="#F48C06" />
-                : <FontAwesome5 name="dog" size={13} color="#F48C06" />}
+                ? <FontAwesome5 name="cat" size={13} color="#FF741C" />
+                : <FontAwesome5 name="dog" size={13} color="#FF741C" />}
             </View>
             <Text style={styles.infoLabel}>Pet</Text>
             <Text style={styles.infoValue}>{bookingData?.petName || '—'} ({bookingData?.petType || '—'})</Text>
@@ -47,7 +47,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.iconBox}>
-              <Ionicons name="storefront-outline" size={14} color="#F48C06" />
+              <Ionicons name="storefront-outline" size={14} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Salon</Text>
             <Text style={styles.infoValue}>{bookingData?.salon || '—'}</Text>
@@ -55,7 +55,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.iconBox}>
-              <Ionicons name="calendar-outline" size={14} color="#F48C06" />
+              <Ionicons name="calendar-outline" size={14} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Date</Text>
             <Text style={styles.infoValue}>{bookingData?.date || '—'}</Text>
@@ -63,7 +63,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.iconBox}>
-              <Ionicons name="time-outline" size={14} color="#F48C06" />
+              <Ionicons name="time-outline" size={14} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Time</Text>
             <Text style={styles.infoValue}>{bookingData?.time || '—'}</Text>
@@ -77,7 +77,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
             <View key={i}>
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <MaterialIcons name="pets" size={13} color="#F48C06" />
+                  <MaterialIcons name="pets" size={13} color="#FF741C" />
                 </View>
                 <Text style={styles.infoLabel2}>{s}</Text>
                 <Text style={styles.priceValue}>LKR {SERVICE_PRICES[s]?.toLocaleString()}</Text>
@@ -94,7 +94,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
             <>
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <Ionicons name="card-outline" size={14} color="#F48C06" />
+                  <Ionicons name="card-outline" size={14} color="#FF741C" />
                 </View>
                 <Text style={styles.infoLabel}>Card</Text>
                 <Text style={styles.infoValue}>{maskedCard}</Text>
@@ -102,7 +102,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
               <View style={styles.divider} />
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <Ionicons name="receipt-outline" size={14} color="#F48C06" />
+                  <Ionicons name="receipt-outline" size={14} color="#FF741C" />
                 </View>
                 <Text style={styles.infoLabel}>Sub Total</Text>
                 <Text style={styles.infoValue}>LKR {subTotal.toLocaleString()}</Text>
@@ -110,7 +110,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
               <View style={styles.divider} />
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <Ionicons name="pricetag-outline" size={14} color="#F48C06" />
+                  <Ionicons name="pricetag-outline" size={14} color="#FF741C" />
                 </View>
                 <Text style={styles.infoLabel}>Service fee</Text>
                 <Text style={styles.infoValue}>LKR {serviceFee.toLocaleString()}</Text>
@@ -118,7 +118,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
               <View style={styles.divider} />
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <Ionicons name="wallet-outline" size={14} color="#F48C06" />
+                  <Ionicons name="wallet-outline" size={14} color="#FF741C" />
                 </View>
                 <Text style={styles.totalLabel}>Total</Text>
                 <Text style={styles.totalValue}>LKR {total.toLocaleString()}</Text>
@@ -128,7 +128,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
             <>
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <Ionicons name="cash-outline" size={14} color="#F48C06" />
+                  <Ionicons name="cash-outline" size={14} color="#FF741C" />
                 </View>
                 <Text style={styles.infoLabel}>Method</Text>
                 <Text style={styles.infoValue}>Pay at Visit</Text>
@@ -136,7 +136,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
               <View style={styles.divider} />
               <View style={styles.infoRow}>
                 <View style={styles.iconBox}>
-                  <Ionicons name="wallet-outline" size={14} color="#F48C06" />
+                  <Ionicons name="wallet-outline" size={14} color="#FF741C" />
                 </View>
                 <Text style={styles.totalLabel}>Total</Text>
                 <Text style={styles.totalValue}>LKR {total.toLocaleString()}</Text>
@@ -146,7 +146,7 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
         </View>
 
         <TouchableOpacity style={styles.homeBtn} onPress={onHome}>
-          <Ionicons name="home-outline" size={18} color="#F48C06" />
+          <Ionicons name="home-outline" size={18} color="#FF741C" />
           <Text style={styles.homeBtnText}>Back to Home</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -155,25 +155,25 @@ const AptConfirmation = ({ onHome, bookingData, cardData }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FCF8F4' },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   scroll: { paddingHorizontal: 20, paddingBottom: 36, paddingTop: 20 },
   successSection: { alignItems: 'center', marginBottom: 32 },
-  successCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#F48C06', justifyContent: 'center', alignItems: 'center', marginBottom: 16, shadowColor: '#F48C06', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 10, elevation: 8 },
-  successTitle: { fontSize: 24, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 8 },
-  successSub: { fontSize: 13, color: '#888888', textAlign: 'center' },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 12, marginTop: 4 },
+  successCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: '#FF741C', justifyContent: 'center', alignItems: 'center', marginBottom: 16, shadowColor: '#FF741C', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 10, elevation: 8 },
+  successTitle: { fontSize: 24, fontWeight: 'bold', color: '#000000', marginBottom: 8 },
+  successSub: { fontSize: 13, color: '#666666', textAlign: 'center' },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#000000', marginBottom: 12, marginTop: 4 },
   card: { backgroundColor: '#FFFFFF', borderRadius: 14, paddingHorizontal: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
-  divider: { height: 1, backgroundColor: '#F5F5F5' },
+  divider: { height: 1, backgroundColor: '#EEEEEE' },
   infoRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, gap: 12 },
-  iconBox: { width: 28, height: 28, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
-  infoLabel: { fontSize: 13, color: '#888888', width: 70 },
-  infoLabel2: { flex: 1, fontSize: 13, color: '#1A1A1A' },
-  infoValue: { flex: 1, fontSize: 13, fontWeight: '600', color: '#1A1A1A', textAlign: 'right' },
-  priceValue: { fontSize: 13, fontWeight: '600', color: '#F48C06' },
-  totalLabel: { fontSize: 14, fontWeight: 'bold', color: '#1A1A1A', width: 70 },
-  totalValue: { flex: 1, fontSize: 15, fontWeight: 'bold', color: '#F48C06', textAlign: 'right' },
-  homeBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 13, borderRadius: 12, borderWidth: 2, borderColor: '#F48C06', backgroundColor: '#FFFFFF', marginTop: 4 },
-  homeBtnText: { fontSize: 14, fontWeight: '600', color: '#F48C06' },
+  iconBox: { width: 28, height: 28, borderRadius: 8, backgroundColor: '#FFF0E6', justifyContent: 'center', alignItems: 'center' },
+  infoLabel: { fontSize: 13, color: '#666666', width: 70 },
+  infoLabel2: { flex: 1, fontSize: 13, color: '#000000' },
+  infoValue: { flex: 1, fontSize: 13, fontWeight: '600', color: '#000000', textAlign: 'right' },
+  priceValue: { fontSize: 13, fontWeight: '600', color: '#FF741C' },
+  totalLabel: { fontSize: 14, fontWeight: 'bold', color: '#000000', width: 70 },
+  totalValue: { flex: 1, fontSize: 15, fontWeight: 'bold', color: '#FF741C', textAlign: 'right' },
+  homeBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 13, borderRadius: 12, borderWidth: 2, borderColor: '#FF741C', backgroundColor: '#FFFFFF', marginTop: 4 },
+  homeBtnText: { fontSize: 14, fontWeight: '600', color: '#FF741C' },
 });
 
 export default AptConfirmation;
