@@ -1,0 +1,55 @@
+import { StyleSheet } from 'react-native';
+
+const allAlertsStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF5EC',
+  },
+  scrollContent: {
+    paddingBottom: 100,
+    paddingHorizontal: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+  backButton: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#222',
+    marginLeft: 12,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#222',
+    marginTop: 16,
+    marginBottom: 16,
+    paddingHorizontal: 4,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+    fontWeight: '500',
+  },
+});
+
+export default allAlertsStyles;
