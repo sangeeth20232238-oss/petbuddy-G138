@@ -56,3 +56,50 @@ const alertDetailStyles = StyleSheet.create({
     paddingTop: 28,
     paddingBottom: 20,
   },
+  
+  // ---------- Name Row ----------
+  nameRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  petName: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  breedColor: {
+    fontSize: 14,
+    color: '#888',
+    fontWeight: '500',
+  },
+  likeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF5EC',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 6,
+  },
+  likeCount: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#E87A3A',
+  },
+
+  // ---------- Owner Card ----------
+  ownerCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FAFAFA',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+  },
