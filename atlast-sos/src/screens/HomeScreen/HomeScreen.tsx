@@ -85,3 +85,80 @@ const MOCK_ALERTS: LostPetAlert[] = [
     comments: 10,
   },
 ];
+
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
+  const [alerts, setAlerts] = useState<LostPetAlert[]>(MOCK_ALERTS);
+  const [loading, setLoading] = useState(false);
+
+  // Pulse animation values
+  const pulseScale = useSharedValue(1);
+  const glowOpacity = useSharedValue(0.3);
+  const pressScale = useSharedValue(1);
+
+  useEffect(() => {
+    // Continuous pulse: 1.0 → 1.08 → 1.0
+    pulseScale.value = withRepeat(
+      withSequence(
+        withTiming(1.08, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.0, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1, // infinite
+      false
+    );
+
+    // Glow breathing: 0.3 → 0.7 → 0.3
+    glowOpacity.value = withRepeat(
+      withSequence(
+        withTiming(0.7, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.3, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulseScale.value * pressScale.value }],
+  }));
+
+  const animatedGlowStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+    transform: [{ scale: pulseScale.value * 1.15 }],
+  }));
+
+  const handlePressIn = () => {
+    pressScale.value = withSpring(0.92, { damping: 15, stiffness: 300 });
+  };
+
+  const handlePressOut = () => {
+    pressScale.value = withSpring(1, { damping: 10, stiffness: 200 });
+  };
+
+  const fetchAlerts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await getRecentAlerts();
+      if (data.length > 0) {
+        setAlerts(data);
+      }
+    } catch (err) {
+      // Use mock data on error
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchAlerts();
+  }, [fetchAlerts]);
+
+  const renderAlertCard = ({ item }: { item: LostPetAlert }) => (
+    <AlertCard
+      alert={item}
+      variant="compact"
+      onPress={() => navigation.navigate('AlertDetail', { alertId: item.id, alert: item })}
+    />
+  );
