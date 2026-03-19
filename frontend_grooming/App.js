@@ -5,6 +5,7 @@ import GroomingMain from './src/screens/GroomingMain';
 import GroomingLocation from './src/screens/GroomingLocation';
 import GroomingApt from './src/screens/GroomingApt';
 import GroomingCheckout from './src/screens/GroomingCheckout';
+import CardPayment from './src/screens/CardPayment';
 
 export default function App() {
   const [screen, setScreen] = useState('main');
@@ -34,7 +35,16 @@ export default function App() {
         <GroomingCheckout
           bookingData={bookingData}
           onBack={() => setScreen('apt')}
-          onConfirm={() => setScreen('main')}
+          onConfirm={(data) => {
+            if (data.paymentMethod === 'card') setScreen('cardPayment');
+            else setScreen('main');
+          }}
+        />
+      )}
+      {screen === 'cardPayment' && (
+        <CardPayment
+          onBack={() => setScreen('checkout')}
+          onAdd={() => setScreen('main')}
         />
       )}
     </SafeAreaProvider>
