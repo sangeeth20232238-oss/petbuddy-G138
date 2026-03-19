@@ -1,16 +1,24 @@
-import React from 'react';
-import { StyleSheet, View, Text, TextInput, FlatList, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, TextInput, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-
-const CLINICS = [
-    { id: '1', name: 'Golden Paws Veterinary', dist: '0.5 Km', status: 'Open', img: 'https://placedog.net/150/150' },
-    { id: '2', name: 'Happy Tails Pet Clinic', dist: '1.5 Km', status: 'Open', img: 'https://placedog.net/151/151' },
-    { id: '3', name: 'Pet Wellness Clinic', dist: '2.0 Km', status: 'Open', img: 'https://placedog.net/152/152' },
-    { id: '4', name: 'Happy Tails Animal Hospital', dist: '0.5 Km', status: 'Open', img: 'https://placedog.net/153/153' },
-];
+import { fetchClinics } from '../../services/emergencyVetService';
 
 export default function ClinicListScreen({ navigation }) {
+    const [clinics, setClinics] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
+
+    useEffect(() => {
+        fetchClinics()
+            .then(setClinics)
+            .finally(() => setLoading(false));
+    }, []);
+
+    const filtered = clinics.filter(c =>
+        c.name.toLowerCase().includes(search.toLowerCase())
+    );
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -19,27 +27,36 @@ export default function ClinicListScreen({ navigation }) {
             </View>
             <View style={styles.searchContainer}>
                 <Ionicons name="search" size={20} color="#999" />
-                <TextInput placeholder="Search" style={styles.searchInput} />
+                <TextInput
+                    placeholder="Search"
+                    style={styles.searchInput}
+                    value={search}
+                    onChangeText={setSearch}
+                />
                 <MaterialCommunityIcons name="microphone" size={20} color="#999" />
             </View>
             <Text style={styles.sectionTitle}>Nearby</Text>
-            <FlatList
-                data={CLINICS}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ClinicDetail', { clinic: item })}>
-                        <Image source={{ uri: item.img }} style={styles.cardImg} />
-                        <View style={styles.cardInfo}>
-                            <Text style={styles.clinicName}>{item.name}</Text>
-                            <View style={styles.cardRow}>
-                                <Text style={styles.dist}>{item.dist} away</Text>
-                                <Text style={styles.status}>{item.status}</Text>
+            {loading ? (
+                <ActivityIndicator size="large" color="#FF741C" style={{ marginTop: 40 }} />
+            ) : (
+                <FlatList
+                    data={filtered}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ClinicDetail', { clinic: item })}>
+                            <Image source={{ uri: item.imageUrl }} style={styles.cardImg} />
+                            <View style={styles.cardInfo}>
+                                <Text style={styles.clinicName}>{item.name}</Text>
+                                <View style={styles.cardRow}>
+                                    <Text style={styles.dist}>{item.distance} away</Text>
+                                    <Text style={styles.status}>{item.status}</Text>
+                                </View>
+                                <Text style={styles.seeMore}>See More</Text>
                             </View>
-                            <Text style={styles.seeMore}>See More</Text>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            />
+                        </TouchableOpacity>
+                    )}
+                />
+            )}
         </SafeAreaView>
     );
 }
