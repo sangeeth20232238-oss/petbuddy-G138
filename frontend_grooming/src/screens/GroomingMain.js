@@ -53,22 +53,22 @@ const GroomingMain = ({ onServicePress }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FCF8F4' },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10, marginBottom: 20 },
   backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
   backButtonText: { fontSize: 20, color: '#000' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#1A1A1A' },
+  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#000000' },
   scrollContent: { paddingHorizontal: 20, paddingBottom: 80 },
   bannerContainer: {},
   bannerTextContainer: {},
   bannerText: {},
   bannerImageContainer: {},
   bannerImage: {},
-  sectionTitle: { fontSize: 14, color: '#333333', textAlign: 'center', marginBottom: 20 },
+  sectionTitle: { fontSize: 14, color: '#000000', textAlign: 'center', marginBottom: 20 },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  cardContainer: { width: '47%', backgroundColor: '#FFFFFF', borderRadius: 15, padding: 12, alignItems: 'center', marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
+  cardContainer: { width: '47%', backgroundColor: '#FFFFFF', borderRadius: 15, padding: 12, alignItems: 'center', marginBottom: 20, borderWidth: 1.5, borderColor: '#FFFFFF', shadowColor: '#000', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.15, shadowRadius: 6, elevation: 5 },
   cardImage: { width: '100%', height: 90, borderRadius: 10, marginBottom: 10 },
-  cardTitle: { fontSize: 13, fontWeight: '500', color: '#1A1A1A', textAlign: 'center' },
+  cardTitle: { fontSize: 13, fontWeight: '600', color: '#000000', textAlign: 'center' },
 });
 
 export default GroomingMain;

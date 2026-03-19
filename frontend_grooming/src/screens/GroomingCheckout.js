@@ -28,7 +28,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          <Ionicons name="chevron-back" size={20} color="#000000" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Checkout</Text>
         <View style={{ width: 40 }} />
@@ -42,8 +42,8 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
               {bookingData?.petType === 'Cat'
-                ? <FontAwesome5 name="cat" size={14} color="#F48C06" />
-                : <FontAwesome5 name="dog" size={14} color="#F48C06" />}
+                ? <FontAwesome5 name="cat" size={14} color="#FF741C" />
+                : <FontAwesome5 name="dog" size={14} color="#FF741C" />}
             </View>
             <Text style={styles.infoLabel}>Type</Text>
             <Text style={styles.infoValue}>{bookingData?.petType || '—'}</Text>
@@ -51,7 +51,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
-              <FontAwesome5 name="paw" size={13} color="#F48C06" />
+              <FontAwesome5 name="paw" size={13} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Name</Text>
             <Text style={styles.infoValue}>{bookingData?.petName || '—'}</Text>
@@ -59,7 +59,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
-              <Ionicons name="calendar-outline" size={15} color="#F48C06" />
+              <Ionicons name="calendar-outline" size={15} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>DOB</Text>
             <Text style={styles.infoValue}>{bookingData?.petDob || '—'}</Text>
@@ -71,7 +71,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
         <View style={styles.card}>
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
-              <Ionicons name="storefront-outline" size={15} color="#F48C06" />
+              <Ionicons name="storefront-outline" size={15} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Salon</Text>
             <Text style={styles.infoValue}>{bookingData?.salon || '—'}</Text>
@@ -79,7 +79,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
-              <Ionicons name="calendar-outline" size={15} color="#F48C06" />
+              <Ionicons name="calendar-outline" size={15} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Date</Text>
             <Text style={styles.infoValue}>{bookingData?.date || '—'}</Text>
@@ -87,7 +87,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           <View style={styles.divider} />
           <View style={styles.infoRow}>
             <View style={styles.infoIconBox}>
-              <Ionicons name="time-outline" size={15} color="#F48C06" />
+              <Ionicons name="time-outline" size={15} color="#FF741C" />
             </View>
             <Text style={styles.infoLabel}>Time</Text>
             <Text style={styles.infoValue}>{bookingData?.time || '—'}</Text>
@@ -104,7 +104,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
               <View key={i}>
                 <View style={styles.serviceRow}>
                   <View style={styles.infoIconBox}>
-                    <MaterialIcons name="pets" size={14} color="#F48C06" />
+                    <MaterialIcons name="pets" size={14} color="#FF741C" />
                   </View>
                   <Text style={styles.serviceText}>{s}</Text>
                   <Text style={styles.servicePrice}>LKR {SERVICE_PRICES[s]?.toLocaleString()}</Text>
@@ -122,7 +122,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           onPress={() => setPaymentMethod('card')}
         >
           <View style={[styles.paymentIconBox, paymentMethod === 'card' && styles.paymentIconBoxSelected]}>
-            <Ionicons name="card-outline" size={22} color={paymentMethod === 'card' ? '#FFFFFF' : '#F48C06'} />
+            <Ionicons name="card-outline" size={22} color={paymentMethod === 'card' ? '#FFFFFF' : '#FF741C'} />
           </View>
           <View style={styles.paymentInfo}>
             <Text style={[styles.paymentTitle, paymentMethod === 'card' && styles.paymentTitleSelected]}>Card Payment</Text>
@@ -138,7 +138,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
           onPress={() => setPaymentMethod('cash')}
         >
           <View style={[styles.paymentIconBox, paymentMethod === 'cash' && styles.paymentIconBoxSelected]}>
-            <Ionicons name="cash-outline" size={22} color={paymentMethod === 'cash' ? '#FFFFFF' : '#F48C06'} />
+            <Ionicons name="cash-outline" size={22} color={paymentMethod === 'cash' ? '#FFFFFF' : '#FF741C'} />
           </View>
           <View style={styles.paymentInfo}>
             <Text style={[styles.paymentTitle, paymentMethod === 'cash' && styles.paymentTitleSelected]}>Pay at Visit</Text>
@@ -165,38 +165,38 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FCF8F4' },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10, marginBottom: 12 },
   backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A1A1A' },
+  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#000000' },
   scroll: { paddingHorizontal: 20, paddingBottom: 36 },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 12, marginTop: 8 },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#000000', marginBottom: 12, marginTop: 8 },
   card: { backgroundColor: '#FFFFFF', borderRadius: 14, paddingHorizontal: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
-  divider: { height: 1, backgroundColor: '#F5F5F5' },
+  divider: { height: 1, backgroundColor: '#EEEEEE' },
   infoRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 12 },
-  infoIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
-  infoLabel: { fontSize: 13, color: '#888888', width: 44 },
-  infoValue: { flex: 1, fontSize: 13, fontWeight: '600', color: '#1A1A1A', textAlign: 'right' },
+  infoIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#D4D4D4', justifyContent: 'center', alignItems: 'center' },
+  infoLabel: { fontSize: 13, color: '#666666', width: 44 },
+  infoValue: { flex: 1, fontSize: 13, fontWeight: '600', color: '#000000', textAlign: 'right' },
   serviceRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 12 },
-  serviceText: { flex: 1, fontSize: 14, color: '#1A1A1A' },
-  servicePrice: { fontSize: 13, fontWeight: '600', color: '#F48C06' },
-  emptyText: { fontSize: 13, color: '#999999', marginBottom: 20 },
+  serviceText: { flex: 1, fontSize: 14, color: '#000000' },
+  servicePrice: { fontSize: 13, fontWeight: '600', color: '#FF741C' },
+  emptyText: { fontSize: 13, color: '#666666', marginBottom: 20 },
   paymentOption: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 14, padding: 16, marginBottom: 12, borderWidth: 2, borderColor: '#EEEEEE', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 3, elevation: 1 },
-  paymentOptionSelected: { borderColor: '#F48C06', backgroundColor: '#FFFAF4' },
-  paymentIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center', marginRight: 14 },
-  paymentIconBoxSelected: { backgroundColor: '#F48C06' },
+  paymentOptionSelected: { borderColor: '#FF741C', backgroundColor: '#FFFFFF' },
+  paymentIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: '#D4D4D4', justifyContent: 'center', alignItems: 'center', marginRight: 14 },
+  paymentIconBoxSelected: { backgroundColor: '#FF741C' },
   paymentInfo: { flex: 1 },
-  paymentTitle: { fontSize: 14, fontWeight: '600', color: '#1A1A1A' },
-  paymentTitleSelected: { color: '#F48C06' },
-  paymentSub: { fontSize: 12, color: '#999999', marginTop: 2 },
-  paymentSubSelected: { color: '#F48C06' },
+  paymentTitle: { fontSize: 14, fontWeight: '600', color: '#000000' },
+  paymentTitleSelected: { color: '#FF741C' },
+  paymentSub: { fontSize: 12, color: '#666666', marginTop: 2 },
+  paymentSubSelected: { color: '#FF741C' },
   radio: { width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
-  radioSelected: { borderColor: '#F48C06' },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#F48C06' },
-  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#FFF4E6', borderRadius: 14, paddingVertical: 16, paddingHorizontal: 20, marginBottom: 24, marginTop: 8 },
-  totalLabel: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A' },
-  totalValue: { fontSize: 20, fontWeight: 'bold', color: '#F48C06' },
-  confirmBtn: { flexDirection: 'row', backgroundColor: '#F48C06', borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
+  radioSelected: { borderColor: '#FF741C' },
+  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: '#FF741C' },
+  totalRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#D4D4D4', borderRadius: 14, paddingVertical: 16, paddingHorizontal: 20, marginBottom: 24, marginTop: 8 },
+  totalLabel: { fontSize: 16, fontWeight: 'bold', color: '#000000' },
+  totalValue: { fontSize: 20, fontWeight: 'bold', color: '#FF741C' },
+  confirmBtn: { flexDirection: 'row', backgroundColor: '#FF741C', borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center' },
   confirmBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
 });
 
