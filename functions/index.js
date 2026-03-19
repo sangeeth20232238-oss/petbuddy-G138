@@ -122,6 +122,13 @@ const SYMPTOM_ALIASES = {
   "losing weight": "weight loss",
   "getting thin": "weight loss",
   "dog losing weight": "weight loss",
+
+    // bones
+  "bone broke": "broken bones",
+  "broke bone": "broken bones",
+  "broken bone": "broken bones",
+  "bone fracture": "broken bones",
+  "fractured bone": "broken bones",
 };
 
 
@@ -158,7 +165,7 @@ function extractSymptomsFromMessage(userMessage) {
 
   for (const phrase of MATCH_PHRASES) {
     const p = ` ${phrase} `;
-    if (text.includes(p)) {
+    if (text.includes(p) || text.split(" ").some(word => phrase.includes(word))) {
       const maybeClean = SYMPTOM_ALIASES[phrase] ? SYMPTOM_ALIASES[phrase] : phrase;
       const normalized = normalizeSymptom(maybeClean);
       if (CLEAN_SET.has(normalized)) found.add(normalized);
@@ -314,6 +321,9 @@ exports.chatbot = functions.https.onRequest((req, res) => {
         error: "Server error"
       });
     }
+
+    console.log("User message:", message);
+    console.log("Extracted symptoms:", symptoms);
 
   });
   // 🔥 force deploy

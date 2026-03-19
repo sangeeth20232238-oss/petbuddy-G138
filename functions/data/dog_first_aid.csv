@@ -22,6 +22,9 @@ case_id,animalname,symptom,first_aid_advice,emergency
 69,dog,breathing difficulty,"Move your dog to a cool, quiet place and reduce stress. Do not force exercise or restrain the chest or neck. If breathing is labored or gasping, seek emergency vet care.",yes
 109,dog,breathing difficulty,"Move your dog to a cool, quiet place and reduce stress. Do not force exercise or restrain the chest or neck. If breathing is labored or gasping, seek emergency vet care.",yes
 10,dog,broken bones,Stop movement immediately. Do not try to straighten the limb. Support the leg if possible and take your dog to a veterinarian urgently.,yes
+10,dog,broken bone,Stop movement immediately. Do not try to straighten the limb. Support the leg if possible and take your dog to a veterinarian urgently.,yes
+10,dog,bone broke,Stop movement immediately. Do not try to straighten the limb. Support the leg if possible and take your dog to a veterinarian urgently.,yes
+10,dog,broke bone,Stop movement immediately. Do not try to straighten the limb. Support the leg if possible and take your dog to a veterinarian urgently.,yes
 2,dog,coughing,"Allow rest and keep away from smoke or dust. Provide water. If coughing lasts long, worsens, or affects breathing, contact a veterinarian.",no
 3,dog,coughing,"Allow rest and keep away from smoke or dust. Provide water. If coughing lasts long, worsens, or affects breathing, contact a veterinarian.",no
 4,dog,coughing,"Allow rest and keep away from smoke or dust. Provide water. If coughing lasts long, worsens, or affects breathing, contact a veterinarian.",no
