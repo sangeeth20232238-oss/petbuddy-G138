@@ -116,3 +116,55 @@ const AlertDetailScreen: React.FC = () => {
             <Ionicons name="arrow-back" size={24} color="#FFF" />
           </TouchableOpacity>
         </View>
+        
+        {/* White card content overlapping the image */}
+        <View style={styles.contentCard}>
+          {/* Pet Name Row */}
+          <View style={styles.nameRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.petName}>{alert.petName}</Text>
+              <Text style={styles.breedColor}>
+                {alert.breed}{alert.color ? ` · ${alert.color}` : ''}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.likeButton}
+              onPress={() => setLiked(!liked)}
+            >
+              <Ionicons
+                name={liked ? 'heart' : 'heart-outline'}
+                size={20}
+                color={liked ? '#E87A3A' : '#E87A3A'}
+              />
+              <Text style={styles.likeCount}>
+                {liked ? (likesCount + 1).toFixed(1) + 'k' : likesCount > 0 ? (likesCount / 1000).toFixed(1) + 'k' : '0'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Owner Card */}
+          <View style={styles.ownerCard}>
+            <View style={styles.ownerInfo}>
+              <View style={styles.ownerAvatar}>
+                <Ionicons name="person" size={24} color="#FFF" />
+              </View>
+              <View>
+                <Text style={styles.ownerLabel}>Owner</Text>
+                <Text style={styles.ownerName}>{alert.ownerName}</Text>
+              </View>
+            </View>
+            <View style={styles.ownerActions}>
+              <TouchableOpacity
+                style={styles.ownerActionBtn}
+                onPress={handleContactOwner}
+              >
+                <Ionicons name="call" size={18} color="#FFF" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.ownerActionBtn, styles.emailBtn]}
+                onPress={handleEmailOwner}
+              >
+                <Ionicons name="mail" size={18} color="#FFF" />
+              </TouchableOpacity>
+            </View>
+          </View>
