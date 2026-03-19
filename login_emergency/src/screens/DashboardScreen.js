@@ -106,10 +106,10 @@ export default function DashboardScreen({ navigation }) {
                         </View>
 
                         <View style={styles.menuItems}>
-                            <MenuLink icon="calendar-clock" label="Appointments" />
-                            <MenuLink icon="paw" label="My Pets" />
-                            <MenuLink icon="shield-check" label="Verified Buddies" />
-                            <MenuLink icon="cog" label="Settings" />
+                            <MenuLink icon="calendar-clock" label="Appointments" onPress={() => { setSidebarVisible(false); navigation.navigate('Appointments'); }} />
+                            <MenuLink icon="paw" label="My Pets" onPress={() => Alert.alert('My Pets', 'Coming soon!')} />
+                            <MenuLink icon="shield-check" label="Verified Buddies" onPress={() => Alert.alert('Verified Buddies', 'Coming soon!')} />
+                            <MenuLink icon="cog" label="Settings" onPress={() => Alert.alert('Settings', 'Coming soon!')} />
                         </View>
 
                         <TouchableOpacity style={styles.logout} onPress={() => navigation.navigate('Login')}>
@@ -123,8 +123,8 @@ export default function DashboardScreen({ navigation }) {
     );
 }
 
-const MenuLink = ({ icon, label }) => (
-    <TouchableOpacity style={styles.menuItem} onPress={() => Alert.alert(label, "Loading...")}>
+const MenuLink = ({ icon, label, onPress }) => (
+    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
         <MaterialCommunityIcons name={icon} size={24} color="#555" />
         <Text style={styles.menuLabel}>{label}</Text>
     </TouchableOpacity>
