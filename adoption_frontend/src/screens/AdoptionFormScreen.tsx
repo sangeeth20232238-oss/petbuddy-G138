@@ -39,8 +39,15 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async () => {
-        if (!fullName.trim() || !phone.trim()) {
-            Alert.alert('Validation Error', 'Please provide your name and phone number.');
+        const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+        if (!nameRegex.test(fullName.trim())) {
+            Alert.alert('Validation Error', 'Please enter a valid full name (letters only, min 2 characters).');
+            return;
+        }
+
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phoneRegex.test(phone.replace(/[\s\-]/g, ''))) {
+            Alert.alert('Validation Error', 'Please enter a valid 10-digit phone number.');
             return;
         }
 
