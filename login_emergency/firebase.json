@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "clinic-dashboard",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
