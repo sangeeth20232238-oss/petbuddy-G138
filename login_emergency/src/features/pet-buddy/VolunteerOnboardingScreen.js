@@ -61,7 +61,7 @@ export default function VolunteerOnboardingScreen({ navigation }) {
                     nicUploaded: true,
                     experience: experience.trim(),
                     breeds: breeds.trim(),
-                    status: 'pending',
+                    status: 'approved',
                     createdAt: new Date().toISOString(),
                 });
                 Alert.alert("Success!", "Your volunteer profile has been submitted for review.", [
