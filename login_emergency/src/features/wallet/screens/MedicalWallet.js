@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet, View, Text, TouchableOpacity,
-  SafeAreaView, ActivityIndicator, Alert, StatusBar, BackHandler
+  ActivityIndicator, Alert, StatusBar, BackHandler
 } from 'react-native';
-import { ChevronLeft, Syringe, Pill, Cpu, Stethoscope, MessageSquare } from 'lucide-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { ChevronLeft, Syringe, Pill, Cpu, Stethoscope } from 'lucide-react-native';
 import { COLORS } from '../theme/colors';
 
 import VaccinationList from '../features/pet-wallet/vaccination-list';
@@ -115,11 +116,7 @@ export default function MedicalWallet({ navigation }) {
         </View>
       </View>
 
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
+
     </SafeAreaView>
   );
 }
@@ -155,9 +152,4 @@ const styles = StyleSheet.create({
   },
   iconContainer: { marginBottom: 10 },
   cardText: { fontSize: 16, fontWeight: '600', color: '#444' },
-  fabContainer: { position: 'absolute', bottom: 40, width: '100%', alignItems: 'center' },
-  fab: {
-    backgroundColor: COLORS.primary, width: 70, height: 70,
-    borderRadius: 35, justifyContent: 'center', alignItems: 'center', elevation: 10,
-  },
 });

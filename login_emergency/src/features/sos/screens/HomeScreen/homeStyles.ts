@@ -6,7 +6,7 @@ const homeStyles = StyleSheet.create({
     backgroundColor: '#FFF5EC',
   },
   scrollContent: {
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   header: {
     flexDirection: 'row',

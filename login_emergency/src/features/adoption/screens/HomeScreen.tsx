@@ -9,16 +9,15 @@ import {
     Image,
     Dimensions,
     StatusBar,
-    Alert,
     ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Pet, PetCategory, RootStackParamList } from '../types';
 import { PETS_DATA, getPetImage } from '../data/pets';
-import { ENDPOINTS } from '../config/api';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../../../firebaseConfig';
 
 const { width } = Dimensions.get('window');
 
@@ -42,25 +41,24 @@ export default function HomeScreen() {
 
     const fetchPets = async () => {
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-            const response = await fetch(ENDPOINTS.PETS, {
-                signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            if (response.ok) {
-                const data = await response.json();
-                // Map background string images to frontend require calls
-                const mappedPets = data.map((pet: any) => ({
-                    ...pet,
-                    image: typeof pet.image === 'string' ? getPetImage(pet.image) : pet.image
-                }));
-                setPets(mappedPets);
+            // Fetch directly from Firestore
+            const snapshot = await getDocs(collection(db, 'pets'));
+            if (!snapshot.empty) {
+                const firestorePets = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        ...data,
+                        id: doc.id,
+                        image: typeof data.image === 'string' ? getPetImage(data.image) : data.image,
+                    } as Pet;
+                });
+                setPets(firestorePets);
+            } else {
+                setPets(PETS_DATA);
             }
         } catch (error) {
             console.log('Error fetching pets, using local data:', error);
+            setPets(PETS_DATA);
         } finally {
             setIsLoading(false);
         }

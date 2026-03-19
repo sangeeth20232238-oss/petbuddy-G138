@@ -88,7 +88,7 @@ export default function DashboardScreen({ navigation }) {
             {/* AI Assistant FAB */}
             <TouchableOpacity 
                 style={styles.fab} 
-                onPress={() => Alert.alert("PetBot AI", "How can I help you and your pet today?")}
+                onPress={() => navigation.navigate('ChatBot')}
             >
                 <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />
             </TouchableOpacity>

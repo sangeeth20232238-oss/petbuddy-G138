@@ -50,6 +50,9 @@ import ShareNotifyScreen from './src/features/sos/screens/ShareNotifyScreen/Shar
 // Wallet Screen
 import MedicalWalletScreen from './src/features/wallet/screens/MedicalWallet';
 
+// Chatbot Screen
+import ChatScreen from './src/features/chatbot/ChatScreen';
+
 SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
 
@@ -112,6 +115,9 @@ export default function App() {
 
         {/* Wallet */}
         <Stack.Screen name="Wallet" component={MedicalWalletScreen} />
+
+        {/* Chatbot */}
+        <Stack.Screen name="ChatBot" component={ChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

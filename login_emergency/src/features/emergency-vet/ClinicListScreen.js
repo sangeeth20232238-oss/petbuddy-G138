@@ -58,5 +58,5 @@ const styles = StyleSheet.create({
     cardRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 },
     dist: { color: '#555' },
     status: { color: '#000', fontWeight: 'bold' },
-    seeMore: { alignSelf: 'flex-end', marginTop: 10, fontFamily: 'Fredoka-Bold' }
+    seeMore: { alignSelf: 'flex-end', marginTop: 10, fontFamily: 'Fredoka-Bold' },
 });

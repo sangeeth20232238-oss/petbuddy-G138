@@ -90,5 +90,5 @@ const styles = StyleSheet.create({
     btnText: { color: 'white', fontFamily: 'Fredoka-Bold' },
     volunteerFooter: { padding: 20, alignItems: 'center', borderTopWidth: 1, borderTopColor: '#EEE' },
     footerText: { fontFamily: 'Fredoka-Regular', color: '#666' },
-    link: { color: '#FF741C', fontFamily: 'Fredoka-Bold' }
+    link: { color: '#FF741C', fontFamily: 'Fredoka-Bold' },
 });

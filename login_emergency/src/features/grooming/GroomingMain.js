@@ -6,8 +6,8 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SERVICES = [
   { id: '1', title: 'Bathing & Drying', image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300&q=80' },
