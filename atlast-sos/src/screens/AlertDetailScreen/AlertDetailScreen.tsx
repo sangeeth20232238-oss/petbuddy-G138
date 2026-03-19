@@ -65,3 +65,54 @@ const AlertDetailScreen: React.FC = () => {
       </SafeAreaView>
     );
   }
+  
+  const lostDate = alert.lostDate || '20.02.2026';
+  const likesCount = alert.likes || 0;
+
+  const handleContactOwner = () => {
+    if (alert.phoneNumber) {
+      Linking.openURL(`tel:${alert.phoneNumber}`);
+    }
+  };
+
+  const handleEmailOwner = () => {
+    Linking.openURL('mailto:');
+  };
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `🚨 Lost Pet Alert: ${alert.petName} (${alert.breed}) is missing near ${alert.location}. If you see this pet, please contact ${alert.ownerName} at ${alert.phoneNumber}.`,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        {/* Full-bleed Pet Image */}
+        <View style={styles.imageContainer}>
+          {alert.imageUrl ? (
+            <Image source={{ uri: alert.imageUrl }} style={styles.petImage} />
+          ) : (
+            <View style={[styles.petImage, styles.petImagePlaceholder]}>
+              <Ionicons name="image-outline" size={80} color="#ccc" />
+            </View>
+          )}
+
+          {/* Back button overlay */}
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <Ionicons name="arrow-back" size={24} color="#FFF" />
+          </TouchableOpacity>
+        </View>
