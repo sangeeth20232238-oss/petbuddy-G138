@@ -103,3 +103,58 @@ const alertDetailStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F0F0F0',
   },
+  ownerInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  ownerAvatar: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#D0D0D0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ownerLabel: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  ownerName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1A1A1A',
+  },
+  ownerActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  ownerActionBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#E87A3A',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emailBtn: {
+    backgroundColor: '#4A90D9',
+  },
+
+  // ---------- Description Card ----------
+  descriptionCard: {
+    backgroundColor: '#FAFAFA',
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#1A1A1A',
+    marginBottom: 10,
+  },
