@@ -162,3 +162,85 @@ const HomeScreen: React.FC = () => {
       onPress={() => navigation.navigate('AlertDetail', { alertId: item.id, alert: item })}
     />
   );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Header */}
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="#222" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Pet SOS</Text>
+        </View>
+
+        {/* Hero Section with Pet Illustrations + Emergency Button */}
+        <View style={styles.heroSection}>
+          <View style={styles.heroCard}>
+            {/* Peeking Pets above the card */}
+            <View style={styles.peekingPetsRow}>
+              <Image source={bulldogImg} style={styles.peekingPetSide} resizeMode="contain" />
+              <Image source={labradorImg} style={styles.peekingPetCenter} resizeMode="contain" />
+              <Image source={catImg} style={styles.peekingPetSide} resizeMode="contain" />
+            </View>
+
+            {/* Paw watermark in background */}
+            <View style={styles.pawWatermarkContainer}>
+              <Ionicons name="paw" size={120} color="rgba(139, 94, 60, 0.06)" />
+            </View>
+
+            {/* Paw Icon */}
+            <Ionicons name="paw" size={28} color="#8B5E3C" style={styles.pawIcon} />
+
+            {/* Animated Emergency Button with Pulse + Glow */}
+            <View style={styles.emergencyButtonWrapper}>
+              {/* Glow ring behind button */}
+              <Animated.View style={[styles.glowRing, animatedGlowStyle]} />
+
+              {/* Pulsing button */}
+              <AnimatedTouchable
+                style={[styles.emergencyButton, animatedButtonStyle]}
+                onPress={() => navigation.navigate('CreatePost')}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                activeOpacity={0.9}
+              >
+                <Ionicons name="paw" size={40} color="#E87A3A" />
+              </AnimatedTouchable>
+            </View>
+
+            <Text style={styles.emergencyText}>LOST PET ?</Text>
+          </View>
+        </View>
+
+        {/* Recent Alerts Section */}
+        <Text style={styles.sectionTitle}>Recent Alerts</Text>
+
+        {loading ? (
+          <ActivityIndicator size="large" color="#E87A3A" style={{ marginTop: 20 }} />
+        ) : (
+          <FlatList
+            data={alerts}
+            renderItem={renderAlertCard}
+            keyExtractor={(item) => item.id || Math.random().toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.alertsRow}
+          />
+        )}
+
+        {/* See All Button */}
+        <TouchableOpacity
+          style={styles.seeAllButton}
+          onPress={() => navigation.navigate('AllAlerts')}
+        >
+          <Text style={styles.seeAllText}>See all</Text>
+        </TouchableOpacity>
+      </ScrollView>
+
+      <BottomTabBar navigation={navigation} activeTab="Home" />
+    </SafeAreaView>
+  );
+};
+
+export default HomeScreen;
