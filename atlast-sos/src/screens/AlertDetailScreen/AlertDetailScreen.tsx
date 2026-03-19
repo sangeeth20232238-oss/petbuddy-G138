@@ -168,3 +168,61 @@ const AlertDetailScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
+          
+          {/* Description Card */}
+          <View style={styles.descriptionCard}>
+            <Text style={styles.sectionTitle}>Description</Text>
+            <Text style={styles.descriptionText}>
+              {alert.additionalDescription || alert.description || 'No description provided.'}
+            </Text>
+          </View>
+
+          {/* Details Section */}
+          <View style={styles.detailsSection}>
+            <Text style={styles.sectionTitle}>Details</Text>
+            <View style={styles.detailsGrid}>
+              {/* Date Lost */}
+              <View style={styles.detailCard}>
+                <MaterialCommunityIcons name="calendar-month" size={28} color="#E87A3A" />
+                <Text style={styles.detailLabel}>Date Lost</Text>
+                <Text style={styles.detailValue}>{lostDate}</Text>
+              </View>
+              {/* Last Seen */}
+              <View style={styles.detailCard}>
+                <Ionicons name="location-outline" size={28} color="#E87A3A" />
+                <Text style={styles.detailLabel}>Last Seen</Text>
+                <Text style={styles.detailValue}>{alert.location || 'Unknown'}</Text>
+              </View>
+              {/* Pet Type */}
+              <View style={styles.detailCard}>
+                <MaterialCommunityIcons name="paw" size={28} color="#E87A3A" />
+                <Text style={styles.detailLabel}>Pet Type</Text>
+                <Text style={styles.detailValue}>{alert.species || 'Unknown'}</Text>
+              </View>
+              {/* Reward */}
+              <View style={styles.detailCard}>
+                <MaterialCommunityIcons name="gift-outline" size={28} color="#E87A3A" />
+                <Text style={styles.detailLabel}>Reward</Text>
+                <Text style={styles.detailValue}>$750</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Contact Owner Button */}
+          <TouchableOpacity style={styles.contactButton} onPress={handleContactOwner}>
+            <Ionicons name="call" size={20} color="#FFF" />
+            <Text style={styles.contactButtonText}>Contact Owner</Text>
+          </TouchableOpacity>
+
+          {/* Share Button */}
+          <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+            <Ionicons name="share-social-outline" size={20} color="#E87A3A" />
+            <Text style={styles.shareButtonText}>Share This Alert</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+export default AlertDetailScreen;
