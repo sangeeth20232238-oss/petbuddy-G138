@@ -61,10 +61,9 @@ export default function VolunteerOnboardingScreen({ navigation }) {
                     nicUploaded: true,
                     experience: experience.trim(),
                     breeds: breeds.trim(),
-                    status: 'approved',
                     createdAt: new Date().toISOString(),
                 });
-                Alert.alert("Success!", "Your volunteer profile has been submitted for review.", [
+                Alert.alert("You're a Buddy! 🐾", "Your profile is live. Pet owners can now reach you.", [
                     { text: "OK", onPress: () => navigation.navigate('Dashboard') }
                 ]);
             } catch (e) {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, writeBatch, doc, deleteField } from 'firebase/firestore';
 import { db } from '../../../firebaseConfig';
 
 const { width } = Dimensions.get('window');
@@ -26,8 +26,15 @@ export default function PetBuddyRequestScreen({ navigation }) {
     const fetchVolunteers = async () => {
         setLoadingVols(true);
         try {
-            const q = query(collection(db, 'volunteers'), where('status', '==', 'approved'));
-            const snap = await getDocs(q);
+            const snap = await getDocs(collection(db, 'volunteers'));
+            // Clean up any old 'status' field from existing docs
+            const batch = writeBatch(db);
+            snap.docs.forEach(d => {
+                if (d.data().status !== undefined) {
+                    batch.update(doc(db, 'volunteers', d.id), { status: deleteField() });
+                }
+            });
+            await batch.commit();
             setVolunteers(snap.docs.map(d => ({ id: d.id, ...d.data() })));
         } catch (e) {
             setVolunteers([]);
