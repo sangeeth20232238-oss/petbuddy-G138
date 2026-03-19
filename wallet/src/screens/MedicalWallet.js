@@ -26,7 +26,6 @@ export default function MedicalWallet() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   
-  // FIX: This captures the Name and ID passed from the previous screen
   const params = useLocalSearchParams();
   const petName = params.name || "Bunny"; 
   const petId = params.id || "2045288AE";
