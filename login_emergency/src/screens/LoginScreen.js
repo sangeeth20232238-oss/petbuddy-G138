@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     StyleSheet, View, Text, TextInput, TouchableOpacity,
-    Dimensions, StatusBar, Alert, ScrollView
+    Dimensions, StatusBar, Alert, ScrollView, ActivityIndicator
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { auth } from '../../firebaseConfig';
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { auth, db } from '../../firebaseConfig';
+import { signInWithEmailAndPassword, sendPasswordResetEmail, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+
+WebBrowser.maybeCompleteAuthSession();
 
 const { height } = Dimensions.get('window');
 
@@ -38,6 +43,42 @@ export default function LoginScreen({ navigation }) {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        webClientId: '506859726227-q6vr5uiipc4gqrn3d69gau239tqg0gmp.apps.googleusercontent.com',
+        androidClientId: '506859726227-b9svulvdh5shrvf648po83a2uvngbukk.apps.googleusercontent.com',
+        expoClientId: '506859726227-q6vr5uiipc4gqrn3d69gau239tqg0gmp.apps.googleusercontent.com',
+        selectAccount: true,
+    });
+
+    useEffect(() => {
+        if (response?.type === 'success') {
+            const { id_token } = response.params;
+            setGoogleLoading(true);
+            const credential = GoogleAuthProvider.credential(id_token);
+            signInWithCredential(auth, credential)
+                .then(async (result) => {
+                    const user = result.user;
+                    const userRef = doc(db, 'users', user.uid);
+                    const snap = await getDoc(userRef);
+                    if (!snap.exists()) {
+                        await setDoc(userRef, {
+                            name: user.displayName || 'User',
+                            email: user.email,
+                            profilePic: user.photoURL || '',
+                            createdAt: new Date(),
+                        });
+                    }
+                    navigation.replace('Dashboard');
+                })
+                .catch((err) => {
+                    console.error('Google Sign-In Error:', err);
+                    Alert.alert('Google Sign-In Failed', err.message);
+                })
+                .finally(() => setGoogleLoading(false));
+        }
+    }, [response]);
 
     const handleLogin = () => {
         if (!email || !password) {
@@ -62,11 +103,11 @@ export default function LoginScreen({ navigation }) {
     };
 
     const handleGoogleLogin = () => {
-        Alert.alert(
-            'Google Sign-In',
-            'To enable Google Sign-In, add your OAuth Client IDs from Firebase Console → Authentication → Sign-in method → Google.',
-            [{ text: 'OK' }]
-        );
+        if (!request) {
+            Alert.alert('Please wait', 'Google Sign-In is loading...');
+            return;
+        }
+        promptAsync();
     };
 
     return (
@@ -113,11 +154,22 @@ export default function LoginScreen({ navigation }) {
             </View>
 
             {/* Google Sign-In */}
-            <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleLogin} activeOpacity={0.85}>
-                <Ionicons name="logo-google" size={22} color="#DB4437" />
-                <Text style={[styles.googleBtnText, { fontFamily: 'Fredoka-SemiBold' }]}>
-                    Continue with Google
-                </Text>
+            <TouchableOpacity
+                style={[styles.googleBtn, googleLoading && { opacity: 0.7 }]}
+                onPress={handleGoogleLogin}
+                disabled={googleLoading}
+                activeOpacity={0.85}
+            >
+                {googleLoading ? (
+                    <ActivityIndicator color="#DB4437" size="small" />
+                ) : (
+                    <>
+                        <Ionicons name="logo-google" size={22} color="#DB4437" />
+                        <Text style={[styles.googleBtnText, { fontFamily: 'Fredoka-SemiBold' }]}>
+                            Continue with Google
+                        </Text>
+                    </>
+                )}
             </TouchableOpacity>
 
             <View style={styles.footer}>

@@ -40,5 +40,11 @@ service cloud.firestore {
     match /adoptions/{adoptionId} {
       allow read, write: if request.auth != null;
     }
+
+    // IMPORTANT: Required for your web dashboard login to work!
+    match /adminRoles/{roleId} {
+      allow read: if request.auth != null && request.auth.uid == roleId;
+      allow write: if false;
+    }
   }
 }

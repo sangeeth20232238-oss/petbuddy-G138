@@ -181,7 +181,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, doc, deleteDoc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -198,13 +198,19 @@
     const db      = getFirestore(app);
     const storage = getStorage(app);
 
-    onAuthStateChanged(auth, user => {
+    onAuthStateChanged(auth, async user => {
         if (!user) {
-            window.location.href = 'index.html'; // Redirect to login if not logged in
-        } else {
-            document.getElementById('shelterEmail').textContent = user.email;
-            window.loadRequests(); // Load requests when authenticated
+            window.location.href = 'index.html';
+            return;
         }
+        const roleDoc = await getDoc(doc(db, 'adminRoles', user.uid));
+        if (!roleDoc.exists() || roleDoc.data().role !== 'shelter') {
+            await signOut(auth);
+            window.location.href = 'index.html';
+            return;
+        }
+        document.getElementById('shelterEmail').textContent = user.email;
+        window.loadRequests();
     });
 
     window.handleLogout = async () => {
@@ -296,12 +302,40 @@
                 if (reqData.status === 'accepted') return; 
                 
                 pendingCount++;
+
+                // Dynamically grab ALL extra keys from the database so nothing is ever hidden
+                let extraDetailsHtml = '';
+                const skipKeys = ['petName', 'petId', 'applicantName', 'applicantPhone', 'reason', 'status', 'userId', 'createdAt'];
+                
+                for (let key in reqData) {
+                    if (!skipKeys.includes(key)) {
+                        let formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                        let value = reqData[key];
+                        
+                        if (value && typeof value === 'object' && !value.toDate) { 
+                            // Unpack nested objects like "lifestyle" instead of showing [object Object]
+                            let nestedHtml = '';
+                            for (let subKey in value) {
+                                let formattedSubKey = subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                                nestedHtml += `<li style="margin-bottom: 4px;"><strong>${formattedSubKey}:</strong> ${value[subKey]}</li>`;
+                            }
+                            extraDetailsHtml += `<p style="margin-bottom:5px;"><strong>${formattedKey}:</strong></p><ul style="margin-top:2px; margin-bottom:12px; padding-left:20px; font-size:14.5px; color:#444;">${nestedHtml}</ul>`;
+                        } else {
+                            // Handle standard strings and numbers
+                            if (!value) value = 'Not specified';
+                            if (value.toDate) value = value.toDate().toLocaleString(); // Format dates if they exist
+                            extraDetailsHtml += `<p style="margin-bottom:5px;"><strong>${formattedKey}:</strong> ${value}</p>`;
+                        }
+                    }
+                }
+
                 const reqHtml = `
                     <div class="form-wrap" style="margin-bottom: 0; padding: 20px;">
                         <h3 style="color:#FF741C; margin-bottom:8px;">🐾 Pet: ${reqData.petName || 'Unknown'}</h3>
-                        <p style="margin-bottom:5px;"><strong>Applicant:</strong> ${reqData.applicantName}</p>
-                        <p style="margin-bottom:5px;"><strong>Phone:</strong> ${reqData.applicantPhone}</p>
-                        <p style="margin-bottom:12px;"><strong>Reason:</strong> ${reqData.reason}</p>
+                        <p style="margin-bottom:5px;"><strong>Applicant:</strong> ${reqData.applicantName || 'Not specified'}</p>
+                        <p style="margin-bottom:5px;"><strong>Phone:</strong> ${reqData.applicantPhone || 'Not specified'}</p>
+                        ${extraDetailsHtml}
+                        <p style="margin-bottom:12px;"><strong>Reason:</strong> ${reqData.reason || 'Not specified'}</p>
                         <div style="display:flex; gap:10px; margin-top: 16px;">
                             <button onclick="acceptRequest('${docSnap.id}', '${reqData.petId}')" style="background-color: #4CAF50; border-radius: 8px;">
                                 Accept & Remove Pet

@@ -1,6 +1,5 @@
 {
   "expo": {
-    "scheme": "petbuddy",
     "name": "PetBuddyMobile",
     "slug": "PetBuddyMobile",
     "version": "1.0.0",
@@ -8,15 +7,18 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "scheme": "petbuddy",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.petbuddy.app"
     },
     "android": {
+      "package": "com.petbuddy.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -29,6 +31,12 @@
     "plugins": [
       "expo-font",
       "expo-web-browser"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9d088ff5-cb9a-4165-9aa9-8fe546a50e20"
+      }
+    },
+    "owner": "petpuddy"
   }
 }

@@ -81,8 +81,9 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
     import {
-        getAuth, signInWithEmailAndPassword, onAuthStateChanged
+        getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence
     } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM",
@@ -95,22 +96,29 @@
 
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db   = getFirestore(app);
 
-    onAuthStateChanged(auth, user => {
-        if (user) {
-            let storedProfile = localStorage.getItem('selectedProfile') || 'Clinic';
-            
-            if (storedProfile === 'Shelter') {
-                window.location.href = 'shelter.html';
-            } else if (storedProfile === 'Clinic') {
-                window.location.href = 'clinic.html';
-            } else {
-                // For Groomer or other future portals
-                window.location.href = 'clinic.html'; 
+    onAuthStateChanged(auth, async user => {
+        const storedProfile = localStorage.getItem('selectedProfile');
+
+        if (user && storedProfile) {
+            try {
+                const roleDoc = await getDoc(doc(db, 'adminRoles', user.uid));
+                if (roleDoc.exists() && roleDoc.data().role === storedProfile.toLowerCase()) {
+                    if (storedProfile === 'Shelter')       window.location.href = 'shelter.html';
+                    else if (storedProfile === 'Clinic')   window.location.href = 'clinic.html';
+                    else if (storedProfile === 'Groomer')  window.location.href = 'groomer.html';
+                } else {
+                    document.getElementById('loginError').textContent = 'Unauthorized. You are not a registered ' + storedProfile + '.';
+                    await signOut(auth);
+                }
+            } catch(e) {
+                document.getElementById('loginError').textContent = 'Error verifying authorization.';
+                await signOut(auth);
             }
         } else {
-            document.getElementById('profileScreen').style.display   = 'flex';
-            document.getElementById('loginScreen').style.display     = 'none';
+            document.getElementById('profileScreen').style.display = 'flex';
+            document.getElementById('loginScreen').style.display   = 'none';
         }
     });
 
@@ -137,12 +145,13 @@
         }
 
         document.getElementById('loginError').textContent = '';
-        btn.textContent = 'Logging in...';
+        btn.textContent = 'Verifying...';
         btn.disabled = true;
 
         try {
+            await setPersistence(auth, browserLocalPersistence);
             await signInWithEmailAndPassword(auth, email, password);
-            // onAuthStateChanged will magically catch this and redirect to the correct page automatically
+            // Firebase will instantly trigger onAuthStateChanged above, which does the RBAC check!
         } catch (e) {
             console.error(e);
             document.getElementById('loginError').textContent = 'Invalid email or password.';
