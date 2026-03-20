@@ -28,15 +28,15 @@ const homeStyles = StyleSheet.create({
   // Enhanced Hero Section
   heroSection: {
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop: 60,
 
   },
   heroCard: {
     backgroundColor: '#F5B87A',
     borderRadius: 28,
-    overflow: 'hidden',
     alignItems: 'center',
-    paddingBottom: 32,
+    paddingBottom: 20,
+    paddingTop: 40,
     // Layered card shadow
     shadowColor: '#000000ff',
     shadowOffset: { width: 0, height: 6 },
@@ -47,13 +47,14 @@ const homeStyles = StyleSheet.create({
 
   // Peeking Pets
   peekingPetsRow: {
-    width: '100%',
+    position: 'absolute',
+    top: -92,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-end',
-    marginTop: 10,
-    marginBottom: -15,
-    zIndex: 2,
+    zIndex: 10,
   },
   peekingPetSide: {
     width: 100,
