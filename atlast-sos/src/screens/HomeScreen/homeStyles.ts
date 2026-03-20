@@ -24,37 +24,77 @@ const homeStyles = StyleSheet.create({
     color: '#222',
     marginLeft: 12,
   },
+
+  // Enhanced Hero Section
   heroSection: {
     marginHorizontal: 20,
-    marginTop: 8,
+    marginTop: 20,
+
   },
   heroCard: {
     backgroundColor: '#F5B87A',
-    borderRadius: 24,
+    borderRadius: 28,
     overflow: 'hidden',
     alignItems: 'center',
-    paddingBottom: 20,
+    paddingBottom: 32,
+    // Layered card shadow
+    shadowColor: '#000000ff',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+    elevation: 8,
   },
-  petBanner: {
+
+  // Peeking Pets
+  peekingPetsRow: {
     width: '100%',
-    height: 140,
-    resizeMode: 'contain',
-  },
-  petBannerPlaceholder: {
-    width: '100%',
-    height: 120,
-    backgroundColor: '#F5B87A',
-    justifyContent: 'center',
-    alignItems: 'center',
     flexDirection: 'row',
-    paddingTop: 10,
-    gap: 8,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginTop: 10,
+    marginBottom: -15,
+    zIndex: 2,
   },
-  petEmoji: {
-    fontSize: 50,
+  peekingPetSide: {
+    width: 100,
+    height: 100,
+    marginHorizontal: -6,
   },
+  peekingPetCenter: {
+    width: 115,
+    height: 115,
+    marginHorizontal: -6,
+    zIndex: 3,
+  },
+
+  // Paw watermark
+  pawWatermarkContainer: {
+    position: 'absolute',
+    top: 60,
+    right: -10,
+    transform: [{ rotate: '25deg' }],
+    zIndex: 0,
+  },
+
   pawIcon: {
-    marginVertical: 4,
+    marginVertical: 6,
+    zIndex: 1,
+  },
+
+  // Animated Emergency Button
+  emergencyButtonWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    width: 130,
+    height: 130,
+  },
+  glowRing: {
+    position: 'absolute',
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    backgroundColor: '#E87A3A',
   },
   emergencyButton: {
     width: 110,
@@ -63,46 +103,56 @@ const homeStyles = StyleSheet.create({
     backgroundColor: '#FFF',
     justifyContent: 'center',
     alignItems: 'center',
+    // Elevated shadow
     shadowColor: '#E87A3A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
-    marginTop: 0,
-  },
-  emergencyIcon: {
-    marginBottom: 2,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    elevation: 8,
+    borderWidth: 3,
+    borderColor: 'rgba(232, 122, 58, 0.15)',
   },
   emergencyText: {
-    fontSize: 15,
+    fontSize: 20,
     fontWeight: '900',
-    color: '#222',
-    marginTop: 6,
+    color: '#422b1aff',
+    marginTop: 30,
+    letterSpacing: 1,
   },
+
+  // Section Title
   sectionTitle: {
     fontSize: 20,
     fontWeight: '800',
     color: '#222',
     textAlign: 'center',
-    marginTop: 24,
+    marginTop: 26,
     marginBottom: 14,
   },
   alertsRow: {
     paddingLeft: 20,
     paddingRight: 8,
   },
+
+  // See All Button
   seeAllButton: {
-    backgroundColor: '#FF741C',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 20,
+    backgroundColor: '#E87A3A',
+    paddingHorizontal: 28,
+    paddingVertical: 10,
+    borderRadius: 22,
     alignSelf: 'center',
-    marginTop: 14,
+    marginTop: 16,
+    shadowColor: '#E87A3A',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 4,
   },
   seeAllText: {
     color: '#FFF',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '700',
+    letterSpacing: 0.5,
   },
 });
 
