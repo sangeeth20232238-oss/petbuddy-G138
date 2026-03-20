@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Dimensions, Linking, Alert, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -7,6 +7,27 @@ const { width } = Dimensions.get('window');
 
 export default function ClinicDetailScreen({ route, navigation }) {
     const { clinic } = route.params;
+
+    const handleCall = () => {
+        if (clinic.phone) {
+            Linking.openURL(`tel:${clinic.phone}`);
+        } else {
+            Alert.alert('Not Available', 'Phone number not provided for this clinic.');
+        }
+    };
+
+    const handleNavigate = () => {
+        if (clinic.address) {
+            const url = Platform.select({
+                ios: `maps:0,0?q=${clinic.address}`,
+                android: `geo:0,0?q=${clinic.address}`,
+            }) || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(clinic.address)}`;
+            Linking.openURL(url);
+        } else {
+            Alert.alert('Not Available', 'Address not provided for this clinic.');
+        }
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -14,20 +35,30 @@ export default function ClinicDetailScreen({ route, navigation }) {
                 <Text style={styles.headerTitle}>Emergency Vet</Text>
             </View>
             <Text style={styles.subTitle}>{clinic.name}</Text>
-            <Image source={{ uri: clinic.img }} style={styles.mainImg} />
+            <Image source={{ uri: clinic.imageUrl || clinic.img }} style={styles.mainImg} />
             <View style={styles.actionRow}>
-                <TouchableOpacity style={styles.actionBtn}><Ionicons name="call" size={28} color="white" /></TouchableOpacity>
-                <TouchableOpacity style={styles.actionBtn}><Ionicons name="navigate" size={28} color="white" /></TouchableOpacity>
+                <TouchableOpacity style={styles.actionBtn} onPress={handleCall}>
+                    <Ionicons name="call" size={28} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionBtn} onPress={handleNavigate}>
+                    <Ionicons name="navigate" size={28} color="white" />
+                </TouchableOpacity>
             </View>
             <View style={styles.detailsContainer}>
                 <Text style={styles.sectionTitle}>Details</Text>
                 <View style={styles.infoRow}>
                     <View style={styles.iconBox}><Ionicons name="location-outline" size={24} color="#FF741C" /></View>
-                    <View><Text style={styles.label}>Address</Text><Text style={styles.value}>123 Main Street, Anytown, USA</Text></View>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.label}>Address</Text>
+                        <Text style={styles.value}>{clinic.address || 'Address not listed'}</Text>
+                    </View>
                 </View>
                 <View style={styles.infoRow}>
                     <View style={styles.iconBox}><Ionicons name="time-outline" size={24} color="#FF741C" /></View>
-                    <View><Text style={styles.label}>Hours</Text><Text style={styles.value}>Mon-Fri: 8am-6pm, Sat: 9am-1pm</Text></View>
+                    <View>
+                        <Text style={styles.label}>Hours</Text>
+                        <Text style={styles.value}>{clinic.hours || clinic.status || 'Hours not listed'}</Text>
+                    </View>
                 </View>
             </View>
             <TouchableOpacity style={styles.bookBtn} onPress={() => navigation.navigate('DoctorList', { clinic })}>
