@@ -309,6 +309,10 @@ export default function ChatScreen() {
             setSuggestions([]);
             return;
         }
+         const response = await fetch(
+            `https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/suggestions?q=${input}`
+        );
+
 
     const scrollToBottom = useCallback(() => {
         setTimeout(() => {
