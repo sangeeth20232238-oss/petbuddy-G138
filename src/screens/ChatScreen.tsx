@@ -21,6 +21,7 @@ import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Message {
     id: string;
@@ -299,6 +300,44 @@ export default function ChatScreen() {
     const [showMenu, setShowMenu] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
+   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const [suggestions, setSuggestions] = useState([]);
+
+    const fetchSuggestions = (input: string) => {
+        if (timeoutRef.current) { // clear previous timer 
+        clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(async () => { //dispalys API call
+        try {
+            if (input.trim().length < 2) {
+                setSuggestions([]);
+                return;
+            }
+
+             const response = await fetch(
+                `https://us-central1-petbuddy-138.cloudfunctions.net/suggestions?q=${input}`
+            );
+
+             const data = await response.json();
+
+            if (data.suggestions.length > 0) {
+                    setSuggestions(data.suggestions || []);
+                }
+        } catch (error) {
+            console.log("Suggestion error:", error);
+        }
+    }, 300); //delay
+};
+
+//Prevent memory leaks when component unmounts: CLEAN UP
+useEffect(() => {
+    return () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+    };
+}, []);
 
     const scrollToBottom = useCallback(() => {
         setTimeout(() => {
@@ -353,6 +392,7 @@ export default function ChatScreen() {
         if (!inputText.trim()) return;
         animateSendButton();
         Keyboard.dismiss();
+        setSuggestions([]); // clear dropdown
         const text = inputText;
         setInputText('');
         await sendMessage(text);
@@ -432,11 +472,26 @@ export default function ChatScreen() {
                         ListFooterComponent={isTyping ? <TypingIndicator /> : null}
                         onContentSizeChange={scrollToBottom}
                         renderItem={({ item, index }) => <MessageBubble message={item} index={index} />}
+                        contentContainerStyle={[
+                        styles.chatContent,
+                        messages.length === 0 && styles.chatContentEmpty,
+                        { paddingBottom: 120 } // 🔥 THIS MAKES SPACE FOR INPUT
+                    ]}
                     />
+                </KeyboardAvoidingView>
+
+                {/*FIXED INPUT BAR */}
+                <View style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                }}>
+                </View>
 
                     {/* ── Input Bar ── */}
                     <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
-                        <View style={[styles.inputBar, isFocused && styles.inputBarFocused]}>
+                        <View style={{ position: 'relative' }}>
                             <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
                                 <Feather name="mic" size={20} color="#FF741C" />
                             </TouchableOpacity>
@@ -444,7 +499,10 @@ export default function ChatScreen() {
                             <TextInput
                                 style={styles.textInput}
                                 value={inputText}
-                                onChangeText={setInputText}
+                                onChangeText={(value) => {
+                                    setInputText(value);
+                                    fetchSuggestions(value); //  call backend
+                                }}
                                 placeholder="What happened to your dog?"
                                 placeholderTextColor="#787878"
                                 multiline
@@ -476,9 +534,43 @@ export default function ChatScreen() {
                                 </TouchableOpacity>
                             </Animated.View>
                         </View>
+                            {suggestions.length > 0 && inputText.length >= 2 && (  //Show suggestions only if there are results 
+                                <View style={{   //Container for the dropdown popup
+                                    position: 'absolute',
+                                    bottom: 70,
+                                    left: 16,
+                                    right: 16,
+                                    backgroundColor: '#FFF7F0',
+                                    borderWidth: 1,
+                                    borderColor: '#FFD4B3',
+                                    borderRadius: 12,
+                                    padding: 8,
+                                    elevation: 6,
+                                    zIndex: 1000,
+                                    maxHeight: 150
+                                }}>
+                                    {suggestions.map((item, index) => (  //Loop through suggestions list
+                                        <TouchableOpacity // Each suggestion is clickable
+                                            key={index}
+                                            onPress={() => {
+                                                setInputText(item);   //  fill input with selected suggestion
+                                                setSuggestions([]);   //  hide dropdown after selection
+                                                sendMessage(item); // auto send 
+                                            }}
+                                        >
+                                             <Text style={{
+                                                        padding: 10,
+                                                        fontSize: 14,
+                                                        color: '#1A1A1A'
+                                                    }}>
+                                                        {item}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </View>
+                                    )}
                         <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
                     </SafeAreaView>
-                </KeyboardAvoidingView>
             </SafeAreaView>
         </View>
     );
@@ -703,11 +795,16 @@ const styles = StyleSheet.create({
 
     // Input Bar
     inputSafeArea: {
-        backgroundColor: 'transparent',
         paddingHorizontal: 16,
-        paddingTop: 8,
-        marginBottom: 15,
-    },
+        paddingTop: 6,
+        paddingBottom: 10,
+        backgroundColor: '#FFFFFF', 
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 8,
+    },  
+
     inputBar: {
         flexDirection: 'row',
         alignItems: 'flex-end',
