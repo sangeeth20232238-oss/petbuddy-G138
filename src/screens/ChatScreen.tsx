@@ -473,6 +473,15 @@ useEffect(() => {
                         onContentSizeChange={scrollToBottom}
                         renderItem={({ item, index }) => <MessageBubble message={item} index={index} />}
                     />
+                </KeyboardAvoidingView>
+
+                {/* 🔥 FIXED INPUT BAR */}
+                <View style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                }}></View>
 
                     {/* ── Input Bar ── */}
                     <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
