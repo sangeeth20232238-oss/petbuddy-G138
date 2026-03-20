@@ -1,21 +1,39 @@
+// App Navigator - Stack navigation for all screens (React Navigation v7)
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createStaticNavigation } from '@react-navigation/native';
+
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import AllAlertsScreen from '../screens/AllAlertsScreen/AllAlertsScreen';
 import AlertDetailScreen from '../screens/AlertDetailScreen/AlertDetailScreen';
 import CreatePostScreen from '../screens/CreatePostScreen/CreatePostScreen';
 import ShareNotifyScreen from '../screens/ShareNotifyScreen/ShareNotifyScreen';
 
-const Stack = createStackNavigator();
+const RootStack = createStackNavigator({
+  screenOptions: {
+    headerShown: false,
+    cardStyle: { backgroundColor: '#FFF5EC' },
+    gestureEnabled: true,
+  },
+  screens: {
+    Home: {
+      screen: HomeScreen,
+    },
+    AllAlerts: {
+      screen: AllAlertsScreen,
+    },
+    AlertDetail: {
+      screen: AlertDetailScreen,
+    },
+    CreatePost: {
+      screen: CreatePostScreen,
+    },
+    ShareNotify: {
+      screen: ShareNotifyScreen,
+    },
+  },
+});
 
-export default function SOSNavigator() {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false, cardStyle: { backgroundColor: '#FFF5EC' } }}>
-      <Stack.Screen name="SOSHome" component={HomeScreen} />
-      <Stack.Screen name="AllAlerts" component={AllAlertsScreen} />
-      <Stack.Screen name="AlertDetail" component={AlertDetailScreen} />
-      <Stack.Screen name="CreatePost" component={CreatePostScreen} />
-      <Stack.Screen name="ShareNotify" component={ShareNotifyScreen} />
-    </Stack.Navigator>
-  );
-}
+export const Navigation = createStaticNavigation(RootStack);
+
+export default Navigation;

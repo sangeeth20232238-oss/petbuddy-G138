@@ -6,14 +6,35 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  SafeAreaView,
   ActivityIndicator,
+  Image,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  withSpring,
+  Easing,
+} from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AlertCard from '../../components/AlertCard';
+import BottomTabBar from '../../components/BottomTabBar';
 import { LostPetAlert, getRecentAlerts } from '../../backend/alertService';
 import styles from './homeStyles';
+
+// Peeking pet images
+const bulldogImg = require('../../../../../assets/peeking-pets/bulldog.png');
+const labradorImg = require('../../../../../assets/peeking-pets/labrador.png');
+const catImg = require('../../../../../assets/peeking-pets/cat.png');
+
+// Demo pet images for alert cards
+const goldyImg = require('../../../../../assets/demo-pets/goldy.png');
+const maxImg = require('../../../../../assets/demo-pets/max.png');
+const lunaImg = require('../../../../../assets/demo-pets/luna.png');
 
 // Mock data for demo (used when Firebase is not configured)
 const MOCK_ALERTS: LostPetAlert[] = [
@@ -30,7 +51,7 @@ const MOCK_ALERTS: LostPetAlert[] = [
     location: 'Colombo 06',
     description: 'This is my Lost Pet named Goldy!',
     additionalDescription: 'A friendly golden retriever, very playful and responds to the name Goldy.',
-    imageUrl: '',
+    imageUrl: goldyImg,
     likes: 1000,
     comments: 24,
   },
@@ -47,7 +68,7 @@ const MOCK_ALERTS: LostPetAlert[] = [
     location: 'Colombo 03',
     description: 'This is my Lost Pet named Max!',
     additionalDescription: 'Brown labrador with blue collar, very gentle.',
-    imageUrl: '',
+    imageUrl: maxImg,
     likes: 850,
     comments: 15,
   },
@@ -64,16 +85,62 @@ const MOCK_ALERTS: LostPetAlert[] = [
     location: 'Colombo 07',
     description: 'This is my Lost Pet named Luna!',
     additionalDescription: 'White persian cat with pink collar.',
-    imageUrl: '',
+    imageUrl: lunaImg,
     likes: 620,
     comments: 10,
   },
 ];
 
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const [alerts, setAlerts] = useState<LostPetAlert[]>(MOCK_ALERTS);
   const [loading, setLoading] = useState(false);
+
+  // Pulse animation values
+  const pulseScale = useSharedValue(1);
+  const glowOpacity = useSharedValue(0.3);
+  const pressScale = useSharedValue(1);
+
+  useEffect(() => {
+    // Continuous pulse: 1.0 → 1.08 → 1.0
+    pulseScale.value = withRepeat(
+      withSequence(
+        withTiming(1.08, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(1.0, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1, // infinite
+      false
+    );
+
+    // Glow breathing: 0.3 → 0.7 → 0.3
+    glowOpacity.value = withRepeat(
+      withSequence(
+        withTiming(0.7, { duration: 1000, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.3, { duration: 1000, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedButtonStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pulseScale.value * pressScale.value }],
+  }));
+
+  const animatedGlowStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+    transform: [{ scale: pulseScale.value * 1.15 }],
+  }));
+
+  const handlePressIn = () => {
+    pressScale.value = withSpring(0.92, { damping: 15, stiffness: 300 });
+  };
+
+  const handlePressOut = () => {
+    pressScale.value = withSpring(1, { damping: 10, stiffness: 200 });
+  };
 
   const fetchAlerts = useCallback(async () => {
     setLoading(true);
@@ -115,24 +182,38 @@ const HomeScreen: React.FC = () => {
         {/* Hero Section with Pet Illustrations + Emergency Button */}
         <View style={styles.heroSection}>
           <View style={styles.heroCard}>
-            {/* Pet Banner Placeholder */}
-            <View style={styles.petBannerPlaceholder}>
-              <Text style={styles.petEmoji}>🐶</Text>
-              <Text style={styles.petEmoji}>🐕</Text>
-              <Text style={styles.petEmoji}>🐱</Text>
+            {/* Peeking Pets above the card */}
+            <View style={styles.peekingPetsRow}>
+              <Image source={bulldogImg} style={styles.peekingPetSide} resizeMode="contain" />
+              <Image source={labradorImg} style={styles.peekingPetCenter} resizeMode="contain" />
+              <Image source={catImg} style={styles.peekingPetSide} resizeMode="contain" />
+            </View>
+
+            {/* Paw watermark in background */}
+            <View style={styles.pawWatermarkContainer}>
+              <Ionicons name="paw" size={120} color="rgba(139, 94, 60, 0.06)" />
             </View>
 
             {/* Paw Icon */}
             <Ionicons name="paw" size={28} color="#8B5E3C" style={styles.pawIcon} />
 
-            {/* Emergency Button */}
-            <TouchableOpacity
-              style={styles.emergencyButton}
-              onPress={() => navigation.navigate('CreatePost')}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="megaphone" size={36} color="#E87A3A" style={styles.emergencyIcon} />
-            </TouchableOpacity>
+            {/* Animated Emergency Button with Pulse + Glow */}
+            <View style={styles.emergencyButtonWrapper}>
+              {/* Glow ring behind button */}
+              <Animated.View style={[styles.glowRing, animatedGlowStyle]} />
+
+              {/* Pulsing button */}
+              <AnimatedTouchable
+                style={[styles.emergencyButton, animatedButtonStyle]}
+                onPress={() => navigation.navigate('CreatePost')}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                activeOpacity={0.9}
+              >
+                <Ionicons name="paw" size={40} color="#E87A3A" />
+              </AnimatedTouchable>
+            </View>
+
             <Text style={styles.emergencyText}>LOST PET ?</Text>
           </View>
         </View>
@@ -162,7 +243,7 @@ const HomeScreen: React.FC = () => {
         </TouchableOpacity>
       </ScrollView>
 
-
+      <BottomTabBar navigation={navigation} activeTab="Home" />
     </SafeAreaView>
   );
 };

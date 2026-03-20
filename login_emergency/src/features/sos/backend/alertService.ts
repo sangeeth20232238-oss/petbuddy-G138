@@ -11,7 +11,7 @@ import {
   serverTimestamp,
   Timestamp,
 } from 'firebase/firestore';
-import { db } from './firebaseConfig';
+import { db } from '../../../../firebaseConfig';
 
 export interface LostPetAlert {
   id?: string;
@@ -26,7 +26,7 @@ export interface LostPetAlert {
   location: string;
   description: string;
   additionalDescription: string;
-  imageUrl: string;
+  imageUrl: string | number;
   likes: number;
   comments: number;
   createdAt?: any;

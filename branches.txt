@@ -1,0 +1,14 @@
+﻿  origin/HEAD -> origin/main
+  origin/PetSOS
+  origin/Pet_adoption
+  origin/ai_backend
+  origin/ai_frontend
+  origin/development
+  origin/login_emergency
+  origin/main
+  origin/pet-grooming-mobile
+  origin/pet-wallet
+  origin/pet-wallet2
+  origin/pet_adoption02
+  origin/petadoption_backend
+  origin/petadoption_backend2

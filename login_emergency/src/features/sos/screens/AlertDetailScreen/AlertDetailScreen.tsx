@@ -65,7 +65,7 @@ const AlertDetailScreen: React.FC = () => {
       </SafeAreaView>
     );
   }
-  
+
   const lostDate = alert.lostDate || '20.02.2026';
   const likesCount = alert.likes || 0;
 
@@ -101,7 +101,7 @@ const AlertDetailScreen: React.FC = () => {
         {/* Full-bleed Pet Image */}
         <View style={styles.imageContainer}>
           {alert.imageUrl ? (
-            <Image source={{ uri: alert.imageUrl }} style={styles.petImage} />
+            <Image source={typeof alert.imageUrl === 'string' ? { uri: alert.imageUrl } : alert.imageUrl} style={styles.petImage} />
           ) : (
             <View style={[styles.petImage, styles.petImagePlaceholder]}>
               <Ionicons name="image-outline" size={80} color="#ccc" />
@@ -116,7 +116,7 @@ const AlertDetailScreen: React.FC = () => {
             <Ionicons name="arrow-back" size={24} color="#FFF" />
           </TouchableOpacity>
         </View>
-        
+
         {/* White card content overlapping the image */}
         <View style={styles.contentCard}>
           {/* Pet Name Row */}
@@ -168,7 +168,7 @@ const AlertDetailScreen: React.FC = () => {
               </TouchableOpacity>
             </View>
           </View>
-          
+
           {/* Description Card */}
           <View style={styles.descriptionCard}>
             <Text style={styles.sectionTitle}>Description</Text>

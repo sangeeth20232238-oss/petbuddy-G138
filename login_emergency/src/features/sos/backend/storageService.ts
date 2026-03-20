@@ -1,12 +1,23 @@
 // Storage Service - Image upload to Firebase Storage
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from './firebaseConfig';
+import { storage } from '../../../../firebaseConfig';
+
+// Convert local file URI to a Blob using XMLHttpRequest (works in React Native)
+const uriToBlob = (uri: string): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => resolve(xhr.response);
+    xhr.onerror = () => reject(new Error('Failed to convert URI to blob'));
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    xhr.send(null);
+  });
+};
 
 // Upload image to Firebase Storage and return download URL
 export const uploadImage = async (uri: string): Promise<string | null> => {
   try {
-    const response = await fetch(uri);
-    const blob = await response.blob();
+    const blob = await uriToBlob(uri);
     const filename = `lostPets/${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
     const storageRef = ref(storage, filename);
     await uploadBytes(storageRef, blob);
