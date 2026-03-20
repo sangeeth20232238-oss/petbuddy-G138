@@ -174,7 +174,8 @@ function extractSymptomsFromMessage(userMessage) {
       const normalized = normalizeSymptom(phrase);
       if (CLEAN_SET.has(normalized)) found.add(normalized);
     }
-
+     
+    // partial word match (e.g. "vomiting" matches "vomit")
     else if (words.some(word => phrase.includes(word))) {
       const normalized = normalizeSymptom(phrase);
       if (CLEAN_SET.has(normalized)) found.add(normalized);
