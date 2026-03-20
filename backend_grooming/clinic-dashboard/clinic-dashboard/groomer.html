@@ -158,11 +158,13 @@
 
         grid.innerHTML = filtered.map(b => `
             <div class="card ${b.status}">
-                <h3>👤 ${b.userName || 'Customer'}</h3>
-                <p>✂️ Service: ${b.service || '—'}</p>
+                <h3>👤 ${b.ownerName || '—'}</h3>
+                <p>📞 Phone: ${b.ownerPhone || '—'}</p>
                 <p>🐾 Pet: ${b.petName || '—'}</p>
+                <p>✂️ Services: ${(b.services || []).join(', ') || '—'}</p>
+                <p>🏪 Salon: ${b.salon || '—'}</p>
                 <p>📅 Date: ${b.date || '—'}</p>
-                <p>🕐 Time: ${b.timeSlot || '—'}</p>
+                <p>🕐 Time: ${b.time || '—'}</p>
                 <span class="badge ${b.status}">${b.status.toUpperCase()}</span>
                 <div class="actions">
                     <button class="btn-confirm"

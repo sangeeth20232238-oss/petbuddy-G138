@@ -293,13 +293,21 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
         <TouchableOpacity style={styles.bookBtn} onPress={async () => {
           const data = { salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone };
           try {
-            await fetch('http://10.31.17.0:3000/api/bookings/grooming', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data),
-            });
+            const { initializeApp, getApps } = await import('firebase/app');
+            const { getFirestore, collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+            const firebaseConfig = {
+              apiKey: 'AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM',
+              authDomain: 'petbuddy-138.firebaseapp.com',
+              projectId: 'petbuddy-138',
+              storageBucket: 'petbuddy-138.firebasestorage.app',
+              messagingSenderId: '506859726227',
+              appId: '1:506859726227:web:9083b07cceca26b8b6b466',
+            };
+            const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+            const db = getFirestore(app);
+            await addDoc(collection(db, 'groomingBookings'), { ...data, status: 'pending', createdAt: serverTimestamp() });
           } catch (e) {
-            console.log('Booking save error:', e.message);
+            console.log('Firebase error:', e.message);
           }
           onConfirm(data);
         }}>
