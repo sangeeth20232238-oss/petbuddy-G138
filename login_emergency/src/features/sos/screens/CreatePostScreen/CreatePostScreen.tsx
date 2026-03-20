@@ -7,14 +7,13 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import BottomTabBar from '../../components/BottomTabBar';
 import { createAlert } from '../../backend/alertService';
 import { uploadImage } from '../../backend/storageService';
 import styles from './createPostStyles';
@@ -192,8 +191,6 @@ const CreatePostScreen: React.FC = () => {
           )}
         </TouchableOpacity>
       </ScrollView>
-
-      <BottomTabBar navigation={navigation} activeTab="Home" />
     </SafeAreaView>
   );
 };

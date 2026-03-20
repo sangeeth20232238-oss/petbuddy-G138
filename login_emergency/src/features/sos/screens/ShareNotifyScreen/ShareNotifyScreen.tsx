@@ -6,13 +6,12 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import VetCard, { VetInfo } from '../../components/VetCard';
-import BottomTabBar from '../../components/BottomTabBar';
 import styles from './shareNotifyStyles';
 
 // Mock vet data
@@ -145,8 +144,6 @@ const ShareNotifyScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      <BottomTabBar navigation={navigation} activeTab="Home" />
     </SafeAreaView>
   );
 };

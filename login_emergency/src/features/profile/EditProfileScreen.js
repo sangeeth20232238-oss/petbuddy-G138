@@ -11,6 +11,7 @@ const { width } = Dimensions.get('window');
 
 export default function EditProfileScreen({ navigation }) {
     const [name, setName] = useState('');
+    const [petName, setPetName] = useState('');
     const [image, setImage] = useState(null);
     const [imgError, setImgError] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -21,6 +22,7 @@ export default function EditProfileScreen({ navigation }) {
         getDoc(doc(db, 'users', user.uid)).then(snap => {
             if (snap.exists()) {
                 setName(snap.data().name || '');
+                setPetName(snap.data().petName || '');
                 const pic = snap.data().profilePic || null;
                 setImage(pic);
                 setImgError(false);
@@ -51,6 +53,7 @@ export default function EditProfileScreen({ navigation }) {
             }
             await setDoc(doc(db, 'users', user.uid), {
                 name: name.trim(),
+                petName: petName.trim(),
                 profilePic: finalImageUrl || '',
                 lastUpdate: new Date().toISOString(),
             }, { merge: true });
@@ -106,6 +109,18 @@ export default function EditProfileScreen({ navigation }) {
                     value={name}
                     onChangeText={setName}
                     placeholder="Enter your name"
+                    placeholderTextColor="#CCC"
+                />
+            </View>
+
+            {/* Pet Name input */}
+            <View style={styles.inputWrapper}>
+                <Text style={[styles.inputLabel, { fontFamily: 'Fredoka-SemiBold' }]}>Pet Name</Text>
+                <TextInput
+                    style={[styles.input, { fontFamily: 'Fredoka-Regular' }]}
+                    value={petName}
+                    onChangeText={setPetName}
+                    placeholder="Enter your pet's name"
                     placeholderTextColor="#CCC"
                 />
             </View>

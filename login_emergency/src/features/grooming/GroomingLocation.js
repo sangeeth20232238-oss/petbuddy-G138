@@ -69,7 +69,7 @@ const LOCATIONS = [
   },
 ];
 
-const GroomingLocation = ({ onBack, onLocationPress }) => {
+const GroomingLocation = ({ navigation }) => {
   const [search, setSearch] = useState('');
 
   const filtered = LOCATIONS.filter(
@@ -81,7 +81,7 @@ const GroomingLocation = ({ onBack, onLocationPress }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Grooming</Text>
@@ -101,7 +101,11 @@ const GroomingLocation = ({ onBack, onLocationPress }) => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.list}>
         {filtered.map((location) => (
-          <TouchableOpacity key={location.id} style={styles.card} onPress={() => onLocationPress(location)}>
+          <TouchableOpacity 
+            key={location.id} 
+            style={styles.card} 
+            onPress={() => navigation.navigate('GroomingApt', { location })}
+          >
             <Image source={{ uri: location.image }} style={styles.cardImage} />
             <View style={styles.cardInfo}>
               <Text style={styles.cardName}>{location.name}</Text>

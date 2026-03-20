@@ -24,11 +24,11 @@ const SERVICES = [
   { id: '12', title: 'Perfume & Styling', image: 'https://images.unsplash.com/photo-1596492784531-6e6eb5ea9993?w=300&q=80' },
 ];
 
-const GroomingMain = ({ onServicePress }) => {
+const GroomingMain = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Grooming</Text>
@@ -53,7 +53,7 @@ const GroomingMain = ({ onServicePress }) => {
 
         <View style={styles.gridContainer}>
           {SERVICES.map((service) => (
-            <TouchableOpacity key={service.id} style={styles.cardContainer} onPress={onServicePress}>
+            <TouchableOpacity key={service.id} style={styles.cardContainer} onPress={() => navigation.navigate('GroomingLocation')}>
               <Image source={{ uri: service.image }} style={styles.cardImage} />
               <Text style={styles.cardTitle}>{service.title}</Text>
             </TouchableOpacity>

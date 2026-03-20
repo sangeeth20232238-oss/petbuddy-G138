@@ -6,10 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   ActivityIndicator,
   Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -22,7 +22,6 @@ import Animated, {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AlertCard from '../../components/AlertCard';
-import BottomTabBar from '../../components/BottomTabBar';
 import { LostPetAlert, getRecentAlerts } from '../../backend/alertService';
 import styles from './homeStyles';
 
@@ -242,8 +241,6 @@ const HomeScreen: React.FC = () => {
           <Text style={styles.seeAllText}>See all</Text>
         </TouchableOpacity>
       </ScrollView>
-
-      <BottomTabBar navigation={navigation} activeTab="Home" />
     </SafeAreaView>
   );
 };

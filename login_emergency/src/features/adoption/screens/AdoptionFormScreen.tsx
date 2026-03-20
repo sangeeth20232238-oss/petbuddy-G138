@@ -52,50 +52,27 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
         const API_URL = ENDPOINTS.ADOPTIONS;
         setIsLoading(true);
         try {
+            const { addDoc, collection, serverTimestamp } = require('firebase/firestore');
+            const { db } = require('../../../../firebaseConfig');
 
-            // Add a 20-second timeout
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                signal: controller.signal,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    petId: pet.id,
-                    petName: pet.name,
-                    applicantName: fullName,
-                    applicantPhone: phone,
-                    outdoorSpace,
-                    pastExperience,
-                    walks,
-                    reason,
-                }),
+            await addDoc(collection(db, 'adoptions'), {
+                petId: pet.id,
+                petName: pet.name,
+                applicantName: fullName,
+                applicantPhone: phone,
+                outdoorSpace,
+                pastExperience,
+                walks,
+                reason,
+                status: 'pending',
+                createdAt: serverTimestamp(),
             });
 
-            clearTimeout(timeoutId);
-
-            const responseData = await response.json().catch(() => ({}));
-
-            if (response.ok) {
-                Alert.alert('Success', 'Your adoption request has been sent!', [
-                    { text: 'OK', onPress: () => navigation.goBack() }
-                ]);
-            } else {
-                const errorMessage = responseData.message || responseData.error || 'Server responded with an error';
-                Alert.alert('Server Error', `Error ${response.status}: ${errorMessage}`);
-            }
+            Alert.alert('Success', 'Your adoption request has been sent!', [
+                { text: 'OK', onPress: () => navigation.goBack() }
+            ]);
         } catch (error: any) {
-            if (error.name === 'AbortError') {
-                Alert.alert('Timeout', 'The server is taking too long to respond. Is your PC and Phone on the same Wi-Fi?');
-            } else if (error.message === 'Network request failed') {
-                Alert.alert('Connection Error', `Could not reach the server at ${API_URL}. \n\n1. Make sure your PC and Phone are on the same Wi-Fi.\n2. Check if the backend is running.\n3. Verify your PC\'s IP address in src/config/api.ts.`);
-            } else {
-                Alert.alert('Error', error.message || 'An unexpected error occurred.');
-            }
+            Alert.alert('Error', error.message || 'An unexpected error occurred while sending your request.');
         } finally {
             setIsLoading(false);
         }

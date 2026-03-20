@@ -20,7 +20,7 @@ import EditVetVisit from '../features/pet-wallet/edit-vet-visit';
 import RecordDetails from '../features/pet-wallet/record-details';
 
 import { db } from '../services/firebaseConfig';
-import { collection, query, where, limit, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, limit, onSnapshot, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 const CategoryCard = ({ icon: Icon, title, onPress }) => (
@@ -63,21 +63,37 @@ export default function MedicalWallet({ navigation }) {
       setLoading(false);
       return;
     }
+
+    // Listen to user profile for petName
+    const userRef = doc(db, 'users', auth.currentUser.uid);
+    const unsubUser = onSnapshot(userRef, (userSnap) => {
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        if (userData.petName) {
+          setPetData(prev => ({ ...prev, name: userData.petName }));
+        }
+      }
+    });
+
     const q = query(
       collection(db, 'pets'), 
       where('ownerId', '==', auth.currentUser.uid), 
       limit(1)
     );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubPets = onSnapshot(q, (snapshot) => {
       if (!snapshot.empty) {
         const docSnap = snapshot.docs[0];
-        setPetData({ id: docSnap.id, ...docSnap.data() });
+        setPetData(prev => ({ ...prev, id: docSnap.id, ...docSnap.data() }));
       } else {
-        setPetData({ name: 'My Pet', id: 'Not Registered' });
+        setPetData(prev => ({ ...prev, id: 'Not Registered' }));
       }
       setLoading(false);
     }, () => setLoading(false));
-    return () => unsubscribe();
+
+    return () => {
+      unsubUser();
+      unsubPets();
+    };
   }, []);
 
   if (loading) {

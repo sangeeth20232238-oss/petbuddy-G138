@@ -21,7 +21,8 @@ const SERVICES = [
 const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
 const getFirstDay = (year, month) => new Date(year, month, 1).getDay();
 
-const GroomingApt = ({ onBack, onConfirm, location }) => {
+const GroomingApt = ({ navigation, route }) => {
+  const { location } = route.params || {};
   const salon = {
     name: location?.name || 'The Groom Room',
     address: location?.address || 'No. 12, Flower Road, Colombo 07, Sri Lanka',
@@ -73,7 +74,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{salon.name}</Text>
@@ -295,7 +296,13 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petType, petName, petDob })}>
+        <TouchableOpacity 
+          style={styles.bookBtn} 
+          onPress={() => {
+            Alert.alert('Success', 'Grooming Appointment confirmed!');
+            navigation.navigate('Dashboard');
+          }}
+        >
           <Text style={styles.bookBtnText}>Confirm Booking</Text>
           <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
