@@ -149,7 +149,7 @@ const SYMPTOM_ALIASES = {
  * 3) Extract symptoms from full sentences
  * ----------------------------------------
  */
-const CLEAN_SYMPTOMS = Array.from(SYMPTOM_TO_ROW.keys()); // Always matches CSV
+const CLEAN_SYMPTOMS = Array.from(getSymptomMap().keys());
 const CLEAN_SET = new Set(CLEAN_SYMPTOMS);
 
 const MATCH_PHRASES = [
