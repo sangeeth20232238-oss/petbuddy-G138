@@ -170,10 +170,19 @@ function extractSymptomsFromMessage(userMessage) {
   for (const phrase of MATCH_PHRASES) {
     const p = ` ${phrase} `;
 
-    if (text.includes(p)) { 
+    if (text.includes(p)) { //exact phrase match
       const normalized = normalizeSymptom(phrase);
       if (CLEAN_SET.has(normalized)) found.add(normalized);
     }
+
+    else if (words.some(word => phrase.includes(word))) {
+      const normalized = normalizeSymptom(phrase);
+      if (CLEAN_SET.has(normalized)) found.add(normalized);
+    }
+  }
+
+  return Array.from(found);
+}
 
 
 /**
