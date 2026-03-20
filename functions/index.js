@@ -157,44 +157,10 @@ function cleanText(s) {
 }
 
 /**
- * Returns array of clean symptoms detected in message
+ * ----------------------------------------
+ * 3) Extract symptoms from full sentences
+ * ----------------------------------------
  */
-function extractSymptomsFromMessage(userMessage) {
-  const text = ` ${cleanText(userMessage)} `;
-  const found = new Set();
-
-  //Split into words
-  const words = text.split(" ");
-
-  for (const phrase of MATCH_PHRASES) {
-    const p = ` ${phrase} `;
-
-    // exact phrase match
-    if (text.includes(p)) {
-      const normalized = normalizeSymptom(phrase);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
-    }
-
-     //NEW: partial word match (VERY IMPORTANT)
-    else if (words.some(word => phrase.includes(word))) {
-      const normalized = normalizeSymptom(phrase);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
-    }
-  }
-
-  return Array.from(found);
-}
-
-
-  for (const phrase of MATCH_PHRASES) {
-    const p = ` ${phrase} `;
-    if (text.includes(p) || text.split(" ").some(word => phrase.includes(word))) {
-      const maybeClean = SYMPTOM_ALIASES[phrase] ? SYMPTOM_ALIASES[phrase] : phrase;
-      const normalized = normalizeSymptom(maybeClean);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
-    }
-  }
-
 
 
 /**
