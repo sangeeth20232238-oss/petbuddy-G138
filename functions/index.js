@@ -361,3 +361,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
 exports.suggestions = functions.https.onRequest((req, res) => {
   // Enable CORS so frontend (React Native / web) can access this API
   cors(req, res, () => {
+    // Get user input from query parameter (?q=...)
+    const query = req.query.q || "";
+    
+
