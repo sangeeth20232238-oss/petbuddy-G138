@@ -44,15 +44,8 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
   const [selectedReason, setSelectedReason] = useState(['Bathing']);
   const [petType, setPetType] = useState(null);
   const [petName, setPetName] = useState('');
-  const [petDob, setPetDob] = useState({ day: null, month: null, year: null });
-  const [showDobPicker, setShowDobPicker] = useState(false);
-  const [dobTemp, setDobTemp] = useState({ day: null, month: null, year: null });
-
-  const DOB_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const currentYear = new Date().getFullYear();
-  const dobYears = Array.from({ length: 20 }, (_, i) => currentYear - i);
-  const dobDays = Array.from({ length: 31 }, (_, i) => i + 1);
-  const dobFormatted = petDob.day ? `${String(petDob.day).padStart(2,'0')} ${DOB_MONTHS[petDob.month - 1]} ${petDob.year}` : null;
+  const [ownerName, setOwnerName] = useState('');
+  const [ownerPhone, setOwnerPhone] = useState('');
 
   const toggleReason = (r) => {
     setSelectedReason(prev =>
@@ -244,7 +237,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.sectionTitle}>Pet Details</Text>
+        <Text style={styles.sectionTitle}>Details</Text>
         <View style={styles.petDetailsCard}>
           <View style={styles.inputRow}>
             <View style={styles.inputIconBox}>
@@ -259,15 +252,32 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
             />
           </View>
           <View style={styles.divider} />
-          <TouchableOpacity style={styles.inputRow} onPress={() => { setDobTemp(petDob); setShowDobPicker(true); }}>
+          <View style={styles.inputRow}>
             <View style={styles.inputIconBox}>
-              <Ionicons name="calendar-outline" size={16} color="#FF741C" />
+              <Ionicons name="person-outline" size={16} color="#FF741C" />
             </View>
-            <Text style={[styles.input, !dobFormatted && { color: '#AAAAAA' }]}>
-              {dobFormatted || "Date of Birth"}
-            </Text>
-            <Ionicons name="chevron-down" size={16} color="#AAAAAA" />
-          </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Owner's Name"
+              placeholderTextColor="#AAAAAA"
+              value={ownerName}
+              onChangeText={setOwnerName}
+            />
+          </View>
+          <View style={styles.divider} />
+          <View style={styles.inputRow}>
+            <View style={styles.inputIconBox}>
+              <Ionicons name="call-outline" size={16} color="#FF741C" />
+            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Owner's Phone Number"
+              placeholderTextColor="#AAAAAA"
+              value={ownerPhone}
+              onChangeText={setOwnerPhone}
+              keyboardType="phone-pad"
+            />
+          </View>
         </View>
 
         <Text style={styles.sectionTitle}>Select Time</Text>
@@ -299,65 +309,13 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petType, petName, petDob: dobFormatted })}>
+        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petType, petName, ownerName, ownerPhone })}>
           <Text style={styles.bookBtnText}>Confirm Booking</Text>
           <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
       </ScrollView>
 
-      {/* DOB Picker Modal */}
-      <Modal transparent visible={showDobPicker} animationType="slide" onRequestClose={() => setShowDobPicker(false)}>
-        <View style={styles.dobOverlay}>
-          <View style={styles.dobSheet}>
-            <Text style={styles.dobSheetTitle}>Select Date of Birth</Text>
 
-            <View style={styles.dobPickerRow}>
-              {/* Day */}
-              <View style={styles.dobCol}>
-                <Text style={styles.dobColLabel}>Day</Text>
-                <ScrollView style={styles.dobScroll} showsVerticalScrollIndicator={false}>
-                  {dobDays.map(d => (
-                    <TouchableOpacity key={d} style={[styles.dobItem, dobTemp.day === d && styles.dobItemSelected]} onPress={() => setDobTemp(p => ({ ...p, day: d }))}>
-                      <Text style={[styles.dobItemText, dobTemp.day === d && styles.dobItemTextSelected]}>{String(d).padStart(2, '0')}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-              {/* Month */}
-              <View style={styles.dobCol}>
-                <Text style={styles.dobColLabel}>Month</Text>
-                <ScrollView style={styles.dobScroll} showsVerticalScrollIndicator={false}>
-                  {DOB_MONTHS.map((m, i) => (
-                    <TouchableOpacity key={m} style={[styles.dobItem, dobTemp.month === i + 1 && styles.dobItemSelected]} onPress={() => setDobTemp(p => ({ ...p, month: i + 1 }))}>
-                      <Text style={[styles.dobItemText, dobTemp.month === i + 1 && styles.dobItemTextSelected]}>{m}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-              {/* Year */}
-              <View style={styles.dobCol}>
-                <Text style={styles.dobColLabel}>Year</Text>
-                <ScrollView style={styles.dobScroll} showsVerticalScrollIndicator={false}>
-                  {dobYears.map(y => (
-                    <TouchableOpacity key={y} style={[styles.dobItem, dobTemp.year === y && styles.dobItemSelected]} onPress={() => setDobTemp(p => ({ ...p, year: y }))}>
-                      <Text style={[styles.dobItemText, dobTemp.year === y && styles.dobItemTextSelected]}>{y}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-            </View>
-
-            <View style={styles.dobBtnRow}>
-              <TouchableOpacity style={styles.dobCancelBtn} onPress={() => setShowDobPicker(false)}>
-                <Text style={styles.dobCancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.dobConfirmBtn} onPress={() => { setPetDob(dobTemp); setShowDobPicker(false); }}>
-                <Text style={styles.dobConfirmText}>Confirm</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };
@@ -428,22 +386,6 @@ const styles = StyleSheet.create({
   input: { flex: 1, fontSize: 14, color: '#000000' },
   checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
   checkboxSelected: { backgroundColor: '#FF741C', borderColor: '#FF741C' },
-  dobOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
-  dobSheet: { backgroundColor: '#FFFFFF', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 36 },
-  dobSheetTitle: { fontSize: 16, fontWeight: 'bold', color: '#000000', textAlign: 'center', marginBottom: 20 },
-  dobPickerRow: { flexDirection: 'row', gap: 10, marginBottom: 24 },
-  dobCol: { flex: 1 },
-  dobColLabel: { fontSize: 12, fontWeight: '600', color: '#666666', textAlign: 'center', marginBottom: 8 },
-  dobScroll: { height: 180, backgroundColor: '#F9F9F9', borderRadius: 12 },
-  dobItem: { paddingVertical: 12, alignItems: 'center', borderRadius: 8 },
-  dobItemSelected: { backgroundColor: '#FF741C' },
-  dobItemText: { fontSize: 14, color: '#000000' },
-  dobItemTextSelected: { color: '#FFFFFF', fontWeight: 'bold' },
-  dobBtnRow: { flexDirection: 'row', gap: 12 },
-  dobCancelBtn: { flex: 1, paddingVertical: 14, borderRadius: 12, borderWidth: 2, borderColor: '#FF741C', alignItems: 'center' },
-  dobCancelText: { color: '#FF741C', fontWeight: '600', fontSize: 14 },
-  dobConfirmBtn: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: '#FF741C', alignItems: 'center' },
-  dobConfirmText: { color: '#FFFFFF', fontWeight: '600', fontSize: 14 },
 });
 
 export default GroomingApt;
