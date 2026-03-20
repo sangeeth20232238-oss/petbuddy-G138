@@ -376,5 +376,15 @@ exports.suggestions = functions.https.onRequest((req, res) => {
     )
     .slice(0, 5); // Limit to top 5 suggestions
 
+    /**
+     * Send suggestions back to frontend
+     */
+    res.json({
+      suggestions: matches,
+    });
+
+  });
+});
+
 
 
