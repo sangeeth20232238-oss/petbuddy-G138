@@ -88,16 +88,6 @@ const styles = StyleSheet.create({
     searchContainer: { flexDirection: 'row', backgroundColor: '#FFF', marginHorizontal: 20, marginBottom: 10, padding: 12, borderRadius: 15, alignItems: 'center', elevation: 2 },
     searchInput: { flex: 1, marginLeft: 10, fontFamily: 'Fredoka-Regular', fontSize: 15, color: '#333' },
     sectionTitle: { fontSize: 20, fontFamily: 'Fredoka-SemiBold', marginLeft: 20, marginBottom: 10 },
-<<<<<<< HEAD
-    card: { flexDirection: 'row', backgroundColor: '#FFDDC7', marginHorizontal: 20, marginBottom: 15, padding: 15, borderRadius: 20 },
-    cardImg: { width: 80, height: 80, borderRadius: 15 },
-    cardInfo: { flex: 1, marginLeft: 15 },
-    clinicName: { fontSize: 16, fontFamily: 'Fredoka-Bold' },
-    cardRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 },
-    dist: { color: '#555' },
-    status: { color: '#000', fontWeight: 'bold' },
-    seeMore: { alignSelf: 'flex-end', marginTop: 10, fontFamily: 'Fredoka-Bold' },
-=======
     card: { flexDirection: 'row', backgroundColor: '#FFF', marginHorizontal: 20, marginBottom: 15, padding: 14, borderRadius: 20, elevation: 3, shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 3 } },
     cardImg: { width: 85, height: 85, borderRadius: 15 },
     cardInfo: { flex: 1, marginLeft: 14, justifyContent: 'center' },
@@ -111,5 +101,4 @@ const styles = StyleSheet.create({
     emptyBox: { alignItems: 'center', marginTop: 60 },
     emptyText: { fontFamily: 'Fredoka-Bold', fontSize: 18, color: '#CCC', marginTop: 12 },
     emptyHint: { fontFamily: 'Fredoka-Regular', color: '#DDD', marginTop: 4 },
->>>>>>> origin/login_emergency
 });

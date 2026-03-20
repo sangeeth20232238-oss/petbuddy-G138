@@ -169,9 +169,6 @@ const styles = StyleSheet.create({
     volunteerFooter: { padding: 20, alignItems: 'center', borderTopWidth: 1, borderTopColor: '#EEE' },
     footerText: { fontFamily: 'Fredoka-Regular', color: '#666' },
     link: { color: '#FF741C', fontFamily: 'Fredoka-Bold' },
-<<<<<<< HEAD
-});
-=======
     // Modal
     modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
     modalBox: { backgroundColor: 'white', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 30, alignItems: 'center' },
@@ -185,4 +182,3 @@ const styles = StyleSheet.create({
     cancelBtn: { marginTop: 10 },
     cancelText: { color: '#AAA', fontFamily: 'Fredoka-SemiBold' },
 });
->>>>>>> origin/login_emergency
