@@ -312,6 +312,11 @@ exports.chatbot = functions.https.onRequest((req, res) => {
         symptoms = findBestSymptoms(message);
       }
 
+      //ONLY KEEP ONE (what user asked)
+      if (symptoms.length > 0) {
+        symptoms = [symptoms[0]];
+      }
+
       // still nothing → then fail
       if (symptoms.length === 0) {
         saveUnknownSymptom(message);
