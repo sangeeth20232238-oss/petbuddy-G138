@@ -323,6 +323,10 @@ exports.chatbot = functions.https.onRequest((req, res) => {
         symptoms = findBestSymptoms(message);
       }
 
+      // still nothing → then fail
+      if (symptoms.length === 0) {
+        saveUnknownSymptom(message);
+
       
 
       return res.json({
