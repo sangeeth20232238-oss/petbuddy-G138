@@ -1,4 +1,6 @@
-const { admin, db } = require('./firebaseAdmin');
+const { admin, db, storage } = require('./firebaseAdmin');
+
+const bucket = storage.bucket();
 
 const PETS_DATA = [
     {
@@ -9,7 +11,7 @@ const PETS_DATA = [
         gender: 'female',
         color: 'Brown',
         weight: '1.2kg',
-        image: 'cat_samantha.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/cat_samantha.jpg',
         description: "A fluffy and calm kitten who enjoys being pampered. Samantha is looking for a quiet home where she can show off her beautiful brown coat and receive all the love she deserves.",
         shelterName: 'Happy Paws Shelter',
         location: 'Colombo ( 1.2km )',
@@ -22,7 +24,7 @@ const PETS_DATA = [
         gender: 'female',
         color: 'Grey',
         weight: '0.8kg',
-        image: 'cat_tigri.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/cat_tigri.jpg',
         description: "Unique and energetic, Tigri is a social butterfly who loves warmth and head scratches. Despite her lack of fur, she has a huge heart and a playful spirit that brightens every room.",
         shelterName: 'Shelter Wish',
         location: 'Colombo ( 2.5km )',
@@ -33,7 +35,7 @@ const PETS_DATA = [
         breed: 'Golden Retriever',
         age: '2 years',
         gender: 'male',
-        image: 'dog_max.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_max.jpg',
         description: "The ultimate companion! Max is a loyal, friendly dog who loves long walks and playing fetch. He's a social boy who gets along perfectly with children and other pets.",
         shelterName: 'Happy Paws Shelter',
         location: 'Kandana ( 5.0km )',
@@ -44,7 +46,7 @@ const PETS_DATA = [
         breed: 'Labrador',
         age: '1 year',
         gender: 'female',
-        image: 'dog_bella.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_bella.jpg',
         description: "Bella is a sweet and gentle soul with a heart of gold. She's highly intelligent, easy to train, and always ready for a game of frisbee or a cozy cuddle on the couch.",
         shelterName: 'Care for Paws',
         location: 'Negombo ( 12.0km )',
@@ -55,7 +57,7 @@ const PETS_DATA = [
         breed: 'Siamese',
         age: '2 years',
         gender: 'female',
-        image: 'cat_luna.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/cat_luna.jpg',
         description: "Elegant and vocal, Luna is a smart cat who loves to 'talk' to her owners. She's highly curious and enjoys high perches where she can observe her kingdom with her striking blue eyes.",
         shelterName: 'Shelter Wish',
         location: 'Colombo ( 3.0km )',
@@ -66,7 +68,7 @@ const PETS_DATA = [
         breed: 'Beagle',
         age: '3 years',
         gender: 'male',
-        image: 'dog_charlie.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_charlie.jpg',
         description: "Charlie is a curious explorer with a fantastic sense of smell. He's a happy-go-lucky dog who enjoys outdoor adventures and has a tail that never stops wagging.",
         shelterName: 'Happy Paws Shelter',
         location: 'Colombo ( 0.8km )',
@@ -77,7 +79,7 @@ const PETS_DATA = [
         breed: 'Corgi',
         age: '8 months',
         gender: 'female',
-        image: 'dog_daisy.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_daisy.jpg',
         description: "Small in size but big in personality! Daisy is a spunky puppy who loves to run and play. Her short legs don't stop her from being the fastest one at the park.",
         shelterName: 'Care for Paws',
         location: 'Wattala ( 4.5km )',
@@ -88,7 +90,7 @@ const PETS_DATA = [
         breed: 'Maine Coon',
         age: '4 years',
         gender: 'male',
-        image: 'cat_oliver.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/cat_oliver.jpg',
         description: "A gentle giant with a majestic presence. Oliver is a laid-back cat who enjoys being brushed and lounging in sunbeams. He's more like a dog than a cat in his loyalty.",
         shelterName: 'Shelter Wish',
         location: 'Colombo ( 6.2km )',
@@ -99,7 +101,7 @@ const PETS_DATA = [
         breed: 'French Bulldog',
         age: '1.5 years',
         gender: 'male',
-        image: 'dog_milo.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_milo.jpg',
         description: "Milo is a charming little fellow who is full of energy. He loves sitting on laps and being the center of attention. He's the perfect apartment companion with a big personality.",
         shelterName: 'Happy Paws Shelter',
         location: 'Colombo ( 2.1km )',
@@ -110,7 +112,7 @@ const PETS_DATA = [
         breed: 'Poodle',
         age: '2 years',
         gender: 'female',
-        image: 'dog_rosie.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_rosie.jpg',
         description: "Highly intelligent and stylish, Rosie is a graceful dog who loves learning new tricks. She's very affectionate and thrives in a home where she can be part of every activity.",
         shelterName: 'Care for Paws',
         location: 'Negombo ( 15.0km )',
@@ -121,7 +123,7 @@ const PETS_DATA = [
         breed: 'Bengal',
         age: '3 years',
         gender: 'male',
-        image: 'cat_simba.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/cat_simba.jpg',
         description: "Simba has a wild look and a courageous heart. He's an active cat who needs plenty of play and interaction. He's particularly fond of water and chasing feather toys.",
         shelterName: 'Shelter Wish',
         location: 'Colombo ( 4.2km )',
@@ -132,7 +134,7 @@ const PETS_DATA = [
         breed: 'German Shepherd',
         age: '4 years',
         gender: 'male',
-        image: 'dog_cooper.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_cooper.jpg',
         description: "Cooper is a brave and disciplined dog with strong protective instincts. He's a loyal partner who is always ready for a hike or a training session. He's a true hero at heart.",
         shelterName: 'Happy Paws Shelter',
         location: 'Kandy ( 115km )',
@@ -143,7 +145,7 @@ const PETS_DATA = [
         breed: 'Ragdoll',
         age: '1 year',
         gender: 'female',
-        image: 'cat_nala.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/cat_nala.jpg',
         description: "True to her breed name, Nala goes limp with affection when held. She's a peaceful cat who loves quiet afternoons and follow her favorite humans from room to room.",
         shelterName: 'Shelter Wish',
         location: 'Colombo ( 3.5km )',
@@ -154,7 +156,7 @@ const PETS_DATA = [
         breed: 'Boxer',
         age: '2 years',
         gender: 'male',
-        image: 'dog_buddy.jpg',
+        image: 'https://storage.googleapis.com/petbuddy-138.firebasestorage.app/pets/dog_buddy.jpg',
         description: "Buddy is a bundle of joy with a constant wagging tail. He's a playful, goofy dog who will keep you laughing with his antics and is always ready for a new friend.",
         shelterName: 'Care for Paws',
         location: 'Wattala ( 7.0km )',
@@ -173,16 +175,17 @@ const seedDatabase = async () => {
         await deleteBatch.commit();
         console.log('Old pets deleted.');
 
-        console.log('Seeding new pet data...');
+        console.log('Seeding new pet data with live URLs...');
         const batch = db.batch();
-        PETS_DATA.forEach((pet, index) => {
+        
+        for (const pet of PETS_DATA) {
             const docRef = petsCollection.doc();
             batch.set(docRef, {
                 ...pet,
                 contactPhone: '0765743454',
                 createdAt: admin.firestore.FieldValue.serverTimestamp()
             });
-        });
+        }
 
         console.log('Committing batch...');
         await batch.commit();
