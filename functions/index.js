@@ -175,6 +175,16 @@ function extractSymptomsFromMessage(userMessage) {
       if (CLEAN_SET.has(normalized)) found.add(normalized);
     }
 
+     //NEW: partial word match (VERY IMPORTANT)
+    else if (words.some(word => phrase.includes(word))) {
+      const normalized = normalizeSymptom(phrase);
+      if (CLEAN_SET.has(normalized)) found.add(normalized);
+    }
+  }
+
+  return Array.from(found);
+}
+
 
   for (const phrase of MATCH_PHRASES) {
     const p = ` ${phrase} `;
