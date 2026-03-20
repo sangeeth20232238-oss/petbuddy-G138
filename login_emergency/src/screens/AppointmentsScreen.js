@@ -13,6 +13,7 @@ const STATUS_COLOR = {
 
 export default function AppointmentsScreen({ navigation }) {
     const [bookings, setBookings] = useState([]);
+    const [grooming, setGrooming] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
 
@@ -20,30 +21,29 @@ export default function AppointmentsScreen({ navigation }) {
         const user = auth.currentUser;
         if (!user) return;
 
-        const q = query(
-            collection(db, 'bookings'),
-            where('userId', '==', user.uid),
-            orderBy('createdAt', 'desc')
-        );
-
-        const unsubscribe = onSnapshot(q, snapshot => {
-            setBookings(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+        const qB = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+        const unsubBookings = onSnapshot(qB, (snap) => {
+            setBookings(snap.docs.map(d => ({ id: d.id, ...d.data() })));
             setLoading(false);
-        }, error => {
-            // If index not ready yet, fall back to unordered query
-            const fallback = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-            onSnapshot(fallback, snapshot => {
-                const data = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-                data.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                setBookings(data);
-                setLoading(false);
-            });
         });
 
-        return unsubscribe;
+        const qG = query(collection(db, 'groomingBookings'), where('userId', '==', user.uid));
+        const unsubGrooming = onSnapshot(qG, (snap) => {
+            setGrooming(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+            setLoading(false);
+        });
+
+        return () => {
+            unsubBookings();
+            unsubGrooming();
+        };
     }, []);
 
-    const filtered = filter === 'all' ? bookings : bookings.filter(b => b.status === filter);
+    const allAppointments = [...bookings, ...grooming].sort((a, b) => {
+        return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+    });
+
+    const filtered = filter === 'all' ? allAppointments : allAppointments.filter(b => b.status === filter);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -87,8 +87,8 @@ export default function AppointmentsScreen({ navigation }) {
                             <View style={styles.card}>
                                 <View style={styles.cardTop}>
                                     <View>
-                                        <Text style={styles.doctorName}>{item.doctorName}</Text>
-                                        <Text style={styles.clinicName}>{item.clinicName}</Text>
+                                        <Text style={styles.doctorName}>{item.doctorName || item.salon || item.salonName}</Text>
+                                        <Text style={styles.clinicName}>{item.clinicName || 'Grooming Service'}</Text>
                                     </View>
                                     <View style={[styles.badge, { backgroundColor: s.bg }]}>
                                         <MaterialCommunityIcons name={s.icon} size={14} color={s.text} />
@@ -105,7 +105,7 @@ export default function AppointmentsScreen({ navigation }) {
                                     </View>
                                     <View style={styles.infoItem}>
                                         <Ionicons name="time-outline" size={16} color="#FF741C" />
-                                        <Text style={styles.infoText}>{item.timeSlot}</Text>
+                                        <Text style={styles.infoText}>{item.timeSlot || item.time}</Text>
                                     </View>
                                 </View>
                                 {item.status === 'confirmed' && (
@@ -133,7 +133,7 @@ export default function AppointmentsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20, gap: 20 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10, gap: 20 },
     headerTitle: { fontSize: 22, fontFamily: 'Fredoka-Bold' },
     tabBar: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: '#EEE', borderRadius: 12, padding: 4 },
     tab: { flex: 1, paddingVertical: 10, alignItems: 'center', borderRadius: 10 },

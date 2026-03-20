@@ -29,7 +29,7 @@ export default function DoctorDetailScreen({ route, navigation }) {
                 style={styles.bookBtn}
                 onPress={() => navigation.navigate('BookingCalendar', { doctor, clinic })}
             >
-                <Text style={styles.bookText}>Book Now</Text>
+                <Text style={styles.bookText}>Book Appointment</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
@@ -37,7 +37,7 @@ export default function DoctorDetailScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
     headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', marginLeft: 50 },
     subTitle: { textAlign: 'center', fontSize: 22, fontFamily: 'Fredoka-Regular', marginBottom: 20 },
     mainImg: { width: width - 40, height: 200, borderRadius: 25, alignSelf: 'center' },

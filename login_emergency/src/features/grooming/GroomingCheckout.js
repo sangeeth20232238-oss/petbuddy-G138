@@ -151,7 +151,7 @@ const GroomingCheckout = ({ onBack, onConfirm, bookingData }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FCF8F4' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10, marginBottom: 12 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 45, marginBottom: 12 },
   backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
   headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A1A1A' },
   scroll: { paddingHorizontal: 20, paddingBottom: 36 },

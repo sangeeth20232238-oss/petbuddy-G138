@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 45,
     borderBottomRightRadius: 45,
     paddingHorizontal: 25,
-    paddingTop: 20,
+    paddingTop: 45,
     paddingBottom: 40,
   },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 },

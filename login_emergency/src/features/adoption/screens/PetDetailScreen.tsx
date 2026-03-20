@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     },
     header: {
         position: 'absolute',
-        top: 50,
+        top: 60,
         left: 20,
         right: 20,
         flexDirection: 'row',

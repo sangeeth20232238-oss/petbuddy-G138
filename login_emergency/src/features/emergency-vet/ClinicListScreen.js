@@ -83,7 +83,7 @@ export default function ClinicListScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
     headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', marginLeft: 50 },
     searchContainer: { flexDirection: 'row', backgroundColor: '#FFF', marginHorizontal: 20, marginBottom: 10, padding: 12, borderRadius: 15, alignItems: 'center', elevation: 2 },
     searchInput: { flex: 1, marginLeft: 10, fontFamily: 'Fredoka-Regular', fontSize: 15, color: '#333' },

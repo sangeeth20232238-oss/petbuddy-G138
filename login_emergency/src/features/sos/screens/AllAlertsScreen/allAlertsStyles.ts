@@ -13,7 +13,7 @@ const allAlertsStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: 45,
     paddingBottom: 8,
   },
   backButton: {

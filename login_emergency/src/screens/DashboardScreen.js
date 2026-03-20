@@ -3,11 +3,13 @@ import {
     StyleSheet, View, Text, ScrollView, Image, TouchableOpacity,
     Dimensions, Modal, Alert, Linking, Animated, Platform
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { db, auth } from '../../firebaseConfig';
 import { doc, onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const { width, height } = Dimensions.get('window');
 const SIDEBAR_WIDTH = width * 0.75;
@@ -28,30 +30,87 @@ export default function DashboardScreen({ navigation }) {
     const notifAnim = useRef(new Animated.Value(height)).current;
 
     useEffect(() => {
-        const user = auth.currentUser;
-        if (!user) return;
+        const loadClearedIds = async () => {
+            try {
+                const stored = await AsyncStorage.getItem('cleared_notification_ids');
+                if (stored) setClearedIds(JSON.parse(stored));
+            } catch (e) { console.error('Error loading cleared IDs:', e); }
+        };
+        loadClearedIds();
 
-        const unsubUser = onSnapshot(doc(db, 'users', user.uid), (snap) => {
-            if (snap.exists()) {
-                setProfilePicError(false);
-                setUserData({
-                    name: snap.data().name || 'User',
-                    profilePic: snap.data().profilePic || null,
+        let unsubUser = () => {};
+        let unsubBookings = () => {};
+        let unsubAdoptions = () => {};
+        let unsubGrooming = () => {};
+
+        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+            unsubUser();
+            unsubBookings();
+            unsubAdoptions();
+            unsubGrooming();
+
+            if (user) {
+                unsubUser = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+                    if (snap.exists()) {
+                        setProfilePicError(false);
+                        setUserData({
+                            name: snap.data().name || 'User',
+                            profilePic: snap.data().profilePic || null,
+                        });
+                    }
                 });
+
+                // Bookings listener
+                const qB = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+                unsubBookings = onSnapshot(qB, (snap) => {
+                    const bList = snap.docs.map(d => ({ id: d.id, ...d.data(), notifType: 'booking' }));
+                    updateNotifications(bList, 'booking');
+                });
+
+                // Adoptions listener
+                const qA = query(collection(db, 'adoptions'), where('userId', '==', user.uid));
+                unsubAdoptions = onSnapshot(qA, (snap) => {
+                    const aList = snap.docs.map(d => ({ id: d.id, ...d.data(), notifType: 'adoption' }));
+                    updateNotifications(aList, 'adoption');
+                });
+
+                // Grooming listener
+                const qG = query(collection(db, 'groomingBookings'), where('userId', '==', user.uid));
+                unsubGrooming = onSnapshot(qG, (snap) => {
+                    const gList = snap.docs.map(d => ({ id: d.id, ...d.data(), notifType: 'grooming' }));
+                    updateNotifications(gList, 'grooming');
+                });
+            } else {
+                setUserData({ name: 'User', profilePic: null });
+                setNotifications([]);
             }
         });
 
-        const q = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-        const unsubBookings = onSnapshot(q, (snap) => {
-            const notifs = snap.docs
-                .map(d => ({ id: d.id, ...d.data() }))
-                .filter(b => b.status === 'confirmed' || b.status === 'rejected')
-                .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-            setNotifications(notifs);
-        });
-
-        return () => { unsubUser(); unsubBookings(); };
+        return () => {
+            unsubscribeAuth();
+            unsubUser();
+            unsubBookings();
+            unsubAdoptions();
+            unsubGrooming();
+        };
     }, []);
+
+    const [rawBookings, setRawBookings] = useState([]);
+    const [rawAdoptions, setRawAdoptions] = useState([]);
+    const [rawGrooming, setRawGrooming] = useState([]);
+
+    const updateNotifications = (newList, type) => {
+        if (type === 'booking') setRawBookings(newList);
+        else if (type === 'grooming') setRawGrooming(newList);
+        else setRawAdoptions(newList);
+    };
+
+    useEffect(() => {
+        const combined = [...rawBookings, ...rawAdoptions, ...rawGrooming]
+            .filter(n => n.status === 'confirmed' || n.status === 'rejected' || n.status === 'pending')
+            .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        setNotifications(combined);
+    }, [rawBookings, rawAdoptions, rawGrooming]);
 
     // ── Sidebar controls ──
     const openSidebar = () => {
@@ -79,6 +138,15 @@ export default function DashboardScreen({ navigation }) {
     };
 
     const visibleNotifs = notifications.filter(n => !clearedIds.includes(n.id));
+    
+    const clearAllNotifications = async () => {
+        const ids = notifications.map(n => n.id);
+        const newCleared = [...new Set([...clearedIds, ...ids])];
+        setClearedIds(newCleared);
+        try {
+            await AsyncStorage.setItem('cleared_notification_ids', JSON.stringify(newCleared));
+        } catch (e) { console.error('Error saving cleared IDs:', e); }
+    };
 
     const services = [
         { id: 1, name: 'Emergency Vet', icon: 'alert-decagram-outline', color: '#FF4D4D' },
@@ -145,8 +213,8 @@ export default function DashboardScreen({ navigation }) {
             </View>
 
             {/* Blog Section - Only this part is SCROLLABLE */}
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-                <View style={styles.blogSection}>
+            <View style={styles.blogSection}>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
                     <View style={styles.blogHeader}>
                         <Text style={styles.blogTitle}>Pet Care Tips 🐾</Text>
                     </View>
@@ -170,8 +238,8 @@ export default function DashboardScreen({ navigation }) {
                             <Text style={styles.blogReadMore}>Read more →</Text>
                         </TouchableOpacity>
                     ))}
-                </View>
-            </ScrollView>
+                </ScrollView>
+            </View>
 
             {/* AI Assistant FAB */}
             <TouchableOpacity 
@@ -202,7 +270,7 @@ export default function DashboardScreen({ navigation }) {
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                 {visibleNotifs.length > 0 && (
                                     <TouchableOpacity
-                                        onPress={() => setClearedIds(notifications.map(n => n.id))}
+                                        onPress={clearAllNotifications}
                                         style={styles.clearBtn}
                                     >
                                         <Text style={styles.clearBtnText}>Clear all</Text>
@@ -223,27 +291,37 @@ export default function DashboardScreen({ navigation }) {
                                 </View>
                             ) : (
                                 visibleNotifs.map(n => {
+                                    const isPending = n.status === 'pending';
                                     const ok = n.status === 'confirmed';
+                                    const bgColor = isPending ? '#FFF9EB' : (ok ? '#F0FFF4' : '#FFF5F5');
+                                    const iconColor = isPending ? '#F59E0B' : (ok ? '#4CAF50' : '#F44336');
+                                    const iconName = isPending ? 'clock-outline' : (ok ? 'check-circle' : 'close-circle');
+
                                     return (
-                                        <View key={n.id} style={[styles.notifItem, { backgroundColor: ok ? '#F0FFF4' : '#FFF5F5' }]}>
-                                            <View style={[styles.notifAvatarBg, { backgroundColor: ok ? '#E8F5E9' : '#FFEBEE' }]}>
+                                        <View key={n.id} style={[styles.notifItem, { backgroundColor: bgColor }]}>
+                                            <View style={[styles.notifAvatarBg, { backgroundColor: isPending ? '#FEF3C7' : (ok ? '#E8F5E9' : '#FFEBEE') }]}>
                                                 <MaterialCommunityIcons
-                                                    name={ok ? 'check-circle' : 'close-circle'}
+                                                    name={iconName}
                                                     size={26}
-                                                    color={ok ? '#4CAF50' : '#F44336'}
+                                                    color={iconColor}
                                                 />
                                             </View>
                                             <View style={{ flex: 1 }}>
                                                 <Text style={styles.notifMsg}>
-                                                    Appointment with{' '}
-                                                    <Text style={{ fontFamily: 'Fredoka-Bold', color: '#333' }}>{n.doctorName}</Text>
-                                                </Text>
-                                                <View style={[styles.notifStatusPill, { backgroundColor: ok ? '#4CAF50' : '#F44336' }]}>
-                                                    <Text style={styles.notifStatusPillText}>
-                                                        {ok ? '✓ Confirmed' : '✗ Rejected'}
+                                                    {n.notifType === 'adoption' ? 'Adoption Request' : 'Appointment with'}{' '}
+                                                    <Text style={{ fontFamily: 'Fredoka-Bold', color: '#333' }}>
+                                                        {n.notifType === 'adoption' ? n.petName : n.doctorName || n.salonName || n.salon}
                                                     </Text>
-                                                </View>
-                                                <Text style={styles.notifSub}>📅 {n.date}  ·  🕐 {n.timeSlot}</Text>
+                                                </Text>
+                                                <Text style={[styles.notifStatus, { color: n.status === 'confirmed' ? '#4CAF50' : '#F44336' }]}>
+                                                    {n.notifType === 'adoption' ? 'Adoption ' : ''}{n.status.charAt(0).toUpperCase() + n.status.slice(1)}
+                                                </Text>
+                                                <Text style={styles.notifDetail}>
+                                                    {n.notifType === 'adoption' 
+                                                        ? `Request for ${n.petName} has been ${n.status}`
+                                                        : `${n.doctorName || n.salonName || n.salon} - ${n.date}`}
+                                                </Text>
+                                                <Text style={styles.notifSub}>📅 {n.date}  ·  🕐 {n.timeSlot || n.time}</Text>
                                             </View>
                                         </View>
                                     );
@@ -367,8 +445,8 @@ const styles = StyleSheet.create({
     grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingHorizontal: 20 },
     card: { width: (width - 60) / 3, backgroundColor: '#FFF', borderRadius: 20, padding: 15, marginBottom: 20, alignItems: 'center', elevation: 5 },
     serviceText: { fontSize: 11, textAlign: 'center', marginTop: 5, color: '#444' },
-    fab: { position: 'absolute', bottom: 30, alignSelf: 'center', backgroundColor: '#FF741C', width: 75, height: 75, borderRadius: 37.5, justifyContent: 'center', alignItems: 'center', elevation: 10 },
-    blogSection: { flex: 1, marginTop: 10 },
+    fab: { position: 'absolute', bottom: 140, alignSelf: 'center', backgroundColor: '#FF741C', width: 75, height: 75, borderRadius: 37.5, justifyContent: 'center', alignItems: 'center', elevation: 10 },
+    blogSection: { marginTop: 10, paddingBottom: 20 },
     blogHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 14 },
     blogTitle: { fontSize: 18, fontFamily: 'Fredoka-Bold', color: '#333' },
     blogCard: { backgroundColor: 'white', borderRadius: 20, overflow: 'hidden', elevation: 4, shadowColor: '#000', shadowOpacity: 0.07, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, marginHorizontal: 20, marginBottom: 14 },

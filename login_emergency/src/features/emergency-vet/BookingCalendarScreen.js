@@ -206,7 +206,7 @@ export default function BookingCalendarScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20, gap: 14 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10, gap: 14 },
     backBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#F0F0F0', alignItems: 'center', justifyContent: 'center' },
     headerTitle: { fontSize: 20, fontFamily: 'Fredoka-Bold', color: '#333' },
     headerSub: { fontSize: 13, fontFamily: 'Fredoka-Regular', color: '#AAA', marginTop: 2 },

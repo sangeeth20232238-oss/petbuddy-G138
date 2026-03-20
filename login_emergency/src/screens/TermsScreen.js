@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFF' },
     header: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-        paddingHorizontal: 16, paddingVertical: 14,
+        paddingHorizontal: 16, paddingTop: 45, paddingBottom: 14,
         borderBottomWidth: 1, borderBottomColor: '#F0F0F0',
         backgroundColor: '#FFF',
     },

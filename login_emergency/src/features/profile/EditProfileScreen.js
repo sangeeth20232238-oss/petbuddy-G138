@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFF', alignItems: 'center' },
     header: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-        width: '100%', paddingHorizontal: 16, paddingVertical: 14,
+        width: '100%', paddingHorizontal: 16, paddingTop: 45, paddingBottom: 14,
         borderBottomWidth: 1, borderBottomColor: '#F0F0F0',
     },
     backBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },

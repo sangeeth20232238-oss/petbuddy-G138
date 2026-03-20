@@ -143,6 +143,15 @@ const ShareNotifyScreen: React.FC = () => {
             <Ionicons name="chevron-forward" size={20} color="#FFF" />
           </TouchableOpacity>
         </View>
+
+        {/* Back to Home Button */}
+        <TouchableOpacity 
+          style={styles.homeButton} 
+          onPress={() => navigation.navigate('Dashboard')} 
+          activeOpacity={0.8}
+        >
+          <Text style={styles.homeButtonText}>Back to Home</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

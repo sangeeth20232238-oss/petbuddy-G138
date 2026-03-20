@@ -12,7 +12,7 @@ const shareNotifyStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingTop: 45,
     paddingBottom: 8,
   },
   backButton: {
@@ -112,6 +112,22 @@ const shareNotifyStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#FFF',
+  },
+  homeButton: {
+    marginHorizontal: 20,
+    marginTop: 30,
+    marginBottom: 40,
+    backgroundColor: '#FFF',
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#E87A3A',
+  },
+  homeButtonText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#E87A3A',
   },
 });
 

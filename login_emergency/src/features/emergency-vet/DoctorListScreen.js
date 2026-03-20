@@ -51,7 +51,7 @@ export default function DoctorListScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
     headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', marginLeft: 50 },
     subTitle: { textAlign: 'center', fontSize: 20, fontFamily: 'Fredoka-Regular', marginVertical: 20 },
     card: { flexDirection: 'row', backgroundColor: '#FFDDC7', marginHorizontal: 20, marginBottom: 15, padding: 15, borderRadius: 25, alignItems: 'center' },

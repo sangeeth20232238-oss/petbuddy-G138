@@ -96,7 +96,7 @@ export default function SignupScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, paddingHorizontal: 30, paddingTop: height * 0.08 },
+    container: { flex: 1, paddingHorizontal: 30, paddingTop: height * 0.12 },
     background: { ...StyleSheet.absoluteFillObject },
     header: { fontSize: 44, textAlign: 'center', marginBottom: 40, color: '#000' },
     inputWrapper: { marginBottom: 30, width: '100%' },
