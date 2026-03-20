@@ -20,8 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const [text, setText] = useState("");
-const [suggestions, setSuggestions] = useState([]);
+
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Message {
@@ -301,6 +300,15 @@ export default function ChatScreen() {
     const [showMenu, setShowMenu] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
+    const [text, setText] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+
+    const fetchSuggestions = async (input) => {
+    try {
+        if (input.length < 2) {
+            setSuggestions([]);
+            return;
+        }
 
     const scrollToBottom = useCallback(() => {
         setTimeout(() => {
