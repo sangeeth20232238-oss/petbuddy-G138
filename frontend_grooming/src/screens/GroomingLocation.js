@@ -116,21 +116,21 @@ const GroomingLocation = ({ onBack, onLocationPress }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FCF8F4' },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 10, marginBottom: 16 },
   backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
   backButtonText: { fontSize: 20, color: '#000' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#1A1A1A' },
+  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#000000' },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 12, marginHorizontal: 20, marginBottom: 16, paddingHorizontal: 12, paddingVertical: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2 },
   searchIcon: { fontSize: 16, marginLeft: 8 },
-  searchInput: { flex: 1, fontSize: 14, color: '#1A1A1A' },
+  searchInput: { flex: 1, fontSize: 14, color: '#000000' },
   list: { paddingHorizontal: 20, paddingBottom: 20 },
   card: { flexDirection: 'row', backgroundColor: '#FFFFFF', borderRadius: 14, marginBottom: 14, padding: 12, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 5, elevation: 2 },
   cardImage: { width: 70, height: 70, borderRadius: 10, marginRight: 12 },
   cardInfo: { flex: 1 },
-  cardName: { fontSize: 14, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 3 },
-  cardAddress: { fontSize: 11, color: '#666666', marginBottom: 3, lineHeight: 15 },
-  cardDistance: { fontSize: 11, color: '#999999' },
+  cardName: { fontSize: 14, fontWeight: 'bold', color: '#000000', marginBottom: 3 },
+  cardAddress: { fontSize: 11, color: '#444444', marginBottom: 3, lineHeight: 15 },
+  cardDistance: { fontSize: 11, color: '#666666' },
 });
 
 export default GroomingLocation;

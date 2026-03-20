@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import GroomingMain from './src/screens/GroomingMain';
 import GroomingLocation from './src/screens/GroomingLocation';
 import GroomingApt from './src/screens/GroomingApt';
-import GroomingCheckout from './src/screens/GroomingCheckout';
+import AptConfirmation from './src/screens/AptConfirmation';
 
 export default function App() {
   const [screen, setScreen] = useState('main');
@@ -27,14 +27,13 @@ export default function App() {
         <GroomingApt
           location={selectedLocation}
           onBack={() => setScreen('location')}
-          onConfirm={(data) => { setBookingData(data); setScreen('checkout'); }}
+          onConfirm={(data) => { setBookingData(data); setScreen('confirmation'); }}
         />
       )}
-      {screen === 'checkout' && (
-        <GroomingCheckout
+      {screen === 'confirmation' && (
+        <AptConfirmation
+          onHome={() => setScreen('main')}
           bookingData={bookingData}
-          onBack={() => setScreen('apt')}
-          onConfirm={() => setScreen('main')}
         />
       )}
     </SafeAreaProvider>
