@@ -163,6 +163,9 @@ function extractSymptomsFromMessage(userMessage) {
   const text = ` ${cleanText(userMessage)} `;
   const found = new Set();
 
+  //Split into words
+  const words = text.split(" ");
+
   for (const phrase of MATCH_PHRASES) {
     const p = ` ${phrase} `;
     if (text.includes(p) || text.split(" ").some(word => phrase.includes(word))) {
