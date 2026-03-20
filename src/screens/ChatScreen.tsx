@@ -321,7 +321,9 @@ export default function ChatScreen() {
 
              const data = await response.json();
 
-            setSuggestions(data.suggestions || []);
+            if (data.suggestions.length > 0) {
+                    setSuggestions(data.suggestions);
+                }
         } catch (error) {
             console.log("Suggestion error:", error);
         }
