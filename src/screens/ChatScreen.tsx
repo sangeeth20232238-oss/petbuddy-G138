@@ -310,7 +310,7 @@ export default function ChatScreen() {
 
     timeoutRef.current = setTimeout(async () => { //dispalys API call
         try {
-            if (input.length < 2) {
+            if (input.trim().length < 2) {
                 setSuggestions([]);
                 return;
             }
@@ -327,7 +327,7 @@ export default function ChatScreen() {
         } catch (error) {
             console.log("Suggestion error:", error);
         }
-    }, 299); //delay
+    }, 300); //delay
 };
 
 //Prevent memory leaks when component unmounts: CLEAN UP
@@ -476,7 +476,7 @@ useEffect(() => {
 
                     {/* ── Input Bar ── */}
                     <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
-                        <View style={[styles.inputSafeArea, { position: 'relative' }]}>
+                        <View style={{ position: 'relative' }}>
                             <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
                                 <Feather name="mic" size={20} color="#FF741C" />
                             </TouchableOpacity>
@@ -519,13 +519,15 @@ useEffect(() => {
                                 </TouchableOpacity>
                             </Animated.View>
                         </View>
-                            {suggestions.length > 0 && inputText.length >= 3 && (  //Show suggestions only if there are results 
+                            {suggestions.length > 0 && inputText.length >= 2 && (  //Show suggestions only if there are results 
                                 <View style={{   //Container for the dropdown popup
                                     position: 'absolute',
-                                    bottom: 80,
+                                    bottom: 70,
                                     left: 16,
                                     right: 16,
-                                    backgroundColor: '#fff',
+                                    backgroundColor: '#FFF7F0',
+                                    borderWidth: 1,
+                                    borderColor: '#FFD4B3',
                                     borderRadius: 12,
                                     padding: 8,
                                     elevation: 6,
