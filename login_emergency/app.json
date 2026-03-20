@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "petbuddy",
     "name": "PetBuddyMobile",
     "slug": "PetBuddyMobile",
     "version": "1.0.0",
@@ -26,7 +27,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ]
   }
 }

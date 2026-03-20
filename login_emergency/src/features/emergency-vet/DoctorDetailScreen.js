@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 const { width } = Dimensions.get('window');
 
 export default function DoctorDetailScreen({ route, navigation }) {
-    const { doctor } = route.params;
+    const { doctor, clinic } = route.params;
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -14,18 +14,21 @@ export default function DoctorDetailScreen({ route, navigation }) {
                 <Text style={styles.headerTitle}>Emergency Vet</Text>
             </View>
             <Text style={styles.subTitle}>Doctor Details</Text>
-            <Image source={{ uri: 'https://i.pravatar.cc/150?u=anna' }} style={styles.mainImg} />
-            <Text style={styles.docName}>Dr. Anna Johnson</Text>
+            <Image source={{ uri: doctor.imageUrl }} style={styles.mainImg} />
+            <Text style={styles.docName}>{doctor.name}</Text>
             <View style={styles.statsRow}>
-                <View style={styles.statBox}><Text style={styles.statTitle}>Experience</Text><Text style={styles.statValue}>7 Years</Text></View>
-                <View style={styles.statBox}><Text style={styles.statTitle}>Charge</Text><Text style={styles.statValue}>Rs.2500</Text></View>
-                <View style={styles.statBox}><Text style={styles.statTitle}>Hours</Text><Text style={styles.statValue}>6hr/day</Text></View>
+                <View style={styles.statBox}><Text style={styles.statTitle}>Experience</Text><Text style={styles.statValue}>{doctor.experience}</Text></View>
+                <View style={styles.statBox}><Text style={styles.statTitle}>Charge</Text><Text style={styles.statValue}>Rs.{doctor.chargeMin}</Text></View>
+                <View style={styles.statBox}><Text style={styles.statTitle}>Hours</Text><Text style={styles.statValue}>{doctor.hoursPerDay}hr/day</Text></View>
             </View>
             <View style={styles.aboutContainer}>
                 <Text style={styles.aboutTitle}>About</Text>
-                <Text style={styles.aboutText}>Dr. Maria Naiis is a highly experienced veterinarian with 7 years of dedicated practice...</Text>
+                <Text style={styles.aboutText}>{doctor.bio}</Text>
             </View>
-            <TouchableOpacity style={styles.bookBtn} onPress={() => navigation.navigate('BookingCalendar')}>
+            <TouchableOpacity
+                style={styles.bookBtn}
+                onPress={() => navigation.navigate('BookingCalendar', { doctor, clinic })}
+            >
                 <Text style={styles.bookText}>Book Now</Text>
             </TouchableOpacity>
         </SafeAreaView>

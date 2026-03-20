@@ -1,15 +1,20 @@
-import React from 'react';
-import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { fetchDoctors } from '../../services/emergencyVetService';
 
-const DOCTORS = [
-    { id: '1', name: 'Dr.Emaly', exp: 'Experienced Doctor', price: 'Rs2500-Rs4000/Session' },
-    { id: '2', name: 'Dr.Sophia', exp: 'Experienced Doctor', price: 'Rs2500-Rs4000/Session' },
-    { id: '3', name: 'Dr.Cameron', exp: 'Experienced Doctor', price: 'Rs2500-Rs4000/Session' },
-];
+export default function DoctorListScreen({ route, navigation }) {
+    const { clinic } = route.params;
+    const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-export default function DoctorListScreen({ navigation }) {
+    useEffect(() => {
+        fetchDoctors(clinic.id)
+            .then(setDoctors)
+            .finally(() => setLoading(false));
+    }, [clinic.id]);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -17,19 +22,29 @@ export default function DoctorListScreen({ navigation }) {
                 <Text style={styles.headerTitle}>Emergency Vet</Text>
             </View>
             <Text style={styles.subTitle}>Available Doctors</Text>
-            <FlatList
-                data={DOCTORS}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('DoctorDetail', { doctor: item })}>
-                        <Image source={{ uri: 'https://i.pravatar.cc/150?u=' + item.id }} style={styles.docImg} />
-                        <View style={styles.info}>
-                            <Text style={styles.name}>{item.name}</Text>
-                            <Text style={styles.exp}>{item.exp}</Text>
-                            <View style={styles.priceBtn}><Text style={styles.priceText}>{item.price}</Text></View>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            />
+            {loading ? (
+                <ActivityIndicator size="large" color="#FF741C" style={{ marginTop: 40 }} />
+            ) : (
+                <FlatList
+                    data={doctors}
+                    keyExtractor={item => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={styles.card}
+                            onPress={() => navigation.navigate('DoctorDetail', { doctor: item, clinic })}
+                        >
+                            <Image source={{ uri: item.imageUrl }} style={styles.docImg} />
+                            <View style={styles.info}>
+                                <Text style={styles.name}>{item.name}</Text>
+                                <Text style={styles.exp}>{item.specialization}</Text>
+                                <View style={styles.priceBtn}>
+                                    <Text style={styles.priceText}>Rs{item.chargeMin}-Rs{item.chargeMax}/Session</Text>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    )}
+                />
+            )}
         </SafeAreaView>
     );
 }

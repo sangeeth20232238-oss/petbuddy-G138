@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PetBuddy — Admin Portal</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #FFF5F0; color: #333; }
+
+        header {
+            background: #FF741C; color: white;
+            padding: 18px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        header h1 { font-size: 22px; }
+
+        .profile-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .profile-container h2 { margin-bottom: 30px; font-size: 28px; color: #FF741C; }
+        .profile-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .profile-card { background: white; border-radius: 16px; padding: 40px; width: 180px; text-align: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; border: 2px solid transparent; }
+        .profile-card:hover { border-color: #FF741C; transform: translateY(-5px); }
+        .profile-card .icon { font-size: 40px; margin-bottom: 10px; }
+        .profile-card h3 { color: #333; font-size: 18px; }
+
+        .login-wrap {
+            max-width: 400px; margin: 80px auto;
+            background: white; border-radius: 16px;
+            padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .login-wrap h2 { margin-bottom: 24px; color: #FF741C; }
+        input {
+            width: 100%; padding: 12px 16px; margin-bottom: 16px;
+            border: 1px solid #ddd; border-radius: 10px; font-size: 15px;
+        }
+        button {
+            width: 100%; padding: 14px;
+            background: #FF741C; color: white;
+            border: none; border-radius: 10px;
+            font-size: 16px; cursor: pointer; font-weight: bold;
+        }
+        button:hover { background: #e5651a; }
+        .error { color: red; font-size: 13px; margin-top: 10px; text-align: center; font-weight: 500;}
+    </style>
+</head>
+<body>
+
+<!-- PROFILE SCREEN -->
+<div id="profileScreen" class="profile-container">
+    <h2>Select Your Portal</h2>
+    <div class="profile-cards">
+        <div class="profile-card" onclick="selectProfile('Shelter')">
+            <div class="icon">🏠</div>
+            <h3>Shelter</h3>
+        </div>
+        <div class="profile-card" onclick="selectProfile('Clinic')">
+            <div class="icon">🏥</div>
+            <h3>Clinic</h3>
+        </div>
+        <div class="profile-card" onclick="selectProfile('Groomer')">
+            <div class="icon">✂️</div>
+            <h3>Groomer</h3>
+        </div>
+    </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="display:none;">
+    <header><h1>🐾 PetBuddy Admin Portal</h1></header>
+    <div class="login-wrap">
+        <h2 id="loginTitle">Login</h2>
+        <input type="email" id="emailInput" placeholder="your@email.com" />
+        <input type="password" id="passwordInput" placeholder="Password" />
+        <button onclick="handleLogin()">Login to Portal</button>
+        <button onclick="goBack()" style="background:transparent; color:#666; margin-top:14px; border:none; width:100%;">⬅ Back to Profiles</button>
+        <p class="error" id="loginError"></p>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import {
+        getAuth, signInWithEmailAndPassword, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM",
+        authDomain: "petbuddy-138.firebaseapp.com",
+        projectId: "petbuddy-138",
+        storageBucket: "petbuddy-138.firebasestorage.app",
+        messagingSenderId: "506859726227",
+        appId: "1:506859726227:web:9083b07cceca26b8b6b466"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            let storedProfile = localStorage.getItem('selectedProfile') || 'Clinic';
+            
+            if (storedProfile === 'Shelter') {
+                window.location.href = 'shelter.html';
+            } else if (storedProfile === 'Clinic') {
+                window.location.href = 'clinic.html';
+            } else {
+                // For Groomer or other future portals
+                window.location.href = 'clinic.html'; 
+            }
+        } else {
+            document.getElementById('profileScreen').style.display   = 'flex';
+            document.getElementById('loginScreen').style.display     = 'none';
+        }
+    });
+
+    window.selectProfile = (profile) => {
+        localStorage.setItem('selectedProfile', profile);
+        document.getElementById('profileScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('loginTitle').textContent = profile + ' Login';
+    };
+
+    window.goBack = () => {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('profileScreen').style.display = 'flex';
+    };
+
+    window.handleLogin = async () => {
+        const email    = document.getElementById('emailInput').value.trim();
+        const password = document.getElementById('passwordInput').value;
+        const btn      = document.querySelector('.login-wrap button');
+        
+        if (!email || !password) {
+            document.getElementById('loginError').textContent = 'Please enter both email and password.';
+            return;
+        }
+
+        document.getElementById('loginError').textContent = '';
+        btn.textContent = 'Logging in...';
+        btn.disabled = true;
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // onAuthStateChanged will magically catch this and redirect to the correct page automatically
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loginError').textContent = 'Invalid email or password.';
+            btn.textContent = 'Login to Portal';
+            btn.disabled = false;
+        }
+    };
+</script>
+</body>
+</html>

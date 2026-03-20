@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PetBuddy — Clinic Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #FFF5F0; color: #333; }
+
+        header {
+            background: #FF741C; color: white;
+            padding: 18px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        header h1 { font-size: 22px; }
+
+        .tabs { display: flex; gap: 15px; margin: 24px auto 0 auto; max-width: 1100px; padding: 0 30px; }
+        .tab-btn {
+            flex: 1; padding: 14px; text-align: center; border-radius: 12px;
+            font-weight: bold; cursor: pointer; color: #FF741C; background: #fff;
+            border: 2px solid #FF741C; transition: all 0.3s ease; font-size: 15px;
+        }
+        .tab-btn.active { background: #FF741C; color: white; box-shadow: 0 4px 15px rgba(255,116,28,0.3); }
+        .tab-btn:hover:not(.active) { opacity: 0.8; }
+
+        .dashboard { padding: 30px; max-width: 1100px; margin: 0 auto; }
+        .dashboard h2 { margin-bottom: 20px; font-size: 24px; color: #FF741C; }
+
+        .filters { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 8px 20px; border-radius: 20px;
+            border: 2px solid #FF741C; background: white;
+            color: #FF741C; cursor: pointer; font-size: 14px; width: auto;
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active { background: #FF741C; color: white; }
+
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white; border-radius: 16px;
+            padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 5px solid #ccc;
+        }
+        .card.pending   { border-left-color: #FFA500; }
+        .card.confirmed { border-left-color: #4CAF50; }
+        .card.rejected  { border-left-color: #F44336; }
+
+        .card h3 { font-size: 16px; margin-bottom: 8px; color: #333; }
+        .card p  { font-size: 14px; color: #666; margin-bottom: 5px; }
+
+        .badge {
+            display: inline-block; padding: 4px 12px;
+            border-radius: 20px; font-size: 12px; font-weight: bold; margin: 10px 0;
+        }
+        .badge.pending   { background: #FFF3CD; color: #856404; }
+        .badge.confirmed { background: #D4EDDA; color: #155724; }
+        .badge.rejected  { background: #F8D7DA; color: #721C24; }
+
+        .actions { display: flex; gap: 10px; margin-top: 14px; }
+        .btn-confirm {
+            flex: 1; padding: 10px; background: #4CAF50;
+            color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+        }
+        .btn-reject {
+            flex: 1; padding: 10px; background: #F44336;
+            color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold;
+        }
+        .btn-confirm:disabled, .btn-reject:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Volunteers */
+        .vol-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .vol-card {
+            background: white; border-radius: 16px; padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #FF741C;
+        }
+        .vol-card h3 { font-size: 17px; color: #FF741C; margin-bottom: 8px; }
+        .vol-card p  { font-size: 14px; color: #666; margin-bottom: 5px; }
+        .vol-card .nic-badge {
+            display: inline-block; background: #E8F5E9; color: #2E7D32;
+            padding: 3px 10px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-top: 8px;
+        }
+
+        .empty { text-align: center; color: #aaa; margin-top: 60px; font-size: 16px; }
+
+        .logout-btn {
+            background: transparent; border: 2px solid white;
+            color: white; padding: 8px 18px; border-radius: 8px;
+            cursor: pointer; font-size: 14px; width: auto;
+        }
+
+        .stats-row {
+            display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+        }
+        .stat-box {
+            background: white; border-radius: 14px; padding: 18px 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex: 1; min-width: 120px; text-align: center;
+        }
+        .stat-box .num { font-size: 28px; font-weight: bold; color: #FF741C; }
+        .stat-box .lbl { font-size: 13px; color: #999; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏥 PetBuddy — Clinic Dashboard</h1>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <span id="clinicEmail" style="font-size:14px;"></span>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+</header>
+
+<div class="tabs">
+    <div class="tab-btn active" onclick="switchTab('bookings', this)">📅 Appointments</div>
+    <div class="tab-btn" onclick="switchTab('volunteers', this)">🐾 Volunteers</div>
+</div>
+
+<!-- BOOKINGS TAB -->
+<div class="dashboard" id="bookingsTab">
+    <h2>Appointments</h2>
+
+    <div class="stats-row">
+        <div class="stat-box"><div class="num" id="statAll">0</div><div class="lbl">Total</div></div>
+        <div class="stat-box"><div class="num" id="statPending">0</div><div class="lbl">Pending</div></div>
+        <div class="stat-box"><div class="num" id="statConfirmed">0</div><div class="lbl">Confirmed</div></div>
+        <div class="stat-box"><div class="num" id="statRejected">0</div><div class="lbl">Rejected</div></div>
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-btn" onclick="setFilter('pending', this)">Pending</button>
+        <button class="filter-btn" onclick="setFilter('confirmed', this)">Confirmed</button>
+        <button class="filter-btn" onclick="setFilter('rejected', this)">Rejected</button>
+    </div>
+    <div class="bookings-grid" id="bookingsGrid"></div>
+    <p class="empty" id="emptyMsg" style="display:none;">No bookings found.</p>
+</div>
+
+<!-- VOLUNTEERS TAB -->
+<div class="dashboard" id="volunteersTab" style="display:none;">
+    <h2>Registered Volunteers</h2>
+    <div class="vol-grid" id="volGrid"></div>
+    <p class="empty" id="volEmpty" style="display:none;">No volunteers registered yet.</p>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM",
+        authDomain: "petbuddy-138.firebaseapp.com",
+        projectId: "petbuddy-138",
+        storageBucket: "petbuddy-138.firebasestorage.app",
+        messagingSenderId: "506859726227",
+        appId: "1:506859726227:web:9083b07cceca26b8b6b466"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    let allBookings = [];
+    let currentFilter = 'all';
+
+    onAuthStateChanged(auth, user => {
+        if (!user) {
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('clinicEmail').textContent = user.email;
+            listenToBookings();
+            loadVolunteers();
+        }
+    });
+
+    window.handleLogout = async () => {
+        await signOut(auth);
+        window.location.href = 'index.html';
+    };
+
+    window.switchTab = (tab, btn) => {
+        document.getElementById('bookingsTab').style.display   = tab === 'bookings'   ? 'block' : 'none';
+        document.getElementById('volunteersTab').style.display = tab === 'volunteers' ? 'block' : 'none';
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    };
+
+    function listenToBookings() {
+        onSnapshot(collection(db, 'bookings'), snapshot => {
+            allBookings = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            updateStats();
+            renderBookings();
+        }, err => {
+            document.getElementById('bookingsGrid').innerHTML =
+                `<p style="color:red;">Error loading bookings: ${err.message}</p>`;
+        });
+    }
+
+    function updateStats() {
+        document.getElementById('statAll').textContent       = allBookings.length;
+        document.getElementById('statPending').textContent   = allBookings.filter(b => b.status === 'pending').length;
+        document.getElementById('statConfirmed').textContent = allBookings.filter(b => b.status === 'confirmed').length;
+        document.getElementById('statRejected').textContent  = allBookings.filter(b => b.status === 'rejected').length;
+    }
+
+    window.setFilter = (filter, btn) => {
+        currentFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderBookings();
+    };
+
+    function renderBookings() {
+        const grid  = document.getElementById('bookingsGrid');
+        const empty = document.getElementById('emptyMsg');
+        const filtered = currentFilter === 'all'
+            ? allBookings
+            : allBookings.filter(b => b.status === currentFilter);
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '';
+            empty.style.display = 'block';
+            return;
+        }
+        empty.style.display = 'none';
+
+        filtered.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+        grid.innerHTML = filtered.map(b => `
+            <div class="card ${b.status}">
+                <h3>👤 ${b.userEmail || b.userId?.slice(0,10) + '...' || 'Unknown User'}</h3>
+                <p>🏥 <strong>${b.clinicName || '—'}</strong></p>
+                <p>👨‍⚕️ ${b.doctorName || '—'}</p>
+                <p>📅 ${b.date || '—'} &nbsp;🕐 ${b.timeSlot || '—'}</p>
+                <span class="badge ${b.status}">${b.status.toUpperCase()}</span>
+                <div class="actions">
+                    <button class="btn-confirm"
+                        ${b.status !== 'pending' ? 'disabled' : ''}
+                        onclick="updateStatus('${b.id}', 'confirmed')">
+                        ✅ Confirm
+                    </button>
+                    <button class="btn-reject"
+                        ${b.status !== 'pending' ? 'disabled' : ''}
+                        onclick="updateStatus('${b.id}', 'rejected')">
+                        ❌ Reject
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    window.updateStatus = async (bookingId, newStatus) => {
+        try {
+            await updateDoc(doc(db, 'bookings', bookingId), { status: newStatus });
+        } catch (e) {
+            alert('Error updating booking: ' + e.message);
+        }
+    };
+
+    async function loadVolunteers() {
+        const grid  = document.getElementById('volGrid');
+        const empty = document.getElementById('volEmpty');
+        try {
+            const snap = await getDocs(collection(db, 'volunteers'));
+            if (snap.empty) {
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            grid.innerHTML = snap.docs.map(d => {
+                const v = d.data();
+                return `
+                    <div class="vol-card">
+                        <h3>🐾 ${v.name || 'Unknown'}</h3>
+                        <p>📞 ${v.phone || '—'}</p>
+                        <p>🐕 Breeds: ${v.breeds || 'Any'}</p>
+                        <p>💼 Experience: ${v.experience || '—'}</p>
+                        ${v.nicUploaded ? '<span class="nic-badge">✅ NIC Verified</span>' : ''}
+                    </div>
+                `;
+            }).join('');
+        } catch (e) {
+            grid.innerHTML = `<p style="color:red;">Error loading volunteers: ${e.message}</p>`;
+        }
+    }
+</script>
+</body>
+</html>

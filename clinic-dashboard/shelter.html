@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PetBuddy — Shelter Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: #FFF5F0; color: #333; }
+
+        header {
+            background: #FF741C; color: white;
+            padding: 18px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        header h1 { font-size: 22px; }
+
+        .dashboard { padding: 30px; max-width: 800px; margin: 0 auto; }
+        .dashboard h2 { margin-bottom: 20px; font-size: 24px; color: #FF741C; }
+
+        .form-wrap {
+            background: white; border-radius: 16px;
+            padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; }
+        input, select, textarea {
+            width: 100%; padding: 12px 16px;
+            border: 1px solid #ddd; border-radius: 10px; font-size: 15px;
+            font-family: inherit;
+        }
+        textarea { resize: vertical; min-height: 100px; }
+        
+        button {
+            width: 100%; padding: 14px;
+            background: #FF741C; color: white;
+            border: none; border-radius: 10px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover { background: #e5651a; }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .message { margin-top: 15px; font-size: 14px; text-align: center; font-weight: bold; }
+        .message.success { color: #4CAF50; }
+        .message.error { color: #F44336; }
+        .message.loading { color: #FF741C; }
+
+        .logout-btn {
+            background: transparent; border: 2px solid white;
+            color: white; padding: 8px 18px; border-radius: 8px;
+            cursor: pointer; font-size: 14px; width: auto;
+        }
+
+        /* Tabs styling */
+        .tabs { display: flex; gap: 15px; margin: 30px auto 0 auto; max-width: 800px; padding: 0 30px; }
+        .tab-btn { 
+            flex: 1; padding: 14px; text-align: center; border-radius: 12px; 
+            font-weight: bold; cursor: pointer; color: #FF741C; background: #fff; 
+            border: 2px solid #FF741C; transition: all 0.3s ease; font-size: 16px;
+        }
+        .tab-btn.active { background: #FF741C; color: white; box-shadow: 0 4px 15px rgba(255, 116, 28, 0.3); }
+        .tab-btn:hover:not(.active) { background: #FF741C; color: white; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🏠 PetBuddy — Shelter Dashboard</h1>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <span id="shelterEmail"></span>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+</header>
+
+<div class="tabs">
+    <div id="tabAddPet" class="tab-btn active" onclick="switchTab('add')">🐾 Add New Pet</div>
+    <div id="tabRequests" class="tab-btn" onclick="switchTab('requests')">📩 Pending Requests</div>
+</div>
+
+<div class="dashboard" id="dashboard">
+    <h2>Add a Pet for Adoption</h2>
+    
+    <div class="form-wrap">
+        <form id="addPetForm" onsubmit="handleAddPet(event)">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" id="petName" required placeholder="e.g. Samantha" />
+            </div>
+            
+            <div style="display:flex; gap:16px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Type</label>
+                    <select id="petType" required>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Breed</label>
+                    <input type="text" id="petBreed" required placeholder="e.g. Golden Retriever" />
+                </div>
+            </div>
+
+            <div style="display:flex; gap:16px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Age</label>
+                    <input type="text" id="petAge" required placeholder="e.g. 2 (Will auto-add Years)" />
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Gender</label>
+                    <select id="petGender" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:16px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Color</label>
+                    <input type="text" id="petColor" required placeholder="e.g. Golden" />
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Weight</label>
+                    <input type="text" id="petWeight" required placeholder="e.g. 25 (Will auto-add kg)" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Shelter Name</label>
+                <input type="text" id="petShelterName" required placeholder="e.g. Happy Paws Shelter" />
+            </div>
+
+            <div style="display:flex; gap:16px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Location</label>
+                    <input type="text" id="petLocation" required placeholder="e.g. New York, NY" />
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>Phone Number</label>
+                    <input type="tel" id="petContactPhone" required placeholder="e.g. 0765743454" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Image Upload</label>
+                <input type="file" id="petImage" accept="image/*" required />
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="petDescription" required placeholder="Tell us about the pet..."></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">Add Pet</button>
+            <p id="formMessage" class="message"></p>
+        </form>
+    </div>
+</div>
+
+<div class="dashboard" id="requestsDashboard" style="display: none;">
+    <h2>Adoption Requests</h2>
+    <div id="requestsContainer" style="display: flex; flex-direction: column; gap: 16px;">
+        <p style="color:#666; font-style:italic;">Loading requests...</p>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script>
+    function switchTab(tab) {
+        document.getElementById('dashboard').style.display = tab === 'add' ? 'block' : 'none';
+        document.getElementById('requestsDashboard').style.display = tab === 'requests' ? 'block' : 'none';
+        
+        document.getElementById('tabAddPet').className = tab === 'add' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('tabRequests').className = tab === 'requests' ? 'tab-btn active' : 'tab-btn';
+    }
+</script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM",
+        authDomain: "petbuddy-138.firebaseapp.com",
+        projectId: "petbuddy-138",
+        storageBucket: "petbuddy-138.firebasestorage.app",
+        messagingSenderId: "506859726227",
+        appId: "1:506859726227:web:9083b07cceca26b8b6b466"
+    };
+
+    const app     = initializeApp(firebaseConfig);
+    const auth    = getAuth(app);
+    const db      = getFirestore(app);
+    const storage = getStorage(app);
+
+    onAuthStateChanged(auth, user => {
+        if (!user) {
+            window.location.href = 'index.html'; // Redirect to login if not logged in
+        } else {
+            document.getElementById('shelterEmail').textContent = user.email;
+            window.loadRequests(); // Load requests when authenticated
+        }
+    });
+
+    window.handleLogout = async () => {
+        await signOut(auth);
+        window.location.href = 'index.html';
+    };
+
+    window.handleAddPet = async (event) => {
+        event.preventDefault();
+        
+        const submitBtn    = document.getElementById('submitBtn');
+        const formMessage  = document.getElementById('formMessage');
+        const imageFile    = document.getElementById('petImage').files[0];
+
+        if (!imageFile) {
+            formMessage.textContent = 'Please select an image.';
+            formMessage.className = 'message error';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        formMessage.textContent = 'Uploading image...';
+        formMessage.className = 'message loading';
+
+        try {
+            // 1. Upload the image to Firebase Storage
+            const storageRef = ref(storage, 'pets/' + Date.now() + '_' + imageFile.name);
+            await uploadBytes(storageRef, imageFile);
+            const imageUrl = await getDownloadURL(storageRef);
+
+            formMessage.textContent = 'Adding pet to database...';
+
+            // Format Age and Weight if they only entered raw numbers
+            let rawAge = document.getElementById('petAge').value.trim();
+            let rawWeight = document.getElementById('petWeight').value.trim();
+            
+            if (!isNaN(rawAge) && rawAge !== '') rawAge += ' Years';
+            if (!isNaN(rawWeight) && rawWeight !== '') rawWeight += ' kg';
+
+            // 2. Save the pet data to Firestore
+            const petData = {
+                name: document.getElementById('petName').value.trim(),
+                type: document.getElementById('petType').value.trim().toLowerCase(), // MUST be lowercase for React Native filter
+                breed: document.getElementById('petBreed').value.trim(),
+                age: rawAge,
+                gender: document.getElementById('petGender').value.trim().toLowerCase(), // MUST be lowercase for React Native gender icons
+                color: document.getElementById('petColor').value.trim(),
+                weight: rawWeight,
+                shelterName: document.getElementById('petShelterName').value.trim(),
+                location: document.getElementById('petLocation').value.trim(),
+                contactPhone: document.getElementById('petContactPhone').value.trim(),
+                description: document.getElementById('petDescription').value.trim(),
+                image: imageUrl,
+                createdAt: serverTimestamp(),
+                ownerEmail: auth.currentUser.email
+            };
+
+            await addDoc(collection(db, 'pets'), petData);
+
+            formMessage.textContent = 'Pet added successfully!';
+            formMessage.className = 'message success';
+            document.getElementById('addPetForm').reset();
+
+        } catch (error) {
+            console.error("Error adding pet: ", error);
+            formMessage.textContent = 'Error adding pet: ' + error.message;
+            formMessage.className = 'message error';
+        } finally {
+            submitBtn.disabled = false;
+        }
+    };
+
+    // Load ADOPTION REQUESTS
+    window.loadRequests = async () => {
+        const requestsContainer = document.getElementById('requestsContainer');
+        try {
+            const snapshot = await getDocs(collection(db, 'adoptions'));
+            requestsContainer.innerHTML = '';
+            
+            if (snapshot.empty) {
+                requestsContainer.innerHTML = '<p>No adoption requests found.</p>';
+                return;
+            }
+
+            let pendingCount = 0;
+            snapshot.forEach(docSnap => {
+                const reqData = docSnap.data();
+                // Filter locally to avoid missing firestore indexes
+                if (reqData.status === 'accepted') return; 
+                
+                pendingCount++;
+                const reqHtml = `
+                    <div class="form-wrap" style="margin-bottom: 0; padding: 20px;">
+                        <h3 style="color:#FF741C; margin-bottom:8px;">🐾 Pet: ${reqData.petName || 'Unknown'}</h3>
+                        <p style="margin-bottom:5px;"><strong>Applicant:</strong> ${reqData.applicantName}</p>
+                        <p style="margin-bottom:5px;"><strong>Phone:</strong> ${reqData.applicantPhone}</p>
+                        <p style="margin-bottom:12px;"><strong>Reason:</strong> ${reqData.reason}</p>
+                        <div style="display:flex; gap:10px; margin-top: 16px;">
+                            <button onclick="acceptRequest('${docSnap.id}', '${reqData.petId}')" style="background-color: #4CAF50; border-radius: 8px;">
+                                Accept & Remove Pet
+                            </button>
+                            <button onclick="rejectRequest('${docSnap.id}')" style="background-color: #F44336; border-radius: 8px;">
+                                Reject Request
+                            </button>
+                        </div>
+                    </div>
+                `;
+                requestsContainer.innerHTML += reqHtml;
+            });
+
+            if (pendingCount === 0) {
+                 requestsContainer.innerHTML = '<p style="color:#888;">No pending adoption requests. All caught up!</p>';
+            }
+        } catch (error) {
+            console.error(error);
+            requestsContainer.innerHTML = `<p class="message error">Error loading requests: ${error.message}</p>`;
+        }
+    };
+
+    // Accept an ADOPTION REQUEST
+    window.acceptRequest = async (requestId, petId) => {
+        if (!confirm('Are you absolutely sure you want to accept this request? The pet will be permanently deleted from the mobile app.')) return;
+        
+        try {
+            // 1. Mark request as 'accepted'
+            await updateDoc(doc(db, 'adoptions', requestId), { status: 'accepted' });
+            
+            // 2. Delete the pet explicitly from the "pets" collection so it disappears from the mobile app
+            if (petId && petId !== 'undefined') {
+                await deleteDoc(doc(db, 'pets', petId));
+                alert('Success! Request accepted and pet has been deleted from the database.');
+            } else {
+                alert('Request accepted, but it did not contain a valid petId so no pet was deleted.');
+            }
+            
+            // 3. Reload list
+            window.loadRequests();
+        } catch (error) {
+            console.error(error);
+            alert('Error updating request: ' + error.message);
+        }
+    };
+
+    // Reject an ADOPTION REQUEST
+    window.rejectRequest = async (requestId) => {
+        if (!confirm('Are you strictly sure you want to REJECT this adoption request? This will delete the form but the pet will remain available for adoption.')) return;
+        
+        try {
+            // Delete just the adoption request form, leaving the Pet completely untouched
+            await deleteDoc(doc(db, 'adoptions', requestId));
+            alert('Adoption request rejected successfully.');
+            
+            // Reload list
+            window.loadRequests();
+        } catch (error) {
+            console.error(error);
+            alert('Error rejecting request: ' + error.message);
+        }
+    };
+</script>
+</body>
+</html>
