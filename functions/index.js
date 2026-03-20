@@ -24,7 +24,7 @@ function loadAdviceRows() {
   });
 
   // Normalize fields
-  return rows
+   cachedData = rows
     .map((r) => ({
       animalname: String(r.animalname || "").trim().toLowerCase(),
       symptom: String(r.symptom || "").trim().toLowerCase(),
@@ -32,9 +32,11 @@ function loadAdviceRows() {
       emergency: String(r.emergency || "").trim().toLowerCase(), // "yes" or "no"
     }))
     .filter((r) => r.symptom);
+
+    return cachedData;
 }
 
-const ADVICE_ROWS = loadAdviceRows();
+
 
 // For quick lookup after matching
 const SYMPTOM_TO_ROW = new Map();
