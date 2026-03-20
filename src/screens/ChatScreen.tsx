@@ -468,7 +468,7 @@ export default function ChatScreen() {
                                 value={inputText}
                                 onChangeText={(value) => {
                                     setInputText(value);
-                                    fetchSuggestions(value); // 🔥 call backend
+                                    fetchSuggestions(value); //  call backend
                                 }}
                                 placeholder="What happened to your dog?"
                                 placeholderTextColor="#787878"
@@ -501,6 +501,22 @@ export default function ChatScreen() {
                                 </TouchableOpacity>
                             </Animated.View>
                         </View>
+                            {suggestions.length > 0 && (
+                                <View style={{
+                                    position: 'absolute',
+                                    bottom: 90,
+                                    left: 16,
+                                    right: 16,
+                                    backgroundColor: '#fff',
+                                    borderRadius: 12,
+                                    padding: 8,
+                                    elevation: 6,
+                                    zIndex: 1000,
+                                    maxHeight: 150
+                                }}>
+                                    
+                        
+
                         <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
                     </SafeAreaView>
                 </KeyboardAvoidingView>
