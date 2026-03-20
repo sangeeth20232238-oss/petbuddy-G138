@@ -472,6 +472,11 @@ useEffect(() => {
                         ListFooterComponent={isTyping ? <TypingIndicator /> : null}
                         onContentSizeChange={scrollToBottom}
                         renderItem={({ item, index }) => <MessageBubble message={item} index={index} />}
+                        contentContainerStyle={[
+                        styles.chatContent,
+                        messages.length === 0 && styles.chatContentEmpty,
+                        { paddingBottom: 120 } // 🔥 THIS MAKES SPACE FOR INPUT
+                    ]}
                     />
                 </KeyboardAvoidingView>
 
@@ -481,7 +486,8 @@ useEffect(() => {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                }}></View>
+                }}>
+                </View>
 
                     {/* ── Input Bar ── */}
                     <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
@@ -565,7 +571,6 @@ useEffect(() => {
                                     )}
                         <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
                     </SafeAreaView>
-                </KeyboardAvoidingView>
             </SafeAreaView>
         </View>
     );
