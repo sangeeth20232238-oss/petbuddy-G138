@@ -7,7 +7,7 @@ import { ChevronLeft, MessageSquare, Cpu, Edit, Save } from 'lucide-react-native
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 export default function MicrochipDetails({ onBack }) {
@@ -23,8 +23,14 @@ export default function MicrochipDetails({ onBack }) {
 
   useEffect(() => {
     const loadMicrochipData = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const docRef = doc(db, 'microchip', 'details');
+        const docRef = doc(db, 'users', user.uid, 'pet_data', 'microchip');
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
@@ -34,9 +40,18 @@ export default function MicrochipDetails({ onBack }) {
           setImplantDate(data.implantDate || '');
           setVeterinarian(data.veterinarian || '');
           setRegistry(data.registry || '');
+        } else {
+          // Keep empty for new user
+          setChipId('');
+          setPetName('');
+          setImplantDate('');
+          setVeterinarian('');
+          setRegistry('');
         }
       } catch (error) {
         console.error('Error loading microchip data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -49,9 +64,12 @@ export default function MicrochipDetails({ onBack }) {
       return;
     }
 
+    const user = auth.currentUser;
+    if (!user) return;
+
     setLoading(true);
     try {
-      await setDoc(doc(db, 'microchip', 'details'), {
+      await setDoc(doc(db, 'users', user.uid, 'pet_data', 'microchip'), {
         chipId: chipId.trim(),
         petName: petName.trim(),
         implantDate: implantDate.trim(),

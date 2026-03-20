@@ -129,24 +129,15 @@ export default function MedicalWallet() {
 
   const updatePetImage = async (imageUri) => {
     try {
-      const petDocRef = doc(db, "pets", "bunny_profile");
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const userDocRef = doc(db, "users", user.uid);
       
-      // Try to update first, if document doesn't exist, create it
-      try {
-        await updateDoc(petDocRef, {
-          profileImage: imageUri,
-          updatedAt: new Date()
-        });
-      } catch (updateError) {
-        // If document doesn't exist, create it with setDoc
-        console.log('Document does not exist, creating new one...');
-        await setDoc(petDocRef, {
-          name: petData?.name || 'Bunny',
-          profileImage: imageUri,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        });
-      }
+      await updateDoc(userDocRef, {
+        profilePic: imageUri,
+        updatedAt: new Date()
+      });
       
       // Update local state immediately
       setPetData(prev => ({ ...prev, profileImage: imageUri }));
@@ -174,16 +165,25 @@ export default function MedicalWallet() {
   }, [currentView]);
 
   useEffect(() => {
-    const petDocRef = doc(db, "pets", "bunny_profile");
+    const user = auth.currentUser;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const userDocRef = doc(db, "users", user.uid);
     
-    const unsubscribe = onSnapshot(petDocRef, (docSnap) => {
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
-        console.log('Pet data from Firebase:', data);
-        console.log('Profile image URI:', data.profileImage);
-        setPetData({ id: docSnap.id, ...data });
+        console.log('User pet data from Firebase:', data);
+        setPetData({ 
+          id: docSnap.id, 
+          name: data.name || 'User',
+          profileImage: data.profilePic || data.profileImage || null
+        });
       } else {
-        console.log("No such pet profile found in Firestore. Using defaults.");
+        console.log("No user profile found in Firestore.");
       }
       setLoading(false);
     }, (error) => {

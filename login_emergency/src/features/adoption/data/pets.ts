@@ -18,6 +18,13 @@ export const PETS_DATA: Pet[] = [
 ];
 
 export const getPetImage = (imagePath: string) => {
+    if (!imagePath) return require('../../../../assets/pets/dog.png');
+    
+    // Check if it's a remote URL
+    if (imagePath.startsWith('http') || imagePath.startsWith('https') || imagePath.startsWith('file://')) {
+        return { uri: imagePath };
+    }
+
     switch (imagePath) {
         case 'cat_samantha.jpg': return require('../../../../assets/pets/cat_samantha.jpg');
         case 'cat_tigri.jpg': return require('../../../../assets/pets/cat_tigri.jpg');
