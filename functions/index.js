@@ -358,4 +358,6 @@ exports.chatbot = functions.https.onRequest((req, res) => {
 });
 
 //Suggestions API (for frontend popup)
-exports.suggestions = functions.https.onRequest((req, res) => {}
+exports.suggestions = functions.https.onRequest((req, res) => {
+  // Enable CORS so frontend (React Native / web) can access this API
+  cors(req, res, () => {
