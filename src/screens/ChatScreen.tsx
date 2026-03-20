@@ -455,43 +455,33 @@ useEffect(() => {
 
                 {/* ── Chat Area ── */}
                 <KeyboardAvoidingView
-                    style={styles.flex}
+                    style={{ flex: 1 }}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    keyboardVerticalOffset={0}
+                    keyboardVerticalOffset={80}
                 >
+
+                    {/* CHAT */}
                     <FlatList
                         ref={flatListRef}
                         data={messages}
                         keyExtractor={item => item.id}
+                        renderItem={({ item, index }) => (
+                            <MessageBubble message={item} index={index} />
+                        )}
+                        ListEmptyComponent={<EmptyState onSuggestionPress={handleSuggestionPress} />}
+                        ListFooterComponent={isTyping ? <TypingIndicator /> : null}
+                        onContentSizeChange={scrollToBottom}
+                        showsVerticalScrollIndicator={false}
                         contentContainerStyle={[
                             styles.chatContent,
                             messages.length === 0 && styles.chatContentEmpty,
                         ]}
-                        showsVerticalScrollIndicator={false}
-                        ListEmptyComponent={<EmptyState onSuggestionPress={handleSuggestionPress} />}
-                        ListFooterComponent={isTyping ? <TypingIndicator /> : null}
-                        onContentSizeChange={scrollToBottom}
-                        renderItem={({ item, index }) => <MessageBubble message={item} index={index} />}
-                        contentContainerStyle={[
-                        styles.chatContent,
-                        messages.length === 0 && styles.chatContentEmpty,
-                        { paddingBottom: 120 } // 🔥 THIS MAKES SPACE FOR INPUT
-                    ]}
                     />
                 </KeyboardAvoidingView>
 
-                {/*FIXED INPUT BAR */}
-                <View style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                }}>
-                </View>
-
                     {/* ── Input Bar ── */}
                     <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
-                        <View style={{ position: 'relative' }}>
+                        <View style={styles.inputBar}>
                             <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
                                 <Feather name="mic" size={20} color="#FF741C" />
                             </TouchableOpacity>
@@ -793,25 +783,29 @@ const styles = StyleSheet.create({
         textTransform: 'capitalize',
     },
 
-    // Input Bar
     inputSafeArea: {
-        paddingHorizontal: 16,
+        paddingHorizontal: 12,
         paddingTop: 6,
-        paddingBottom: 10,
-        backgroundColor: '#FFFFFF', 
+        paddingBottom: 8,
+
+        backgroundColor: '#FFFFFF',
+
+        borderTopWidth: 1,              // 🔥 clean separation
+        borderTopColor: '#EEE',
+
         shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 8,
-    },  
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+        elevation: 6,
+    }
 
     inputBar: {
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         backgroundColor: '#FFFFFF',
         borderRadius: 30,
-        paddingHorizontal: 8,
-        paddingVertical: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.12,
