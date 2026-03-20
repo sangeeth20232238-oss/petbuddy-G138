@@ -300,25 +300,11 @@ export default function ChatScreen() {
     const [showMenu, setShowMenu] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
+    const timeoutRef = useRef(null);
     const [text, setText] = useState("");
     const [suggestions, setSuggestions] = useState([]);
 
-    const fetchSuggestions = async (input) => {
-    try {
-        if (input.length < 2) {
-            setSuggestions([]);
-            return;
-        }
-         const response = await fetch(
-            `https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/suggestions?q=${input}`
-        );
-
-        const data = await response.json();
-
-        setSuggestions(data.suggestions || []);
-    } catch (error) {
-        console.log("Suggestion error:", error);
-    }
+    
 };
 
 
