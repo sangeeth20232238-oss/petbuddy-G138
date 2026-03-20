@@ -157,23 +157,34 @@ function cleanText(s) {
 }
 
 /**
- * Returns array of clean symptoms detected in message
+ * ----------------------------------------
+ * 3) Extract symptoms from full sentences
+ * ----------------------------------------
  */
 function extractSymptomsFromMessage(userMessage) {
   const text = ` ${cleanText(userMessage)} `;
   const found = new Set();
 
+  const words = text.split(" ");
+
   for (const phrase of MATCH_PHRASES) {
     const p = ` ${phrase} `;
-    if (text.includes(p) || text.split(" ").some(word => phrase.includes(word))) {
-      const maybeClean = SYMPTOM_ALIASES[phrase] ? SYMPTOM_ALIASES[phrase] : phrase;
-      const normalized = normalizeSymptom(maybeClean);
+
+    if (text.includes(p)) { //exact phrase match
+      const normalized = normalizeSymptom(phrase);
+      if (CLEAN_SET.has(normalized)) found.add(normalized);
+    }
+     
+    // partial word match (e.g. "vomiting" matches "vomit")
+    else if (words.some(word => word.length > 3 && phrase.includes(word))) {
+      const normalized = normalizeSymptom(phrase);
       if (CLEAN_SET.has(normalized)) found.add(normalized);
     }
   }
 
   return Array.from(found);
 }
+
 
 /**
  * ----------------------------
@@ -295,9 +306,20 @@ exports.chatbot = functions.https.onRequest((req, res) => {
         });
       }
       let symptoms = extractSymptomsFromMessage(message);
-
+      
+      //fallback using Fuse
       if (symptoms.length === 0) {
-      saveUnknownSymptom(message);
+        symptoms = findBestSymptoms(message);
+      }
+
+      //ONLY KEEP ONE (what user asked)
+      if (symptoms.length > 0) {
+        symptoms = [symptoms[0]];
+      }
+
+      // still nothing → then fail
+      if (symptoms.length === 0) {
+        saveUnknownSymptom(message);
 
       return res.json({
         found: false,
@@ -328,3 +350,35 @@ exports.chatbot = functions.https.onRequest((req, res) => {
   });
   // 🔥 force deploy
 });
+
+//Suggestions API (for frontend popup)
+exports.suggestions = functions.https.onRequest((req, res) => {
+  // Enable CORS so frontend (React Native / web) can access this API
+  cors(req, res, () => {
+    // Get user input from query parameter (?q=...)
+    const query = req.query.q || "";
+    const normalized = normalizeText(query); // Normalize input (lowercase, remove special chars)
+
+    /**
+     * Filter symptoms based on user input
+     * - Checks if symptom includes the typed text
+     * - Example: "bone" → "broken bones"
+     */
+
+    const matches = ALL_SYMPTOMS.filter(symptom =>
+      symptom.includes(normalized) || normalized.includes(symptom)
+    )
+    .slice(0, 5); // Limit to top 5 suggestions
+
+    /**
+     * Send suggestions back to frontend
+     */
+    res.json({
+      suggestions: matches,
+    });
+
+  });
+});
+
+
+
