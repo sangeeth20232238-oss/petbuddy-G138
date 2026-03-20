@@ -501,8 +501,8 @@ export default function ChatScreen() {
                                 </TouchableOpacity>
                             </Animated.View>
                         </View>
-                            {suggestions.length > 0 && (
-                                <View style={{
+                            {suggestions.length > 0 && (  //Show suggestions only if there are results 
+                                <View style={{   //Container for the dropdown popup
                                     position: 'absolute',
                                     bottom: 90,
                                     left: 16,
@@ -514,12 +514,12 @@ export default function ChatScreen() {
                                     zIndex: 1000,
                                     maxHeight: 150
                                 }}>
-                                    {suggestions.map((item, index) => (
-                                        <TouchableOpacity
+                                    {suggestions.map((item, index) => (  //Loop through suggestions list
+                                        <TouchableOpacity // Each suggestion is clickable
                                             key={index}
                                             onPress={() => {
-                                                setInputText(item);   // ✅ fill input with selected suggestion
-                                                setSuggestions([]);   // ❌ hide dropdown after selection
+                                                setInputText(item);   //  fill input with selected suggestion
+                                                setSuggestions([]);   //  hide dropdown after selection
                                             }}
                                         >
                                              <Text style={{
