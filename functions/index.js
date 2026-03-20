@@ -205,10 +205,20 @@ function extractSymptomsFromMessage(userMessage) {
  */
 const ALL_SYMPTOMS = Array.from(SYMPTOM_TO_ROW.keys());
 
-const fuse = new Fuse(ALL_SYMPTOMS, {
-  includeScore: true,
-  threshold: 0.35,
-});
+let fuse = null;
+
+function getFuse() {
+  if (fuse) return fuse;
+
+  const symptoms = Array.from(getSymptomMap().keys());
+
+  fuse = new Fuse(symptoms, {
+    includeScore: true,
+    threshold: 0.35,
+  });
+
+  return fuse;
+}
 
 function normalizeText(s) {
   return String(s || "")
