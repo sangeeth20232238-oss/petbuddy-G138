@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../theme/colors';
 
 // Firebase Imports: Importing the database and Firestore query tools
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from "firebase/firestore";
 
 /**
@@ -53,7 +53,7 @@ export default function PrescriptionList({ onBack, navigate }) {
    */
   useEffect(() => {
     // Define query: sort by the server-side timestamp in descending order (newest first)
-    const q = query(collection(db, "prescriptions"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, 'users', auth.currentUser.uid, 'prescriptions'), orderBy("createdAt", "desc"));
     
     // onSnapshot creates a persistent websocket connection to Firestore
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -81,7 +81,7 @@ export default function PrescriptionList({ onBack, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, 'prescriptions', id));
+              await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'prescriptions', id));
             } catch (error) {
               Alert.alert('Error', 'Failed to delete record');
             }

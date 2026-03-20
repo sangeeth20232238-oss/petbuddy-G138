@@ -8,7 +8,7 @@ import { ChevronLeft, Upload, Calendar } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export default function EditVaccination({ onBack, params }) {
@@ -65,7 +65,7 @@ export default function EditVaccination({ onBack, params }) {
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'vaccinations', params.id), {
+      await updateDoc(doc(db, 'users', auth.currentUser.uid, 'vaccinations', params.id), {
         vaccineName: vaccineName.trim(),
         dateTaken: dateTaken.toLocaleDateString(),
         nextDueDate: nextDueDate.toLocaleDateString(),

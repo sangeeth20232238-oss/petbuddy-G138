@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, Calendar } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export default function EditPrescription({ onBack, params }) {
@@ -46,7 +46,7 @@ export default function EditPrescription({ onBack, params }) {
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'prescriptions', params.id), {
+      await updateDoc(doc(db, 'users', auth.currentUser.uid, 'prescriptions', params.id), {
         medName: medName.trim(),
         dosage: dosage.trim(),
         startDate: startDate.toLocaleDateString(),

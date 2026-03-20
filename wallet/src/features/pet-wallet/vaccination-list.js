@@ -8,7 +8,8 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../theme/colors';
 
 // --- FIREBASE IMPORTS ---
-import { db } from '../../services/firebaseConfig';
+// --- FIREBASE IMPORTS ---
+import { db, auth } from '../../services/firebaseConfig';
 import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from "firebase/firestore";
 
 /**
@@ -65,7 +66,7 @@ export default function VaccinationList({ onBack, navigate }) {
    */
   useEffect(() => {
     // Query: collection 'vaccinations' ordered by newest first
-    const q = query(collection(db, "vaccinations"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, 'users', auth.currentUser.uid, 'vaccinations'), orderBy("createdAt", "desc"));
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const records = [];
@@ -94,7 +95,7 @@ export default function VaccinationList({ onBack, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, 'vaccinations', id));
+              await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'vaccinations', id));
             } catch (error) {
               Alert.alert('Error', 'Failed to delete record');
             }

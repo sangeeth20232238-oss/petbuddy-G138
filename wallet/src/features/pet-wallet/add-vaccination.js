@@ -11,7 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function AddVaccination({ onBack }) {
@@ -47,7 +47,7 @@ export default function AddVaccination({ onBack }) {
 
     setLoading(true);
     try {
-      await addDoc(collection(db, 'vaccinations'), {
+      await addDoc(collection(db, 'users', auth.currentUser.uid, 'vaccinations'), {
         vaccineName: vaccineName.trim(),
         dateTaken: dateTaken.toLocaleDateString(),
         nextDueDate: nextDueDate.toLocaleDateString(),

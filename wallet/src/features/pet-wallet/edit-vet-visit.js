@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, Calendar } from 'lucide-react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export default function EditVetVisit({ onBack, params }) {
@@ -39,7 +39,7 @@ export default function EditVetVisit({ onBack, params }) {
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'vetVisits', params.id), {
+      await updateDoc(doc(db, 'users', auth.currentUser.uid, 'vetVisits', params.id), {
         visitReason: visitReason.trim(),
         visitDate: visitDate.toLocaleDateString(),
         veterinarian: veterinarian.trim(),

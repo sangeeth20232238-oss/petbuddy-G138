@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 export default function MicrochipDetails({ onBack }) {
@@ -26,7 +26,7 @@ export default function MicrochipDetails({ onBack }) {
   useEffect(() => {
     const loadMicrochipData = async () => {
       try {
-        const docRef = doc(db, 'microchip', 'details');
+        const docRef = doc(db, 'users', auth.currentUser.uid, 'microchip', 'details');
         const docSnap = await getDoc(docRef);
         
         if (docSnap.exists()) {
@@ -53,7 +53,7 @@ export default function MicrochipDetails({ onBack }) {
 
     setLoading(true);
     try {
-      await setDoc(doc(db, 'microchip', 'details'), {
+      await setDoc(doc(db, 'users', auth.currentUser.uid, 'microchip', 'details'), {
         chipId: chipId.trim(),
         petName: petName.trim(),
         implantDate: implantDate.trim(),

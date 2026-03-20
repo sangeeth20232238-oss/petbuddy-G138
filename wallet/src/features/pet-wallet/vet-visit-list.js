@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router';
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from 'firebase/firestore';
 
 const RecordCard = ({ title, date, veterinarian, onPress, onDelete, onEdit }) => (
@@ -43,7 +43,7 @@ export default function VetVisitList({ onBack, navigate }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, "vetVisits"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, 'users', auth.currentUser.uid, 'vetVisits'), orderBy("createdAt", "desc"));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -79,7 +79,7 @@ export default function VetVisitList({ onBack, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, 'vetVisits', id));
+              await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'vetVisits', id));
             } catch (error) {
               Alert.alert('Error', 'Failed to delete record');
             }

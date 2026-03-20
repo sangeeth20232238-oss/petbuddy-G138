@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, MessageSquare, Syringe, Pill, Stethoscope, FileText, Trash2 } from 'lucide-react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { COLORS } from '../../theme/colors';
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { doc, deleteDoc } from 'firebase/firestore';
 
 export default function RecordDetails({ onBack, params, navigate }) {
@@ -29,7 +29,7 @@ export default function RecordDetails({ onBack, params, navigate }) {
           onPress: async () => {
             try {
               const collection = isVaccination ? 'vaccinations' : isPrescription ? 'prescriptions' : 'vetVisits';
-              await deleteDoc(doc(db, collection, params.id));
+              await deleteDoc(doc(db, 'users', auth.currentUser.uid, collection, params.id));
               Alert.alert('Success', 'Record deleted successfully', [
                 { text: 'OK', onPress: onBack }
               ]);

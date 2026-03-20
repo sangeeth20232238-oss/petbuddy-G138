@@ -26,7 +26,7 @@ import EditVetVisit from '../src/features/pet-wallet/edit-vet-visit';
 import RecordDetails from '../src/features/pet-wallet/record-details';
 
 // 1. Firebase Imports - Ensuring we use Firestore instead of localhost
-import { db } from '../src/services/firebaseConfig';
+import { db, auth } from '../src/services/firebaseConfig';
 import { doc, onSnapshot, updateDoc, setDoc } from "firebase/firestore";
 
 const CategoryCard = ({ icon: Icon, title, width, onPress }) => (
@@ -73,7 +73,7 @@ export default function MedicalWallet() {
       return;
     }
     try {
-      const petDocRef = doc(db, "pets", "bunny_profile");
+      const petDocRef = doc(db, 'users', auth.currentUser.uid, 'pets', 'default_profile');
       try {
         await updateDoc(petDocRef, {
           name: tempName.trim(),
@@ -159,7 +159,7 @@ export default function MedicalWallet() {
 
   const updatePetImage = async (imageUri) => {
     try {
-      const petDocRef = doc(db, "pets", "bunny_profile");
+      const petDocRef = doc(db, 'users', auth.currentUser.uid, 'pets', 'default_profile');
       
       // Try to update first, if document doesn't exist, create it
       try {
@@ -204,7 +204,7 @@ export default function MedicalWallet() {
   }, [currentView]);
 
   useEffect(() => {
-    const petDocRef = doc(db, "pets", "bunny_profile");
+    const petDocRef = doc(db, 'users', auth.currentUser.uid, 'pets', 'default_profile');
     
     const unsubscribe = onSnapshot(petDocRef, (docSnap) => {
       if (docSnap.exists()) {

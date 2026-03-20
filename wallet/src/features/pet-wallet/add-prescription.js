@@ -10,7 +10,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
-import { db } from '../../services/firebaseConfig';
+import { db, auth } from '../../services/firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function AddPrescription({ onBack }) {
@@ -33,7 +33,7 @@ export default function AddPrescription({ onBack }) {
 
     setLoading(true);
     try {
-      await addDoc(collection(db, 'prescriptions'), {
+      await addDoc(collection(db, 'users', auth.currentUser.uid, 'prescriptions'), {
         medName: medName.trim(),
         dosage: dosage.trim(),
         startDate: startDate.toLocaleDateString(),
