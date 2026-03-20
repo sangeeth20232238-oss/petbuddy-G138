@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Dimensions, StatusBar, Alert } from 'react-native';
+import {
+    StyleSheet, View, Text, TextInput, TouchableOpacity,
+    Dimensions, StatusBar, Alert, ScrollView
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../../firebaseConfig';
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth'; // Added reset import
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 
-const { width, height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
-// DEFINED OUTSIDE TO FIX KEYBOARD BUG
 const FloatingField = ({ label, placeholder, isPassword, value, onChangeText, showPassword, setShowPassword }) => (
     <View style={styles.inputWrapper}>
         <Text style={[styles.floatingText, { fontFamily: 'Fredoka-SemiBold' }]}>{label}</Text>
@@ -20,10 +22,11 @@ const FloatingField = ({ label, placeholder, isPassword, value, onChangeText, sh
                 value={value}
                 onChangeText={onChangeText}
                 autoCapitalize="none"
+                keyboardType={!isPassword ? 'email-address' : 'default'}
             />
             {isPassword && (
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                    <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={22} color="black" />
+                    <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={22} color="black" />
                 </TouchableOpacity>
             )}
         </View>
@@ -34,67 +37,88 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    // LOGIN LOGIC
     const handleLogin = () => {
         if (!email || !password) {
-            Alert.alert("Error", "Please enter your email and password");
+            Alert.alert('Error', 'Please enter your email and password');
             return;
         }
+        setLoading(true);
         signInWithEmailAndPassword(auth, email, password)
             .then(() => navigation.replace('Dashboard'))
-            .catch(() => Alert.alert("Login Failed", "Invalid email or password."));
+            .catch(() => Alert.alert('Login Failed', 'Invalid email or password.'))
+            .finally(() => setLoading(false));
     };
 
-    // FORGOT PASSWORD LOGIC
     const handleForgotPassword = () => {
         if (!email) {
-            Alert.alert("Email Required", "Please enter your email address in the field above first.");
+            Alert.alert('Email Required', 'Please enter your email address first.');
             return;
         }
-
         sendPasswordResetEmail(auth, email)
-            .then(() => {
-                Alert.alert(
-                    "Success",
-                    "A password reset link has been sent to your email! Please check your inbox (and spam folder)."
-                );
-            })
-            .catch((error) => {
-                // Common error: auth/user-not-found if the email isn't in your Firebase list
-                Alert.alert("Reset Error", error.message);
-            });
+            .then(() => Alert.alert('Success', 'Password reset link sent to your email!'))
+            .catch((err) => Alert.alert('Error', err.message));
+    };
+
+    const handleGoogleLogin = () => {
+        Alert.alert(
+            'Google Sign-In',
+            'To enable Google Sign-In, add your OAuth Client IDs from Firebase Console → Authentication → Sign-in method → Google.',
+            [{ text: 'OK' }]
+        );
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+        >
             <StatusBar barStyle="dark-content" />
             <LinearGradient colors={['#FFFFFF', '#FF741C']} locations={[0.43, 1.0]} style={styles.background} />
 
             <Text style={[styles.header, { fontFamily: 'Fredoka-Bold' }]}>Login</Text>
 
-            <FloatingField label="Email" placeholder="test@petbuddy.lk" value={email} onChangeText={setEmail} />
-            <FloatingField label="Password" placeholder="********" isPassword value={password} onChangeText={setPassword} showPassword={showPassword} setShowPassword={setShowPassword} />
+            <FloatingField
+                label="Email"
+                placeholder="test@petbuddy.lk"
+                value={email}
+                onChangeText={setEmail}
+            />
+            <FloatingField
+                label="Password"
+                placeholder="********"
+                isPassword
+                value={password}
+                onChangeText={setPassword}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+            />
 
             <TouchableOpacity style={styles.forgotBtn} onPress={handleForgotPassword}>
                 <Text style={[styles.forgotText, { fontFamily: 'Fredoka-SemiBold' }]}>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.mainBtn} onPress={handleLogin}>
-                <Text style={[styles.mainBtnText, { fontFamily: 'Fredoka-Bold' }]}>Login</Text>
+            <TouchableOpacity style={[styles.mainBtn, loading && { opacity: 0.7 }]} onPress={handleLogin} disabled={loading}>
+                <Text style={[styles.mainBtnText, { fontFamily: 'Fredoka-Bold' }]}>
+                    {loading ? 'Logging in...' : 'Login'}
+                </Text>
             </TouchableOpacity>
 
             <View style={styles.dividerRow}>
-                <View style={styles.line} /><Text style={[styles.orText, { fontFamily: 'Fredoka-Bold' }]}>Or</Text><View style={styles.line} />
+                <View style={styles.line} />
+                <Text style={[styles.orText, { fontFamily: 'Fredoka-Bold' }]}>Or</Text>
+                <View style={styles.line} />
             </View>
 
-            <Text style={[styles.continueText, { fontFamily: 'Fredoka-SemiBold' }]}>Continue With</Text>
-
-            <View style={styles.socialRow}>
-                <TouchableOpacity style={styles.socialBtn}><Ionicons name="logo-google" size={26} color="#DB4437" /></TouchableOpacity>
-                <TouchableOpacity style={styles.socialBtn}><Ionicons name="logo-facebook" size={26} color="#4267B2" /></TouchableOpacity>
-                <TouchableOpacity style={styles.socialBtn}><Ionicons name="logo-apple" size={26} color="#000" /></TouchableOpacity>
-            </View>
+            {/* Google Sign-In */}
+            <TouchableOpacity style={styles.googleBtn} onPress={handleGoogleLogin} activeOpacity={0.85}>
+                <Ionicons name="logo-google" size={22} color="#DB4437" />
+                <Text style={[styles.googleBtnText, { fontFamily: 'Fredoka-SemiBold' }]}>
+                    Continue with Google
+                </Text>
+            </TouchableOpacity>
 
             <View style={styles.footer}>
                 <Text style={[styles.footerText, { fontFamily: 'Fredoka-SemiBold' }]}>New Customer? </Text>
@@ -102,12 +126,22 @@ export default function LoginScreen({ navigation }) {
                     <Text style={[styles.enrolLink, { fontFamily: 'Fredoka-Bold' }]}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+
+            {/* Terms link */}
+            <TouchableOpacity style={styles.termsLink} onPress={() => navigation.navigate('Terms')}>
+                <Text style={[styles.termsText, { fontFamily: 'Fredoka-Regular' }]}>
+                    By continuing, you agree to our{' '}
+                    <Text style={{ fontFamily: 'Fredoka-SemiBold', textDecorationLine: 'underline', color: '#FF741C' }}>
+                        Terms & Conditions
+                    </Text>
+                </Text>
+            </TouchableOpacity>
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, paddingHorizontal: 30, paddingTop: height * 0.12 },
+    scrollContent: { flexGrow: 1, paddingHorizontal: 30, paddingTop: height * 0.12, paddingBottom: 40 },
     background: { ...StyleSheet.absoluteFillObject },
     header: { fontSize: 44, textAlign: 'center', marginBottom: 50, color: '#000' },
     inputWrapper: { marginBottom: 35, width: '100%' },
@@ -121,10 +155,15 @@ const styles = StyleSheet.create({
     dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 25 },
     line: { flex: 1, height: 1, backgroundColor: 'rgba(0,0,0,0.3)' },
     orText: { marginHorizontal: 15, fontSize: 16 },
-    continueText: { textAlign: 'center', marginBottom: 15, fontSize: 16 },
-    socialRow: { flexDirection: 'row', justifyContent: 'center', gap: 20 },
-    socialBtn: { backgroundColor: '#FFF', padding: 12, borderRadius: 12, elevation: 4 },
-    footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 30 },
+    googleBtn: {
+        flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+        backgroundColor: '#FFF', borderRadius: 15, paddingVertical: 15,
+        elevation: 4, gap: 12, borderWidth: 1, borderColor: '#F0F0F0',
+    },
+    googleBtnText: { fontSize: 16, color: '#333' },
+    footer: { flexDirection: 'row', justifyContent: 'center', marginTop: 28 },
     footerText: { fontSize: 15 },
-    enrolLink: { color: '#FF741C', fontSize: 15 }
+    enrolLink: { color: '#FF741C', fontSize: 15 },
+    termsLink: { alignItems: 'center', marginTop: 18 },
+    termsText: { fontSize: 12, color: 'rgba(0,0,0,0.45)', textAlign: 'center', lineHeight: 18 },
 });

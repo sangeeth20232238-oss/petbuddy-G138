@@ -30,6 +30,7 @@ import PetBuddyPaywallScreen from './src/features/pet-buddy/PetBuddyPaywallScree
 // Profile 
 import EditProfileScreen from './src/features/profile/EditProfileScreen';
 import AppointmentsScreen from './src/screens/AppointmentsScreen';
+import TermsScreen from './src/screens/TermsScreen';
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
@@ -73,6 +74,7 @@ export default function App() {
         {/* Profile */}
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="Appointments" component={AppointmentsScreen} />
+        <Stack.Screen name="Terms" component={TermsScreen} />
 
       </Stack.Navigator>
     </NavigationContainer>
