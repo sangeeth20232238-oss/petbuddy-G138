@@ -184,19 +184,16 @@ function extractSymptomsFromMessage(userMessage) {
   const words = text.split(" ");
 
   for (const phrase of getMatchPhrases()) {
-    const p = ` ${phrase} `;
+  const p = ` ${phrase} `;
 
-    if (text.includes(p)) { //exact phrase match
-      const normalized = normalizeSymptom(phrase);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
-    }
-     
-    // partial word match (e.g. "vomiting" matches "vomit")
-    else if (words.some(word => word.length > 3 && phrase.includes(word))) {
-      const normalized = normalizeSymptom(phrase);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
-    }
+  if (text.includes(p)) {
+    const normalized = normalizeSymptom(phrase);
+    if (CLEAN_SET.has(normalized)) found.add(normalized);
+  } else if (words.some(word => word.length > 3 && phrase.includes(word))) {
+    const normalized = normalizeSymptom(phrase);
+    if (CLEAN_SET.has(normalized)) found.add(normalized);
   }
+}
 
   return Array.from(found);
 }
