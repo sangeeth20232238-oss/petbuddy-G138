@@ -476,7 +476,7 @@ useEffect(() => {
 
                     {/* ── Input Bar ── */}
                     <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
-                        <View style={[styles.inputBar, isFocused && styles.inputBarFocused]}>
+                        <View style={[styles.inputSafeArea, { position: 'relative' }]}>
                             <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
                                 <Feather name="mic" size={20} color="#FF741C" />
                             </TouchableOpacity>
