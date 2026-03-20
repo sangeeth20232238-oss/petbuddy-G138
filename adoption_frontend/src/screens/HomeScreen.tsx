@@ -17,7 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Pet, PetCategory, RootStackParamList } from '../types';
-import { PETS_DATA, getPetImage } from '../data/pets';
+import { PETS_DATA } from '../data/pets';
 import { ENDPOINTS } from '../config/api';
 
 const { width } = Dimensions.get('window');
@@ -52,11 +52,21 @@ export default function HomeScreen() {
 
             if (response.ok) {
                 const data = await response.json();
-                // Map background string images to frontend require calls
-                const mappedPets = data.map((pet: any) => ({
-                    ...pet,
-                    image: typeof pet.image === 'string' ? getPetImage(pet.image) : pet.image
-                }));
+                // Map background string images to frontend require calls or network uris
+                const mappedPets = data.map((pet: any) => {
+                    let imageSource = pet.image;
+                    if (typeof pet.image === 'string') {
+                        if (pet.image.startsWith('http') || pet.image.startsWith('data:image')) {
+                            imageSource = { uri: pet.image };
+                        } else {
+                            imageSource = require('../../assets/pets/dog.png'); // Fallback
+                        }
+                    }
+                    return {
+                        ...pet,
+                        image: imageSource
+                    };
+                });
                 setPets(mappedPets);
             }
         } catch (error) {
