@@ -522,9 +522,17 @@ export default function ChatScreen() {
                                                 setSuggestions([]);   // ❌ hide dropdown after selection
                                             }}
                                         >
-
-                        
-
+                                             <Text style={{
+                                                        padding: 10,
+                                                        fontSize: 14,
+                                                        color: '#1A1A1A'
+                                                    }}>
+                                                        {item}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </View>
+                                    )}
                         <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
                     </SafeAreaView>
                 </KeyboardAvoidingView>
