@@ -149,9 +149,13 @@ const SYMPTOM_ALIASES = {
  * 3) Extract symptoms from full sentences
  * ----------------------------------------
  */
-const CLEAN_SYMPTOMS = Array.from(getSymptomMap().keys());
-const CLEAN_SET = new Set(CLEAN_SYMPTOMS);
+function getCleanSymptoms() {
+  return Array.from(getSymptomMap().keys());
+}
 
+function getCleanSet() {
+  return new Set(getCleanSymptoms());
+}
 const MATCH_PHRASES = [
   ...Object.keys(SYMPTOM_ALIASES),
   ...CLEAN_SYMPTOMS
@@ -184,13 +188,13 @@ function extractSymptomsFromMessage(userMessage) {
 
     if (text.includes(p)) { //exact phrase match
       const normalized = normalizeSymptom(phrase);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
+      if (getCleanSet().has(normalized)) found.add(normalized);
     }
      
     // partial word match (e.g. "vomiting" matches "vomit")
     else if (words.some(word => word.length > 3 && phrase.includes(word))) {
       const normalized = normalizeSymptom(phrase);
-      if (CLEAN_SET.has(normalized)) found.add(normalized);
+      if (getCleanSet().has(normalized)) found.add(normalized);
     }
   }
 
@@ -204,6 +208,7 @@ function extractSymptomsFromMessage(userMessage) {
  * ----------------------------
  */
 const ALL_SYMPTOMS = Array.from(getSymptomMap().keys());
+
 
 let fuse = null;
 
@@ -249,7 +254,8 @@ function findBestSymptoms(userMessage) {
   const unique = [];
   for (const s of combined) if (s && !unique.includes(s)) unique.push(s);
 
-  return unique.filter((s) => SYMPTOM_TO_ROW.has(s));
+  const map = getSymptomMap();
+  return unique.filter((s) => map.has(s));
 }
 
 /**
@@ -262,7 +268,8 @@ function buildAdviceReply(symptoms) {
   const parts = [];
 
   for (const s of symptoms) {
-    const row = SYMPTOM_TO_ROW.get(s);
+    const map = getSymptomMap();
+    const row = map.get(s);
     if (!row) continue;
 
     const isEmergency = row.emergency === "yes";
