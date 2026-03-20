@@ -366,7 +366,7 @@ exports.suggestions = functions.https.onRequest((req, res) => {
      */
 
     const matches = ALL_SYMPTOMS.filter(symptom =>
-      symptom.includes(normalized)
+      symptom.includes(normalized) || normalized.includes(symptom)
     )
     .slice(0, 5); // Limit to top 5 suggestions
 
