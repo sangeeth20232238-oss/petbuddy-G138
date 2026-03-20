@@ -784,7 +784,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         paddingHorizontal: 16,
         paddingTop: 8,
-        marginBottom: 15,
+        paddingBottom: 8,
     },
     inputBar: {
         flexDirection: 'row',
