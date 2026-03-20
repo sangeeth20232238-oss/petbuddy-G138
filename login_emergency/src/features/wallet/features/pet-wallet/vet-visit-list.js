@@ -9,7 +9,8 @@ import { COLORS } from '../../theme/colors';
 
 // Firebase imports
 import { db } from '../../services/firebaseConfig';
-import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, doc, deleteDoc, where } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const RecordCard = ({ title, date, veterinarian, onPress, onDelete, onEdit }) => (
   <TouchableOpacity style={styles.recordCard} onPress={onPress} activeOpacity={0.7}>
@@ -41,10 +42,25 @@ export default function VetVisitList({ onBack, navigate }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const q = query(collection(db, "vetVisits"), orderBy("createdAt", "desc"));
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      setVetVisits([]);
+      setLoading(false);
+      return;
+    }
+
+    const q = query(
+      collection(db, "vetVisits"), 
+      where("userId", "==", auth.currentUser.uid)
+    );
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      docs.sort((a, b) => {
+        const tA = a.createdAt?.seconds || 0;
+        const tB = b.createdAt?.seconds || 0;
+        return tB - tA;
+      });
       setVetVisits(docs);
       setLoading(false);
     }, (error) => {

@@ -9,7 +9,8 @@ import { COLORS } from '../../theme/colors';
 
 // Firebase Imports: Importing the database and Firestore query tools
 import { db } from '../../services/firebaseConfig';
-import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, doc, deleteDoc, where } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 /**
  * REUSABLE COMPONENT: RecordCard
@@ -50,13 +51,27 @@ export default function PrescriptionList({ onBack, navigate }) {
    * Ensures the list reflects additions or deletions immediately without refreshing.
    */
   useEffect(() => {
-    // Define query: sort by the server-side timestamp in descending order (newest first)
-    const q = query(collection(db, "prescriptions"), orderBy("createdAt", "desc"));
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      setPrescriptions([]);
+      setLoading(false);
+      return;
+    }
+
+    // Define query: filter by userId. Sorting happens locally to avoid Firebase Composite Index
+    const q = query(
+      collection(db, "prescriptions"), 
+      where("userId", "==", auth.currentUser.uid)
+    );
     
     // onSnapshot creates a persistent websocket connection to Firestore
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      // Map Firestore docs into a clean array of objects including the ID
       const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      docs.sort((a, b) => {
+        const tA = a.createdAt?.seconds || 0;
+        const tB = b.createdAt?.seconds || 0;
+        return tB - tA;
+      });
       setPrescriptions(docs);
       setLoading(false); // Stop the spinner once data is received
     }, (error) => {

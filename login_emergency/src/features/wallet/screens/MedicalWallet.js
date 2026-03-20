@@ -20,7 +20,8 @@ import EditVetVisit from '../features/pet-wallet/edit-vet-visit';
 import RecordDetails from '../features/pet-wallet/record-details';
 
 import { db } from '../services/firebaseConfig';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, limit, onSnapshot } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const CategoryCard = ({ icon: Icon, title, onPress }) => (
   <TouchableOpacity style={styles.navCard} activeOpacity={0.7} onPress={onPress}>
@@ -57,9 +58,23 @@ export default function MedicalWallet({ navigation }) {
   }, [currentView]);
 
   useEffect(() => {
-    const petDocRef = doc(db, 'pets', 'bunny_profile');
-    const unsubscribe = onSnapshot(petDocRef, (docSnap) => {
-      if (docSnap.exists()) setPetData({ id: docSnap.id, ...docSnap.data() });
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      setLoading(false);
+      return;
+    }
+    const q = query(
+      collection(db, 'pets'), 
+      where('ownerId', '==', auth.currentUser.uid), 
+      limit(1)
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      if (!snapshot.empty) {
+        const docSnap = snapshot.docs[0];
+        setPetData({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        setPetData({ name: 'My Pet', id: 'Not Registered' });
+      }
       setLoading(false);
     }, () => setLoading(false));
     return () => unsubscribe();

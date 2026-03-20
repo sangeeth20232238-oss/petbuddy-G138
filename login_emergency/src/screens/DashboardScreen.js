@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, Dimensions, Modal, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { StyleSheet, View, Text, ScrollView, Image, TouchableOpacity, Dimensions, Animated, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -10,6 +10,29 @@ const { width } = Dimensions.get('window');
 
 export default function DashboardScreen({ navigation }) {
     const [isSidebarVisible, setSidebarVisible] = useState(false);
+    
+    // Animated values for smooth sidebar sliding
+    const slideAnim = useRef(new Animated.Value(-width)).current;
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+
+    const toggleSidebar = (show) => {
+        if (show) setSidebarVisible(true);
+        Animated.parallel([
+            Animated.timing(slideAnim, {
+                toValue: show ? 0 : -width,
+                duration: 250,
+                useNativeDriver: true
+            }),
+            Animated.timing(fadeAnim, {
+                toValue: show ? 1 : 0,
+                duration: 250,
+                useNativeDriver: true
+            })
+        ]).start(() => {
+            if (!show) setSidebarVisible(false);
+        });
+    };
+
     const [userData, setUserData] = useState({ 
         name: 'User', 
         profilePic: 'https://via.placeholder.com/150' 
@@ -51,7 +74,7 @@ export default function DashboardScreen({ navigation }) {
                 {/* Header: Dynamic Profile & Notification Bell */}
                 <View style={styles.header}>
                     <View style={styles.userInfo}>
-                        <TouchableOpacity onPress={() => setSidebarVisible(true)}>
+                        <TouchableOpacity onPress={() => toggleSidebar(true)}>
                             <Image source={{ uri: userData.profilePic }} style={styles.profilePic} />
                         </TouchableOpacity>
                         <View>
@@ -93,17 +116,19 @@ export default function DashboardScreen({ navigation }) {
                 <MaterialCommunityIcons name="robot-happy-outline" size={38} color="white" />
             </TouchableOpacity>
 
-            {/* Dynamic Sidebar Modal */}
-            <Modal transparent={true} visible={isSidebarVisible} animationType="fade">
-                <View style={styles.modalOverlay}>
-                    <TouchableOpacity style={styles.closeArea} onPress={() => setSidebarVisible(false)} />
-                    <View style={styles.sidebar}>
+            {/* Dynamic Sidebar Animated */}
+            <View style={[StyleSheet.absoluteFill, { zIndex: 100, flexDirection: 'row' }]} pointerEvents={isSidebarVisible ? 'auto' : 'none'}>
+                <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.5)', opacity: fadeAnim }]}>
+                    <TouchableOpacity style={{ flex: 1 }} onPress={() => toggleSidebar(false)} activeOpacity={1} disabled={!isSidebarVisible} />
+                </Animated.View>
+
+                <Animated.View style={[styles.sidebar, { transform: [{ translateX: slideAnim }], zIndex: 101 }]}>
                         <View style={styles.sidebarProfile}>
                             <Image source={{ uri: userData.profilePic }} style={styles.largeProfilePic} />
                             <Text style={styles.userName}>{userData.name}</Text>
                             <TouchableOpacity onPress={() => {
-                                setSidebarVisible(false);
-                                navigation.navigate('EditProfile'); // Navigates to the new edit screen
+                                toggleSidebar(false);
+                                navigation.navigate('EditProfile'); 
                             }}>
                                 <Text style={styles.editBtn}>Edit Profile</Text>
                             </TouchableOpacity>
@@ -120,9 +145,8 @@ export default function DashboardScreen({ navigation }) {
                             <Ionicons name="log-out-outline" size={24} color="#FF4D4D" />
                             <Text style={styles.logoutText}>Logout</Text>
                         </TouchableOpacity>
-                    </View>
+                    </Animated.View>
                 </View>
-            </Modal>
         </SafeAreaView>
     );
 }
@@ -148,8 +172,6 @@ const styles = StyleSheet.create({
     card: { width: (width - 60) / 3, backgroundColor: '#FFF', borderRadius: 20, padding: 15, marginBottom: 20, alignItems: 'center', elevation: 5 },
     serviceText: { fontSize: 11, textAlign: 'center', marginTop: 5, color: '#444' },
     fab: { position: 'absolute', bottom: 30, alignSelf: 'center', backgroundColor: '#FF741C', width: 75, height: 75, borderRadius: 37.5, justifyContent: 'center', alignItems: 'center', elevation: 10 },
-    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', flexDirection: 'row' },
-    closeArea: { flex: 1 },
     sidebar: { width: width * 0.75, backgroundColor: 'white', height: '100%', padding: 25 },
     sidebarProfile: { alignItems: 'center', marginVertical: 40 },
     largeProfilePic: { width: 90, height: 90, borderRadius: 45, borderWidth: 3, borderColor: '#FF741C', marginBottom: 10 },

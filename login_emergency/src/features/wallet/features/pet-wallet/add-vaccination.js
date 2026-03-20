@@ -12,6 +12,7 @@ import { COLORS } from '../../theme/colors';
 // Firebase imports
 import { db } from '../../services/firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default function AddVaccination({ onBack }) {
   const insets = useSafeAreaInsets();
@@ -43,14 +44,20 @@ export default function AddVaccination({ onBack }) {
       return;
     }
 
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      Alert.alert('Error', 'You must be logged in to add a record.');
+      return;
+    }
+
     setLoading(true);
     try {
       await addDoc(collection(db, 'vaccinations'), {
+        userId: auth.currentUser.uid,
         vaccineName: vaccineName.trim(),
         dateTaken: dateTaken.toLocaleDateString(),
         nextDueDate: nextDueDate.toLocaleDateString(),
         imageUri: imageUri,
-        petName: 'Bunny',
         createdAt: serverTimestamp()
       });
       

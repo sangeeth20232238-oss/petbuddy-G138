@@ -8,7 +8,8 @@ import { COLORS } from '../../theme/colors';
 
 // --- FIREBASE IMPORTS ---
 import { db } from '../../services/firebaseConfig';
-import { collection, onSnapshot, query, orderBy, doc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, doc, deleteDoc, where } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
 
 /**
  * Reusable Component: RecordCard
@@ -61,14 +62,33 @@ export default function VaccinationList({ onBack, navigate }) {
    * Ensures the list updates immediately when a vaccine is added or edited.
    */
   useEffect(() => {
-    // Query: collection 'vaccinations' ordered by newest first
-    const q = query(collection(db, "vaccinations"), orderBy("createdAt", "desc"));
+    const auth = getAuth();
+    if (!auth.currentUser) {
+      setVaccinations([]);
+      setLoading(false);
+      return;
+    }
+
+    // Query: collection 'vaccinations' filtered by userId
+    // Sorting happens locally to avoid Firebase Composite Index requirement
+    const q = query(
+      collection(db, "vaccinations"), 
+      where("userId", "==", auth.currentUser.uid)
+    );
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const records = [];
       querySnapshot.forEach((doc) => {
         records.push({ id: doc.id, ...doc.data() });
       });
+      
+      // Sort by newest first
+      records.sort((a, b) => {
+        const tA = a.createdAt?.seconds || 0;
+        const tB = b.createdAt?.seconds || 0;
+        return tB - tA;
+      });
+      
       setVaccinations(records);
       setLoading(false);
     }, (error) => {
