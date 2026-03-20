@@ -45,6 +45,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
   const [petName, setPetName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [ownerPhone, setOwnerPhone] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const toggleReason = (r) => {
     setSelectedReason(prev =>
@@ -290,7 +291,31 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone })}>
+        <TouchableOpacity style={styles.bookBtn} disabled={submitting} onPress={async () => {
+          if (submitting) return;
+          setSubmitting(true);
+          const data = { salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone };
+          try {
+            const { initializeApp, getApps } = await import('firebase/app');
+            const { getFirestore, collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+            const firebaseConfig = {
+              apiKey: 'AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM',
+              authDomain: 'petbuddy-138.firebaseapp.com',
+              projectId: 'petbuddy-138',
+              storageBucket: 'petbuddy-138.firebasestorage.app',
+              messagingSenderId: '506859726227',
+              appId: '1:506859726227:web:9083b07cceca26b8b6b466',
+            };
+            const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+            const db = getFirestore(app);
+            await addDoc(collection(db, 'groomingBookings'), { ...data, status: 'pending', createdAt: serverTimestamp() });
+          } catch (e) {
+            console.log('Firebase error:', e.message);
+            setSubmitting(false);
+            return;
+          }
+          onConfirm(data);
+        }}>
           <Text style={styles.bookBtnText}>Confirm Booking</Text>
           <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
