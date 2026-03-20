@@ -466,7 +466,10 @@ export default function ChatScreen() {
                             <TextInput
                                 style={styles.textInput}
                                 value={inputText}
-                                onChangeText={setInputText}
+                                onChangeText={(value) => {
+                                    setInputText(value);
+                                    fetchSuggestions(value); // 🔥 call backend
+                                }}
                                 placeholder="What happened to your dog?"
                                 placeholderTextColor="#787878"
                                 multiline
