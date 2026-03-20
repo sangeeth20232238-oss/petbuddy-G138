@@ -304,7 +304,8 @@ export default function ChatScreen() {
     const [text, setText] = useState("");
     const [suggestions, setSuggestions] = useState([]);
 
-    
+    const fetchSuggestions = (input) => {
+        
 };
 
 
