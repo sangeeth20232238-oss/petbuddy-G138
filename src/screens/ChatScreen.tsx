@@ -514,7 +514,15 @@ export default function ChatScreen() {
                                     zIndex: 1000,
                                     maxHeight: 150
                                 }}>
-                                    
+                                    {suggestions.map((item, index) => (
+                                        <TouchableOpacity
+                                            key={index}
+                                            onPress={() => {
+                                                setInputText(item);   // ✅ fill input with selected suggestion
+                                                setSuggestions([]);   // ❌ hide dropdown after selection
+                                            }}
+                                        >
+
                         
 
                         <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
