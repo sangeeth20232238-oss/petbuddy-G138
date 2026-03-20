@@ -327,8 +327,6 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       if (symptoms.length === 0) {
         saveUnknownSymptom(message);
 
-      
-
       return res.json({
         found: false,
         reply:
@@ -358,3 +356,6 @@ exports.chatbot = functions.https.onRequest((req, res) => {
   });
   // 🔥 force deploy
 });
+
+//Suggestions API (for frontend popup)
+exports.suggestions = functions.https.onRequest((req, res) => {}
