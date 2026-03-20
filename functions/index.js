@@ -203,7 +203,7 @@ function extractSymptomsFromMessage(userMessage) {
  * 4) Fuzzy matcher (backup)
  * ----------------------------
  */
-const ALL_SYMPTOMS = Array.from(SYMPTOM_TO_ROW.keys());
+const ALL_SYMPTOMS = Array.from(getSymptomMap().keys());
 
 let fuse = null;
 
@@ -242,7 +242,7 @@ function findBestSymptoms(userMessage) {
   }
 
   // 2) fuzzy match whole message
-  const fuzzy = fuse.search(msg).slice(0, 5).map((r) => r.item);
+ const fuzzy = getFuse().search(msg).slice(0, 5).map((r) => r.item);
 
   // unique + keep valid
   const combined = [...aliasHits, ...fuzzy].map((s) => normalizeText(s));
@@ -398,26 +398,6 @@ exports.suggestions = functions.https.onRequest((req, res) => {
     res.json({
       suggestions: matches,
     });
-
-    exports.chatbot = functions.https.onRequest((req, res) => {
-      const data = loadAdviceRows();     //  safe
-      const map = getSymptomMap();       //  safe
-
-      const userInput = req.body.message.toLowerCase();
-
-      const result = map.get(userInput);
-
-      if (result) {
-        return res.json({
-          reply: result.first_aid_advice,
-        });
-      }
-
-      return res.json({
-        reply: "No advice found for this symptom.",
-      });
-    });
-
   });
 });
 
