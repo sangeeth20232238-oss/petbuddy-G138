@@ -36,12 +36,21 @@ function loadAdviceRows() {
     return cachedData;
 }
 
+let symptomMap = null;
 
+function getSymptomMap() {
+  if (symptomMap) return symptomMap;
 
-// For quick lookup after matching
-const SYMPTOM_TO_ROW = new Map();
-for (const r of ADVICE_ROWS) {
-  if (!SYMPTOM_TO_ROW.has(r.symptom)) SYMPTOM_TO_ROW.set(r.symptom, r);
+  const data = loadAdviceRows(); // 🔥 load safely
+  symptomMap = new Map();
+
+  for (const r of data) {
+    if (!symptomMap.has(r.symptom)) {
+      symptomMap.set(r.symptom, r);
+    }
+  }
+
+  return symptomMap;
 }
 
 
