@@ -301,7 +301,6 @@ export default function ChatScreen() {
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
     const timeoutRef = useRef(null);
-    const [text, setText] = useState("");
     const [suggestions, setSuggestions] = useState([]);
 
     const fetchSuggestions = (input) => {
@@ -319,8 +318,24 @@ export default function ChatScreen() {
              const response = await fetch(
                 `https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/suggestions?q=${input}`
             );
+
+             const data = await response.json();
+
+            setSuggestions(data.suggestions || []);
+        } catch (error) {
+            console.log("Suggestion error:", error);
+        }
+    }, 300); //delay
 };
 
+//Prevent memory leaks when component unmounts: CLEAN UP
+useEffect(() => {
+    return () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+    };
+}, []);
 
     const scrollToBottom = useCallback(() => {
         setTimeout(() => {
