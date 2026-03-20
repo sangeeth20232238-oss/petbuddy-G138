@@ -322,7 +322,7 @@ export default function ChatScreen() {
              const data = await response.json();
 
             if (data.suggestions.length > 0) {
-                    setSuggestions(data.suggestions);
+                    setSuggestions(data.suggestions || []);
                 }
         } catch (error) {
             console.log("Suggestion error:", error);
@@ -519,10 +519,10 @@ useEffect(() => {
                                 </TouchableOpacity>
                             </Animated.View>
                         </View>
-                            {suggestions.length > 0 && (  //Show suggestions only if there are results 
+                            {suggestions.length > 0 && inputText.length >= 3 && (  //Show suggestions only if there are results 
                                 <View style={{   //Container for the dropdown popup
                                     position: 'absolute',
-                                    bottom: 90,
+                                    bottom: 80,
                                     left: 16,
                                     right: 16,
                                     backgroundColor: '#fff',
@@ -538,6 +538,7 @@ useEffect(() => {
                                             onPress={() => {
                                                 setInputText(item);   //  fill input with selected suggestion
                                                 setSuggestions([]);   //  hide dropdown after selection
+                                                sendMessage(item); // auto send 
                                             }}
                                         >
                                              <Text style={{
