@@ -42,7 +42,6 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
   const [selectedDate, setSelectedDate] = useState(today.getDate());
   const [selectedTime, setSelectedTime] = useState('10:00 AM');
   const [selectedReason, setSelectedReason] = useState(['Bathing']);
-  const [petType, setPetType] = useState(null);
   const [petName, setPetName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [ownerPhone, setOwnerPhone] = useState('');
@@ -219,24 +218,6 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </View>
         </View>
 
-        <Text style={styles.sectionTitle}>Pet Type</Text>
-        <View style={styles.petTypeRow}>
-          <TouchableOpacity
-            style={[styles.petTypeBtn, petType === 'Dog' && styles.petTypeBtnSelected]}
-            onPress={() => setPetType('Dog')}
-          >
-            <FontAwesome5 name="dog" size={20} color={petType === 'Dog' ? '#FFFFFF' : '#FF741C'} />
-            <Text style={[styles.petTypeText, petType === 'Dog' && styles.petTypeTextSelected]}>Dog</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.petTypeBtn, petType === 'Cat' && styles.petTypeBtnSelected]}
-            onPress={() => setPetType('Cat')}
-          >
-            <FontAwesome5 name="cat" size={20} color={petType === 'Cat' ? '#FFFFFF' : '#FF741C'} />
-            <Text style={[styles.petTypeText, petType === 'Cat' && styles.petTypeTextSelected]}>Cat</Text>
-          </TouchableOpacity>
-        </View>
-
         <Text style={styles.sectionTitle}>Details</Text>
         <View style={styles.petDetailsCard}>
           <View style={styles.inputRow}>
@@ -309,7 +290,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petType, petName, ownerName, ownerPhone })}>
+        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone })}>
           <Text style={styles.bookBtnText}>Confirm Booking</Text>
           <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
@@ -375,11 +356,6 @@ const styles = StyleSheet.create({
   reasonLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   reasonIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF0E6', justifyContent: 'center', alignItems: 'center' },
   reasonText: { fontSize: 14, color: '#000000' },
-  petTypeRow: { flexDirection: 'row', gap: 14, marginBottom: 20 },
-  petTypeBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 14, borderRadius: 12, borderWidth: 2, borderColor: '#FF741C', backgroundColor: '#FFFFFF' },
-  petTypeBtnSelected: { backgroundColor: '#FF741C' },
-  petTypeText: { fontSize: 15, fontWeight: '600', color: '#FF741C' },
-  petTypeTextSelected: { color: '#FFFFFF' },
   petDetailsCard: { backgroundColor: '#FFFFFF', borderRadius: 14, paddingHorizontal: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
   inputRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, gap: 12 },
   inputIconBox: { width: 34, height: 34, borderRadius: 10, backgroundColor: '#FFF0E6', justifyContent: 'center', alignItems: 'center' },
