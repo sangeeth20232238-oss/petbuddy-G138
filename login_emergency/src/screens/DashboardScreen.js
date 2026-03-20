@@ -71,7 +71,7 @@ export default function DashboardScreen({ navigation }) {
                     {services.map((s) => (
                         <TouchableOpacity key={s.id} style={styles.card} onPress={() => {
                             if (s.name === 'Emergency Vet') navigation.navigate('ClinicList');
-                            else if (s.name === 'Pet Buddy') navigation.navigate('PetBuddyRequest');
+                            else if (s.name === 'Pet Buddy') navigation.navigate('PetBuddyPaywall');
                             else Alert.alert(s.name, "Feature coming soon!");
                         }}>
                             <MaterialCommunityIcons name={s.icon} size={32} color={s.color} />

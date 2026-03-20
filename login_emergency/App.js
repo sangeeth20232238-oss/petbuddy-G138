@@ -25,6 +25,7 @@ import PetBuddyRequestScreen from './src/features/pet-buddy/PetBuddyRequestScree
 import PetBuddyConfigScreen from './src/features/pet-buddy/PetBuddyConfigScreen';
 import PetBuddyTrackingScreen from './src/features/pet-buddy/PetBuddyTrackingScreen';
 import VolunteerOnboardingScreen from './src/features/pet-buddy/VolunteerOnboardingScreen';
+import PetBuddyPaywallScreen from './src/features/pet-buddy/PetBuddyPaywallScreen';
 
 // Profile 
 import EditProfileScreen from './src/features/profile/EditProfileScreen';
@@ -67,6 +68,7 @@ export default function App() {
         <Stack.Screen name="PetBuddyConfig" component={PetBuddyConfigScreen} />
         <Stack.Screen name="PetBuddyTracking" component={PetBuddyTrackingScreen} />
         <Stack.Screen name="VolunteerOnboarding" component={VolunteerOnboardingScreen} />
+        <Stack.Screen name="PetBuddyPaywall" component={PetBuddyPaywallScreen} />
 
         {/* Profile */}
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
