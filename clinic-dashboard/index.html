@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>PetBuddy — Clinic Dashboard</title>
+    <title>PetBuddy — Admin Portal</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', sans-serif; background: #FFF5F0; color: #333; }
@@ -14,7 +14,14 @@
             display: flex; align-items: center; justify-content: space-between;
         }
         header h1 { font-size: 22px; }
-        header span { font-size: 14px; opacity: 0.85; }
+
+        .profile-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .profile-container h2 { margin-bottom: 30px; font-size: 28px; color: #FF741C; }
+        .profile-cards { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .profile-card { background: white; border-radius: 16px; padding: 40px; width: 180px; text-align: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; border: 2px solid transparent; }
+        .profile-card:hover { border-color: #FF741C; transform: translateY(-5px); }
+        .profile-card .icon { font-size: 40px; margin-bottom: 10px; }
+        .profile-card h3 { color: #333; font-size: 18px; }
 
         .login-wrap {
             max-width: 400px; margin: 80px auto;
@@ -30,101 +37,43 @@
             width: 100%; padding: 14px;
             background: #FF741C; color: white;
             border: none; border-radius: 10px;
-            font-size: 16px; cursor: pointer;
+            font-size: 16px; cursor: pointer; font-weight: bold;
         }
         button:hover { background: #e5651a; }
-        .error { color: red; font-size: 13px; margin-top: 10px; }
-
-        .dashboard { padding: 30px; display: none; }
-        .dashboard h2 { margin-bottom: 20px; font-size: 20px; }
-
-        .filters { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
-        .filter-btn {
-            padding: 8px 20px; border-radius: 20px;
-            border: 2px solid #FF741C; background: white;
-            color: #FF741C; cursor: pointer; font-size: 14px; width: auto;
-        }
-        .filter-btn.active { background: #FF741C; color: white; }
-
-        .bookings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white; border-radius: 16px;
-            padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-            border-left: 5px solid #ccc;
-        }
-        .card.pending  { border-left-color: #FFA500; }
-        .card.confirmed { border-left-color: #4CAF50; }
-        .card.rejected  { border-left-color: #F44336; }
-
-        .card h3 { font-size: 16px; margin-bottom: 6px; }
-        .card p  { font-size: 13px; color: #666; margin-bottom: 4px; }
-
-        .badge {
-            display: inline-block; padding: 3px 12px;
-            border-radius: 20px; font-size: 12px; font-weight: bold;
-            margin: 10px 0;
-        }
-        .badge.pending   { background: #FFF3CD; color: #856404; }
-        .badge.confirmed { background: #D4EDDA; color: #155724; }
-        .badge.rejected  { background: #F8D7DA; color: #721C24; }
-
-        .actions { display: flex; gap: 10px; margin-top: 14px; }
-        .btn-confirm {
-            flex: 1; padding: 10px; background: #4CAF50;
-            color: white; border: none; border-radius: 8px; cursor: pointer; width: auto;
-        }
-        .btn-reject {
-            flex: 1; padding: 10px; background: #F44336;
-            color: white; border: none; border-radius: 8px; cursor: pointer; width: auto;
-        }
-        .btn-confirm:disabled, .btn-reject:disabled { opacity: 0.4; cursor: default; }
-
-        .empty { text-align: center; color: #aaa; margin-top: 60px; font-size: 16px; }
-        .logout-btn {
-            background: transparent; border: 2px solid white;
-            color: white; padding: 8px 18px; border-radius: 8px;
-            cursor: pointer; font-size: 14px; width: auto;
-        }
+        .error { color: red; font-size: 13px; margin-top: 10px; text-align: center; font-weight: 500;}
     </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
-    <header><h1>🐾 PetBuddy Clinic Portal</h1></header>
-    <div class="login-wrap">
-        <h2>Clinic Login</h2>
-        <input type="email" id="emailInput" placeholder="clinic@email.com" />
-        <input type="password" id="passwordInput" placeholder="Password" />
-        <button onclick="handleLogin()">Login</button>
-        <p class="error" id="loginError"></p>
+<!-- PROFILE SCREEN -->
+<div id="profileScreen" class="profile-container">
+    <h2>Select Your Portal</h2>
+    <div class="profile-cards">
+        <div class="profile-card" onclick="selectProfile('Shelter')">
+            <div class="icon">🏠</div>
+            <h3>Shelter</h3>
+        </div>
+        <div class="profile-card" onclick="selectProfile('Clinic')">
+            <div class="icon">🏥</div>
+            <h3>Clinic</h3>
+        </div>
+        <div class="profile-card" onclick="selectProfile('Groomer')">
+            <div class="icon">✂️</div>
+            <h3>Groomer</h3>
+        </div>
     </div>
 </div>
 
-<!-- DASHBOARD SCREEN -->
-<div id="dashboardScreen">
-    <header>
-        <h1>🐾 PetBuddy — Clinic Dashboard</h1>
-        <div style="display:flex; align-items:center; gap:16px;">
-            <span id="clinicEmail"></span>
-            <button class="logout-btn" onclick="handleLogout()">Logout</button>
-        </div>
-    </header>
-    <div class="dashboard" id="dashboard">
-        <h2>Appointments</h2>
-        <div class="filters">
-            <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
-            <button class="filter-btn" onclick="setFilter('pending', this)">Pending</button>
-            <button class="filter-btn" onclick="setFilter('confirmed', this)">Confirmed</button>
-            <button class="filter-btn" onclick="setFilter('rejected', this)">Rejected</button>
-        </div>
-        <div class="bookings-grid" id="bookingsGrid"></div>
-        <p class="empty" id="emptyMsg" style="display:none;">No bookings found.</p>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="display:none;">
+    <header><h1>🐾 PetBuddy Admin Portal</h1></header>
+    <div class="login-wrap">
+        <h2 id="loginTitle">Login</h2>
+        <input type="email" id="emailInput" placeholder="your@email.com" />
+        <input type="password" id="passwordInput" placeholder="Password" />
+        <button onclick="handleLogin()">Login to Portal</button>
+        <button onclick="goBack()" style="background:transparent; color:#666; margin-top:14px; border:none; width:100%;">⬅ Back to Profiles</button>
+        <p class="error" id="loginError"></p>
     </div>
 </div>
 
@@ -132,11 +81,8 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
     import {
-        getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+        getAuth, signInWithEmailAndPassword, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
-    import {
-        getFirestore, collection, onSnapshot, doc, updateDoc, query, where
-    } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBI2pHqIKd_Uz0Rb3xJ2YH_IzhkKb7aRbM",
@@ -149,100 +95,60 @@
 
     const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db   = getFirestore(app);
-
-    let allBookings = [];
-    let currentFilter = 'all';
-    let unsubscribeBookings = null;
 
     onAuthStateChanged(auth, user => {
         if (user) {
-            document.getElementById('loginScreen').style.display    = 'none';
-            document.getElementById('dashboardScreen').style.display = 'block';
-            document.getElementById('dashboard').style.display       = 'block';
-            document.getElementById('clinicEmail').textContent       = user.email;
-            listenToBookings(user.email);
+            let storedProfile = localStorage.getItem('selectedProfile') || 'Clinic';
+            
+            if (storedProfile === 'Shelter') {
+                window.location.href = 'shelter.html';
+            } else if (storedProfile === 'Clinic') {
+                window.location.href = 'clinic.html';
+            } else {
+                // For Groomer or other future portals
+                window.location.href = 'clinic.html'; 
+            }
         } else {
-            document.getElementById('loginScreen').style.display     = 'block';
-            document.getElementById('dashboardScreen').style.display = 'none';
-            if (unsubscribeBookings) unsubscribeBookings();
+            document.getElementById('profileScreen').style.display   = 'flex';
+            document.getElementById('loginScreen').style.display     = 'none';
         }
     });
+
+    window.selectProfile = (profile) => {
+        localStorage.setItem('selectedProfile', profile);
+        document.getElementById('profileScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'block';
+        document.getElementById('loginTitle').textContent = profile + ' Login';
+    };
+
+    window.goBack = () => {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('profileScreen').style.display = 'flex';
+    };
 
     window.handleLogin = async () => {
         const email    = document.getElementById('emailInput').value.trim();
         const password = document.getElementById('passwordInput').value;
-        document.getElementById('loginError').textContent = '';
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (e) {
-            document.getElementById('loginError').textContent = 'Invalid email or password.';
-        }
-    };
-
-    window.handleLogout = () => signOut(auth);
-
-    function listenToBookings(email) {
-        const q = collection(db, 'bookings');
-        unsubscribeBookings = onSnapshot(q, snapshot => {
-            allBookings = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderBookings();
-        });
-    }
-
-    window.setFilter = (filter, btn) => {
-        currentFilter = filter;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderBookings();
-    };
-
-    function renderBookings() {
-        const grid = document.getElementById('bookingsGrid');
-        const empty = document.getElementById('emptyMsg');
-        const filtered = currentFilter === 'all'
-            ? allBookings
-            : allBookings.filter(b => b.status === currentFilter);
-
-        if (filtered.length === 0) {
-            grid.innerHTML = '';
-            empty.style.display = 'block';
+        const btn      = document.querySelector('.login-wrap button');
+        
+        if (!email || !password) {
+            document.getElementById('loginError').textContent = 'Please enter both email and password.';
             return;
         }
-        empty.style.display = 'none';
 
-        filtered.sort((a, b) => {
-            const ta = a.createdAt?.seconds || 0;
-            const tb = b.createdAt?.seconds || 0;
-            return tb - ta;
-        });
+        document.getElementById('loginError').textContent = '';
+        btn.textContent = 'Logging in...';
+        btn.disabled = true;
 
-        grid.innerHTML = filtered.map(b => `
-            <div class="card ${b.status}">
-                <h3>👤 Patient ID: ${b.userId.slice(0, 8)}...</h3>
-                <p>🏥 Clinic: ${b.clinicName || '—'}</p>
-                <p>👨‍⚕️ Doctor: ${b.doctorName || '—'}</p>
-                <p>📅 Date: ${b.date || '—'}</p>
-                <p>🕐 Time: ${b.timeSlot || '—'}</p>
-                <span class="badge ${b.status}">${b.status.toUpperCase()}</span>
-                <div class="actions">
-                    <button class="btn-confirm"
-                        ${b.status !== 'pending' ? 'disabled' : ''}
-                        onclick="updateStatus('${b.id}', 'confirmed')">
-                        ✅ Confirm
-                    </button>
-                    <button class="btn-reject"
-                        ${b.status !== 'pending' ? 'disabled' : ''}
-                        onclick="updateStatus('${b.id}', 'rejected')">
-                        ❌ Reject
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    window.updateStatus = async (bookingId, newStatus) => {
-        await updateDoc(doc(db, 'bookings', bookingId), { status: newStatus });
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // onAuthStateChanged will magically catch this and redirect to the correct page automatically
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loginError').textContent = 'Invalid email or password.';
+            btn.textContent = 'Login to Portal';
+            btn.disabled = false;
+        }
     };
 </script>
 </body>

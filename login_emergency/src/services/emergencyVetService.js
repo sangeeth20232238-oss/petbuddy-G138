@@ -1,4 +1,4 @@
-import { db } from '../../firebaseConfig';
+import { db, auth } from '../../firebaseConfig';
 import {
     collection, getDocs, addDoc, serverTimestamp, query, where
 } from 'firebase/firestore';
@@ -17,15 +17,17 @@ export async function fetchDoctors(clinicId) {
 
 // Save a booking when patient taps "Book Now"
 export async function createBooking({ userId, clinicId, clinicName, doctorId, doctorName, date, timeSlot }) {
+    const user = auth.currentUser;
     return await addDoc(collection(db, 'bookings'), {
         userId,
+        userEmail: user ? user.email : '',
         clinicId,
         clinicName,
         doctorId,
         doctorName,
         date,
         timeSlot,
-        status: 'pending',   // clinic changes this to 'confirmed' or 'rejected'
+        status: 'pending',
         createdAt: serverTimestamp(),
     });
 }
