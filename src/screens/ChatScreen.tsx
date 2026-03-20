@@ -475,7 +475,7 @@ useEffect(() => {
                     />
                 </KeyboardAvoidingView>
 
-                {/* 🔥 FIXED INPUT BAR */}
+                {/*FIXED INPUT BAR */}
                 <View style={{
                     position: 'absolute',
                     bottom: 0,
@@ -790,11 +790,16 @@ const styles = StyleSheet.create({
 
     // Input Bar
     inputSafeArea: {
-        backgroundColor: 'transparent',
         paddingHorizontal: 16,
-        paddingTop: 8,
-        paddingBottom: 8,
-    },
+        paddingTop: 6,
+        paddingBottom: 10,
+        backgroundColor: '#FFFFFF', 
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 8,
+    },  
+
     inputBar: {
         flexDirection: 'row',
         alignItems: 'flex-end',
