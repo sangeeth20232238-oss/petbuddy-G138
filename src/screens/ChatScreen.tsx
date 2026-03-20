@@ -327,7 +327,7 @@ export default function ChatScreen() {
         } catch (error) {
             console.log("Suggestion error:", error);
         }
-    }, 300); //delay
+    }, 500); //delay
 };
 
 //Prevent memory leaks when component unmounts: CLEAN UP
