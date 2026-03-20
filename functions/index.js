@@ -389,6 +389,25 @@ exports.suggestions = functions.https.onRequest((req, res) => {
       suggestions: matches,
     });
 
+    exports.chatbot = functions.https.onRequest((req, res) => {
+      const data = loadAdviceRows();     //  safe
+      const map = getSymptomMap();       //  safe
+
+      const userInput = req.body.message.toLowerCase();
+
+      const result = map.get(userInput);
+
+      if (result) {
+        return res.json({
+          reply: result.first_aid_advice,
+        });
+      }
+
+      return res.json({
+        reply: "No advice found for this symptom.",
+      });
+    });
+
   });
 });
 
