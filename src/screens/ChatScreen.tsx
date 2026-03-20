@@ -313,6 +313,14 @@ export default function ChatScreen() {
             `https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/suggestions?q=${input}`
         );
 
+        const data = await response.json();
+
+        setSuggestions(data.suggestions || []);
+    } catch (error) {
+        console.log("Suggestion error:", error);
+    }
+};
+
 
     const scrollToBottom = useCallback(() => {
         setTimeout(() => {
