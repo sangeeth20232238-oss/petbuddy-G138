@@ -305,7 +305,9 @@ export default function ChatScreen() {
     const [suggestions, setSuggestions] = useState([]);
 
     const fetchSuggestions = (input) => {
-        
+        if (timeoutRef.current) { // clear previous timer 
+        clearTimeout(timeoutRef.current);
+    }
 };
 
 
