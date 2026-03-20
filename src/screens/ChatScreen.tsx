@@ -300,10 +300,10 @@ export default function ChatScreen() {
     const [showMenu, setShowMenu] = useState(false);
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
-    const timeoutRef = useRef(null);
+   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [suggestions, setSuggestions] = useState([]);
 
-    const fetchSuggestions = (input) => {
+    const fetchSuggestions = (input: string) => {
         if (timeoutRef.current) { // clear previous timer 
         clearTimeout(timeoutRef.current);
     }
@@ -316,7 +316,7 @@ export default function ChatScreen() {
             }
 
              const response = await fetch(
-                `https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/suggestions?q=${input}`
+                `https://us-central1-petbuddy-138.cloudfunctions.net/suggestions?q=${input}`
             );
 
              const data = await response.json();
