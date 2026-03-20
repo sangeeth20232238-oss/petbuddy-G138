@@ -454,10 +454,10 @@ useEffect(() => {
                 </Modal>
 
                 {/* ── Chat Area ── */}
-                <KeyboardAvoidingView
+               <KeyboardAvoidingView
                     style={{ flex: 1 }}
-                    behavior="padding"
-                    keyboardVerticalOffset={0}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}  // 🔥 IMPORTANT
+                    keyboardVerticalOffset={10}
                 >
 
                     {/* CHAT */}
@@ -477,16 +477,9 @@ useEffect(() => {
                             messages.length === 0 && styles.chatContentEmpty,
                         ]}
                     />
-                    <View style={{
-                        position: 'absolute',
-                        bottom: 20,
-                        left: 0,
-                        right: 0,
-                    }}>
-                    </View>
-
-                    {/* ── Input Bar ── */}
                     
+
+                        {/* ── Input Bar ── */}
                         <View style={styles.inputBar}>
                             <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
                                 <Feather name="mic" size={20} color="#FF741C" />
@@ -497,43 +490,35 @@ useEffect(() => {
                                 value={inputText}
                                 onChangeText={(value) => {
                                     setInputText(value);
-                                    fetchSuggestions(value); //  call backend
+                                    fetchSuggestions(value);
                                 }}
-
                                 placeholder="What happened to your dog?"
                                 placeholderTextColor="#787878"
                                 multiline
                                 maxLength={1000}
                                 returnKeyType="send"
                                 onSubmitEditing={handleSend}
-                                onFocus={() => setIsFocused(true)}
-                                onBlur={() => setIsFocused(false)}
                             />
 
                             <Animated.View style={{ transform: [{ scale: sendBtnScale }] }}>
                                 <TouchableOpacity
                                     style={[styles.sendBtn, !inputText.trim() && styles.sendBtnDisabled]}
                                     onPress={handleSend}
-                                    activeOpacity={0.8}
                                     disabled={!inputText.trim()}
                                 >
                                     <LinearGradient
                                         colors={inputText.trim() ? ['#FF9A5C', '#FF741C'] : ['#E0E0E0', '#CCCCCC']}
                                         style={styles.sendBtnGradient}
                                     >
-                                        <Ionicons
-                                            name="arrow-up"
-                                            size={20}
-                                            color="#3e3d3d"
-                                        />
+                                        <Ionicons name="arrow-up" size={20} color="#3e3d3d" />
                                     </LinearGradient>
-                                    
                                 </TouchableOpacity>
                             </Animated.View>
                         </View>
                             {suggestions.length > 0 && inputText.length >= 2 && (  //Show suggestions only if there are results 
                                 <View style={{   //Container for the dropdown popup
-                                    bottom: 75,
+                                    position: 'absolute', 
+                                    bottom: 90,
                                     left: 16,
                                     right: 16,
                                     backgroundColor: '#FFF7F0',
@@ -563,11 +548,9 @@ useEffect(() => {
                                                     </Text>
                                                 </TouchableOpacity>
                                             ))}
+                                            <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
                                         </View>
                                     )}
-                        <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
-                    
-
                  </KeyboardAvoidingView>
             </SafeAreaView>
         </View>
@@ -626,7 +609,7 @@ const styles = StyleSheet.create({
     chatContent: {
         paddingHorizontal: 16,
         paddingTop: 16,
-        paddingBottom: 8,
+        paddingBottom: 120,
     },
     chatContentEmpty: {
         flex: 1,
@@ -853,7 +836,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'rgba(37, 36, 36, 0.7)',
         textAlign: 'center',
-        marginTop: 12,
+        marginTop: 8,
         marginBottom: -1,
     },
 
