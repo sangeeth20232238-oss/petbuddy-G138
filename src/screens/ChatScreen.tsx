@@ -375,6 +375,7 @@ export default function ChatScreen() {
         if (!inputText.trim()) return;
         animateSendButton();
         Keyboard.dismiss();
+        setSuggestions([]); // clear dropdown
         const text = inputText;
         setInputText('');
         await sendMessage(text);
