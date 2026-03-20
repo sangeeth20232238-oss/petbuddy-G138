@@ -161,6 +161,14 @@ function cleanText(s) {
  * 3) Extract symptoms from full sentences
  * ----------------------------------------
  */
+function extractSymptomsFromMessage(userMessage) {
+  const text = ` ${cleanText(userMessage)} `;
+  const found = new Set();
+
+  const words = text.split(" ");
+
+  for (const phrase of MATCH_PHRASES) {
+    const p = ` ${phrase} `;
 
 
 /**
