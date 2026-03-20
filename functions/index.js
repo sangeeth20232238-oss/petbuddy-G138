@@ -14,8 +14,9 @@ const Fuse = require("fuse.js");
  * functions/data/dog_first_aid.csv
  */
 const DATA_PATH = path.join(__dirname, "data", "dog_first_aid.csv");
-
+let cachedData = null;
 function loadAdviceRows() {
+  if (cachedData) return cachedData;
   const csvText = fs.readFileSync(DATA_PATH, "utf8");
   const rows = parse(csvText, {
     columns: true,
