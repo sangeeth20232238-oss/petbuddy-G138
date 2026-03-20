@@ -72,9 +72,12 @@ export default function SignupScreen({ navigation }) {
                 </TouchableOpacity>
                 <Text style={[styles.termsText, { fontFamily: 'Fredoka-SemiBold' }]}>
                     I agree to all the{' '}
-                    <TouchableOpacity onPress={() => navigation.navigate('Terms')} activeOpacity={0.7}>
-                        <Text style={styles.linkText}>Terms and Conditions</Text>
-                    </TouchableOpacity>
+                    <Text 
+                        style={styles.linkText} 
+                        onPress={() => navigation.navigate('Terms')}
+                    >
+                        Terms and Conditions
+                    </Text>
                 </Text>
             </View>
 
