@@ -290,7 +290,19 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={() => onConfirm({ salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone })}>
+        <TouchableOpacity style={styles.bookBtn} onPress={async () => {
+          const data = { salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone };
+          try {
+            await fetch('http://10.31.17.0:3000/api/bookings/grooming', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data),
+            });
+          } catch (e) {
+            console.log('Booking save error:', e.message);
+          }
+          onConfirm(data);
+        }}>
           <Text style={styles.bookBtnText}>Confirm Booking</Text>
           <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" style={{ marginLeft: 8 }} />
         </TouchableOpacity>
