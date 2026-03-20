@@ -310,7 +310,7 @@ export default function ChatScreen() {
 
     timeoutRef.current = setTimeout(async () => { //dispalys API call
         try {
-            if (input.length < 3) {
+            if (input.length < 2) {
                 setSuggestions([]);
                 return;
             }
