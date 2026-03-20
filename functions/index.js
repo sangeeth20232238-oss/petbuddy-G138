@@ -152,16 +152,16 @@ const SYMPTOM_ALIASES = {
 function getCleanSymptoms() {
   return Array.from(getSymptomMap().keys());
 }
+const CLEAN_SET = new Set(getCleanSymptoms());
 
-function getCleanSet() {
-  return new Set(getCleanSymptoms());
+function getMatchPhrases() {
+  return [
+    ...Object.keys(SYMPTOM_ALIASES),
+    ...getCleanSymptoms()
+  ]
+    .map((s) => s.toLowerCase().trim())
+    .sort((a, b) => b.length - a.length);
 }
-const MATCH_PHRASES = [
-  ...Object.keys(SYMPTOM_ALIASES),
-  ...getCleanSymptoms()
-]
-  .map((s) => s.toLowerCase().trim())
-  .sort((a, b) => b.length - a.length); // longest first
 
 function cleanText(s) {
   return String(s || "")
@@ -183,18 +183,18 @@ function extractSymptomsFromMessage(userMessage) {
 
   const words = text.split(" ");
 
-  for (const phrase of MATCH_PHRASES) {
+  for (const phrase of getMatchPhrases()) {
     const p = ` ${phrase} `;
 
     if (text.includes(p)) { //exact phrase match
       const normalized = normalizeSymptom(phrase);
-      if (getCleanSet().has(normalized)) found.add(normalized);
+      if (CLEAN_SET.has(normalized)) found.add(normalized);
     }
      
     // partial word match (e.g. "vomiting" matches "vomit")
     else if (words.some(word => word.length > 3 && phrase.includes(word))) {
       const normalized = normalizeSymptom(phrase);
-      if (getCleanSet().has(normalized)) found.add(normalized);
+      if (CLEAN_SET.has(normalized)) found.add(normalized);
     }
   }
 
@@ -207,7 +207,9 @@ function extractSymptomsFromMessage(userMessage) {
  * 4) Fuzzy matcher (backup)
  * ----------------------------
  */
-const ALL_SYMPTOMS = Array.from(getSymptomMap().keys());
+function getAllSymptoms() {
+  return Array.from(getSymptomMap().keys());
+}
 
 
 let fuse = null;
@@ -394,7 +396,7 @@ exports.suggestions = functions.https.onRequest((req, res) => {
      * - Example: "bone" → "broken bones"
      */
 
-    const matches = ALL_SYMPTOMS.filter(symptom =>
+    const matches = getAllSymptoms().filter(symptom =>
       symptom.includes(normalized) || normalized.includes(symptom)
     )
     .slice(0, 5); // Limit to top 5 suggestions
