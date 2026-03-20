@@ -158,7 +158,7 @@ function getCleanSet() {
 }
 const MATCH_PHRASES = [
   ...Object.keys(SYMPTOM_ALIASES),
-  ...CLEAN_SYMPTOMS
+  ...getCleanSymptoms()
 ]
   .map((s) => s.toLowerCase().trim())
   .sort((a, b) => b.length - a.length); // longest first
