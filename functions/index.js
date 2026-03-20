@@ -195,8 +195,7 @@ function extractSymptomsFromMessage(userMessage) {
     }
   }
 
-  return Array.from(found);
-}
+
 
 /**
  * ----------------------------
@@ -318,9 +317,13 @@ exports.chatbot = functions.https.onRequest((req, res) => {
         });
       }
       let symptoms = extractSymptomsFromMessage(message);
-
+      
+      //fallback using Fuse
       if (symptoms.length === 0) {
-      saveUnknownSymptom(message);
+        symptoms = findBestSymptoms(message);
+      }
+
+      
 
       return res.json({
         found: false,
