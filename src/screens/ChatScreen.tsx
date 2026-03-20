@@ -479,14 +479,14 @@ useEffect(() => {
                     />
                     <View style={{
                         position: 'absolute',
-                        bottom: 0,
+                        bottom: 20,
                         left: 0,
                         right: 0,
                     }}>
                     </View>
 
                     {/* ── Input Bar ── */}
-                    <SafeAreaView edges={['bottom']} style={styles.inputSafeArea}>
+                    
                         <View style={styles.inputBar}>
                             <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
                                 <Feather name="mic" size={20} color="#FF741C" />
@@ -533,11 +533,11 @@ useEffect(() => {
                         </View>
                             {suggestions.length > 0 && inputText.length >= 2 && (  //Show suggestions only if there are results 
                                 <View style={{   //Container for the dropdown popup
-                                    bottom: 70,
+                                    bottom: 75,
                                     left: 16,
                                     right: 16,
                                     backgroundColor: '#FFF7F0',
-                                    borderWidth: 1,
+                                    borderWidth: 0,
                                     borderColor: '#FFD4B3',
                                     borderRadius: 12,
                                     padding: 8,
@@ -566,7 +566,7 @@ useEffect(() => {
                                         </View>
                                     )}
                         <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
-                    </SafeAreaView>
+                    
 
                  </KeyboardAvoidingView>
             </SafeAreaView>
@@ -630,7 +630,9 @@ const styles = StyleSheet.create({
     },
     chatContentEmpty: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
+         paddingTop: 20,
+
     },
 
     // Messages
@@ -723,7 +725,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 24,
         paddingTop: 0,
-        marginTop: -50,
     },
     emptyIconWrapper: {
         marginBottom: 14,
@@ -804,10 +805,11 @@ const styles = StyleSheet.create({
         elevation: 6,
         borderWidth: 0,
         borderColor: 'rgba(0,0,0,0.05)',
+        width: '95%', 
+        alignSelf: 'center',
     },
 
     inputSafeArea: {
-        paddingBottom: -60, // ✅ small clean spacing
         paddingHorizontal: 15,
     },
 
