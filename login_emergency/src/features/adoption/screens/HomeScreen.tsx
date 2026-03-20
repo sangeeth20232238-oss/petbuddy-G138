@@ -11,6 +11,7 @@ import {
     StatusBar,
     ActivityIndicator,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -89,10 +90,9 @@ export default function HomeScreen() {
                     style={styles.backButton}
                     onPress={() => navigation.goBack()}
                 >
-                    <Text style={styles.backIcon}>←</Text>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Pet Adoption</Text>
-                <View style={styles.placeholder} />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
                 {/* Search Bar */}
@@ -230,10 +230,9 @@ const styles = StyleSheet.create({
         right: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        paddingTop: 45,
         paddingHorizontal: 20,
-        paddingTop: 60,
-        paddingBottom: 15,
+        paddingBottom: 10,
         backgroundColor: '#FFFFFF',
         zIndex: 1000,
         elevation: 5,
@@ -249,9 +248,10 @@ const styles = StyleSheet.create({
         color: '#000',
     },
     headerTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#000',
+        fontSize: 24,
+        fontFamily: 'Fredoka-Bold',
+        color: '#222',
+        marginLeft: 50,
     },
     placeholder: {
         width: 40,

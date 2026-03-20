@@ -8,11 +8,14 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
+  Share,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import VetCard, { VetInfo } from '../../components/VetCard';
 import BottomTabBar from '../../components/BottomTabBar';
+import { getAlertById, LostPetAlert } from '../../backend/alertService';
 import styles from './shareNotifyStyles';
 
 // Mock vet data
@@ -49,8 +52,25 @@ const MOCK_VETS: VetInfo[] = [
 
 const ShareNotifyScreen: React.FC = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
+  const { alertId } = route.params || {};
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVets, setSelectedVets] = useState<string[]>([]);
+  const [alertData, setAlertData] = useState<LostPetAlert | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    if (alertId && alertId !== 'demo') {
+      const fetchAlert = async () => {
+        setLoading(true);
+        const data = await getAlertById(alertId);
+        if (data) setAlertData(data);
+        setLoading(false);
+      };
+      fetchAlert();
+    }
+  }, [alertId]);
 
   const filteredVets = MOCK_VETS.filter((vet) =>
     vet.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -74,8 +94,34 @@ const ShareNotifyScreen: React.FC = () => {
     Alert.alert('Shared!', 'Alert shared with local community groups.', [{ text: 'OK' }]);
   };
 
-  const handleShareSocial = () => {
-    Alert.alert('Share', 'Opening social media share options...', [{ text: 'OK' }]);
+  const handleShareSocial = async () => {
+    console.log('handleShareSocial triggered');
+    const petName = alertData?.petName || 'my pet';
+    const location = alertData?.location || 'nearby area';
+    const breeds = alertData?.breed || alertData?.species || 'Pet';
+    
+    const message = `🚨 LOST PET ALERT 🚨\n\nPlease help find ${petName}, a ${breeds} last seen at ${location}.\n\nIf you have any information, please contact the owner or tag us @_petbuddy_.\n\n#LostPet #PetSOS #_petbuddy_`;
+
+    console.log('Sharing message:', message);
+
+    try {
+      const result = await Share.share({
+        message: message,
+      });
+      
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          console.log('Shared with activity type:', result.activityType);
+        } else {
+          console.log('Shared');
+        }
+      } else if (result.action === Share.dismissedAction) {
+        console.log('Share dismissed');
+      }
+    } catch (error: any) {
+      console.error('Share Error:', error.message);
+      Alert.alert('Share Error', error.message || 'Could not open share options.');
+    }
   };
 
   return (
@@ -84,9 +130,9 @@ const ShareNotifyScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Ionicons name="arrow-back" size={24} color="#222" />
+            <Ionicons name="arrow-back" size={28} color="#222" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Pet SOS</Text>
+          <Text style={[styles.headerTitle, { fontFamily: 'Fredoka-Bold' }]}>Pet SOS</Text>
         </View>
 
         {/* Nearby Vets Section */}
@@ -138,8 +184,21 @@ const ShareNotifyScreen: React.FC = () => {
         {/* Social Media Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitleBold}>Social Media posts</Text>
-          <TouchableOpacity style={styles.socialCard} onPress={handleShareSocial} activeOpacity={0.8}>
-            <Ionicons name="share-social-outline" size={24} color="#FFF" style={styles.socialIcon} />
+          <View style={styles.connectedAccount}>
+            <Ionicons name="logo-instagram" size={16} color="#E87A3A" />
+            <Text style={styles.connectedText}>Connected to Instagram: @_petbuddy_</Text>
+          </View>
+          <TouchableOpacity 
+            style={[styles.socialCard, loading && { opacity: 0.6 }]} 
+            onPress={handleShareSocial} 
+            activeOpacity={0.8}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFF" style={styles.socialIcon} />
+            ) : (
+              <Ionicons name="share-social-outline" size={24} color="#FFF" style={styles.socialIcon} />
+            )}
             <Text style={styles.socialText}>Share to Social{'\n'}Media ?</Text>
             <Ionicons name="chevron-forward" size={20} color="#FFF" />
           </TouchableOpacity>

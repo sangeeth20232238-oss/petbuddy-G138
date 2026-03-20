@@ -11,25 +11,23 @@ const homeStyles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
     paddingTop: 45,
-    paddingBottom: 8,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
   },
   backButton: {
     padding: 4,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
+    fontSize: 24,
     color: '#222',
-    marginLeft: 12,
+    marginLeft: 50,
   },
 
   // Enhanced Hero Section
   heroSection: {
     marginHorizontal: 20,
-    marginTop: 20,
-
+    marginTop: 40,
   },
   heroCard: {
     backgroundColor: '#F5B87A',
@@ -51,9 +49,8 @@ const homeStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-end',
-    marginTop: 10,
-    marginBottom: -15,
-    zIndex: 2,
+    marginBottom: -50,
+    zIndex: 10,
   },
   peekingPetSide: {
     width: 100,

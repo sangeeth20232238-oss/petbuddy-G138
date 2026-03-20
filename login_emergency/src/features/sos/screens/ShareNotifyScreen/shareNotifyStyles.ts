@@ -19,10 +19,9 @@ const shareNotifyStyles = StyleSheet.create({
     padding: 4,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
+    fontSize: 24,
     color: '#222',
-    marginLeft: 12,
+    marginLeft: 50,
   },
   section: {
     marginHorizontal: 20,
@@ -112,6 +111,23 @@ const shareNotifyStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: '#FFF',
+  },
+  connectedAccount: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF5EC',
+    padding: 8,
+    borderRadius: 8,
+    marginBottom: 10,
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(232, 122, 58, 0.2)',
+  },
+  connectedText: {
+    fontSize: 12,
+    color: '#E87A3A',
+    fontWeight: '600',
+    marginLeft: 6,
   },
   homeButton: {
     marginHorizontal: 20,

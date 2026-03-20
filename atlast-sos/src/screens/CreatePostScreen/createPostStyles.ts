@@ -11,18 +11,17 @@ const createPostStyles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
   },
   backButton: {
     padding: 4,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
+    fontSize: 24,
     color: '#222',
-    marginLeft: 12,
+    marginLeft: 50,
   },
   uploadSection: {
     marginHorizontal: 20,

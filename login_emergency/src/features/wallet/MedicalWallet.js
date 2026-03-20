@@ -6,8 +6,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
   ChevronLeft, Syringe, Pill, Cpu, 
-  Stethoscope, MessageSquare, Camera, User 
+  Stethoscope, MessageSquare, Camera, User,
+  Plus, Trash2, Edit2, MapPin, Phone, Clock, FileText, Activity
 } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { COLORS } from '../src/theme/colors';
@@ -248,10 +250,9 @@ export default function MedicalWallet() {
         <SafeAreaView edges={['top', 'left', 'right']}>
           <View style={styles.headerRow}>
             <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-              <ChevronLeft color="#333" size={24} />
+              <Ionicons name="arrow-back" size={28} color="#222" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Medical Wallet</Text>
-            <View style={{ width: 40 }} />
           </View>
 
           <View style={styles.profileCard}>
@@ -351,14 +352,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingBottom: 40,
   },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  headerTitle: { fontSize: 22, fontWeight: '700', color: '#333' },
+  headerRow: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
+  headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
   backButton: {
     backgroundColor: '#FFF',
     borderRadius: 12,

@@ -123,10 +123,9 @@ const GroomingApt = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => step === 1 ? navigation.goBack() : setStep(1)}>
-          <Ionicons name="chevron-back" size={20} color="#1A1A1A" />
+          <Ionicons name="arrow-back" size={28} color="#222" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{step === 1 ? salon.name : 'Book Appointment'}</Text>
-        <View style={{ width: 40 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
@@ -369,10 +368,10 @@ const GroomingApt = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FCF8F4' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 45, marginBottom: 12 },
-  backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
-  headerTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A1A1A' },
+  container: { flex: 1, backgroundColor: '#FFF6EE' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10, backgroundColor: '#FFF6EE' },
+  backButton: { padding: 4 },
+  headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
   scroll: { paddingHorizontal: 20, paddingBottom: 30 },
   salonImage: { width: '100%', height: 200, borderRadius: 16, marginBottom: 20 },
   actionRow: { flexDirection: 'row', justifyContent: 'center', gap: 16, marginBottom: 24 },
@@ -390,50 +389,50 @@ const styles = StyleSheet.create({
   serviceRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 13, gap: 12 },
   serviceIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
   serviceText: { flex: 1, fontSize: 14, color: '#1A1A1A' },
-  servicePrice: { fontSize: 13, fontWeight: '600', color: '#F48C06' },
-  bookBtn: { flexDirection: 'row', backgroundColor: '#F48C06', borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
-  bookBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
+  servicePrice: { fontSize: 13, fontFamily: 'Fredoka-Bold', color: '#E87A3A' },
+  bookBtn: { flexDirection: 'row', backgroundColor: '#E87A3A', borderRadius: 14, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
+  bookBtnText: { color: '#FFFFFF', fontSize: 16, fontFamily: 'Fredoka-Bold' },
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'center', alignItems: 'center' },
-  modalBox: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 28, width: '78%', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10, elevation: 10 },
+  modalBox: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 28, width: '78%', alignItems: 'center' },
   modalIconBox: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center', marginBottom: 14 },
-  modalTitle: { fontSize: 16, fontWeight: 'bold', color: '#1A1A1A', marginBottom: 8, textAlign: 'center' },
-  modalPhone: { fontSize: 20, fontWeight: 'bold', color: '#F48C06', marginBottom: 20 },
-  modalAddress: { fontSize: 13, color: '#444444', textAlign: 'center', lineHeight: 20, marginBottom: 6 },
-  modalLandmark: { fontSize: 12, color: '#888888', textAlign: 'center', marginBottom: 20 },
-  modalBtn: { backgroundColor: '#F48C06', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 36 },
-  modalBtnText: { color: '#FFFFFF', fontWeight: '600', fontSize: 14 },
+  modalTitle: { fontSize: 18, fontFamily: 'Fredoka-Bold', color: '#222', marginBottom: 8, textAlign: 'center' },
+  modalPhone: { fontSize: 20, fontFamily: 'Fredoka-Bold', color: '#E87A3A', marginBottom: 20 },
+  modalAddress: { fontSize: 13, color: '#444444', textAlign: 'center', lineHeight: 20, marginBottom: 6, fontFamily: 'Fredoka-Regular' },
+  modalLandmark: { fontSize: 12, color: '#888888', textAlign: 'center', marginBottom: 20, fontFamily: 'Fredoka-Regular' },
+  modalBtn: { backgroundColor: '#E87A3A', borderRadius: 10, paddingVertical: 10, paddingHorizontal: 36 },
+  modalBtnText: { color: '#FFFFFF', fontFamily: 'Fredoka-SemiBold', fontSize: 14 },
   calendarBox: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 5, elevation: 2 },
   calendarHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  monthLabel: { fontSize: 15, fontWeight: '600', color: '#1A1A1A' },
+  monthLabel: { fontSize: 15, fontFamily: 'Fredoka-Bold', color: '#222' },
   calendarNav: { flexDirection: 'row', gap: 4 },
   navBtn: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
   dayLabels: { flexDirection: 'row', justifyContent: 'space-around', marginBottom: 6 },
-  dayLabel: { width: 36, textAlign: 'center', fontSize: 11, color: '#999999', fontWeight: '600' },
+  dayLabel: { width: 36, textAlign: 'center', fontSize: 11, color: '#999999', fontFamily: 'Fredoka-Medium' },
   calendarGrid: { flexDirection: 'row', flexWrap: 'wrap' },
   dayCell: { width: '14.28%', height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 20 },
-  selectedDay: { backgroundColor: '#F48C06' },
-  dayText: { fontSize: 13, color: '#1A1A1A' },
-  selectedDayText: { color: '#FFFFFF', fontWeight: 'bold' },
+  selectedDay: { backgroundColor: '#E87A3A' },
+  dayText: { fontSize: 13, color: '#222', fontFamily: 'Fredoka-Regular' },
+  selectedDayText: { color: '#FFFFFF', fontFamily: 'Fredoka-Bold' },
   timeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 20 },
   timeSlot: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 16, borderRadius: 10, borderWidth: 1, borderColor: '#E0E0E0', backgroundColor: '#FFFFFF' },
-  selectedTimeSlot: { backgroundColor: '#F48C06', borderColor: '#F48C06' },
-  timeText: { fontSize: 13, color: '#555555' },
-  selectedTimeText: { color: '#FFFFFF', fontWeight: '600' },
+  selectedTimeSlot: { backgroundColor: '#E87A3A', borderColor: '#E87A3A' },
+  timeText: { fontSize: 13, color: '#555555', fontFamily: 'Fredoka-Medium' },
+  selectedTimeText: { color: '#FFFFFF', fontFamily: 'Fredoka-SemiBold' },
   reasonRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16, backgroundColor: '#FFFFFF', borderRadius: 12, marginBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 3, elevation: 1 },
   reasonLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   reasonIconBox: { width: 30, height: 30, borderRadius: 8, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
-  reasonText: { fontSize: 14, color: '#1A1A1A' },
+  reasonText: { fontSize: 14, color: '#222', fontFamily: 'Fredoka-Medium' },
   petTypeRow: { flexDirection: 'row', gap: 14, marginBottom: 20 },
-  petTypeBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 14, borderRadius: 12, borderWidth: 2, borderColor: '#F48C06', backgroundColor: '#FFFFFF' },
-  petTypeBtnSelected: { backgroundColor: '#F48C06' },
-  petTypeText: { fontSize: 15, fontWeight: '600', color: '#F48C06' },
+  petTypeBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, paddingVertical: 14, borderRadius: 12, borderWidth: 2, borderColor: '#E87A3A', backgroundColor: '#FFFFFF' },
+  petTypeBtnSelected: { backgroundColor: '#E87A3A' },
+  petTypeText: { fontSize: 15, fontFamily: 'Fredoka-Bold', color: '#E87A3A' },
   petTypeTextSelected: { color: '#FFFFFF' },
   petDetailsCard: { backgroundColor: '#FFFFFF', borderRadius: 14, paddingHorizontal: 16, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5, elevation: 2 },
   inputRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, gap: 12 },
   inputIconBox: { width: 34, height: 34, borderRadius: 10, backgroundColor: '#FFF4E6', justifyContent: 'center', alignItems: 'center' },
-  input: { flex: 1, fontSize: 14, color: '#1A1A1A' },
+  input: { flex: 1, fontSize: 14, color: '#222', fontFamily: 'Fredoka-Regular' },
   checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 2, borderColor: '#CCCCCC', justifyContent: 'center', alignItems: 'center' },
-  checkboxSelected: { backgroundColor: '#F48C06', borderColor: '#F48C06' },
+  checkboxSelected: { backgroundColor: '#E87A3A', borderColor: '#E87A3A' },
 });
 
 export default GroomingApt;

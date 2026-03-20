@@ -19,10 +19,9 @@ const createPostStyles = StyleSheet.create({
     padding: 4,
   },
   headerTitle: {
-    fontSize: 20,
-    fontWeight: '800',
+    fontSize: 24,
     color: '#222',
-    marginLeft: 12,
+    marginLeft: 50,
   },
   uploadSection: {
     marginHorizontal: 20,

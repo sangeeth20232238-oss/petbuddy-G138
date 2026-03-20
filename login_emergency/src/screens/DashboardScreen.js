@@ -314,14 +314,15 @@ export default function DashboardScreen({ navigation }) {
                                                     </Text>
                                                 </Text>
                                                 <Text style={[styles.notifStatus, { color: n.status === 'confirmed' ? '#4CAF50' : '#F44336' }]}>
-                                                    {n.notifType === 'adoption' ? 'Adoption ' : ''}{n.status.charAt(0).toUpperCase() + n.status.slice(1)}
+                                                    {n.notifType === 'adoption' ? 'Adoption ' : ''}
+                                                    {n.status ? (n.status.charAt(0).toUpperCase() + n.status.slice(1)) : 'Status Unknown'}
                                                 </Text>
                                                 <Text style={styles.notifDetail}>
                                                     {n.notifType === 'adoption' 
-                                                        ? `Request for ${n.petName} has been ${n.status}`
-                                                        : `${n.doctorName || n.salonName || n.salon} - ${n.date}`}
+                                                        ? `Request for ${n.petName || 'Pet'} has been ${n.status || 'processed'}`
+                                                        : `${n.doctorName || n.salonName || n.salon || 'Service'} - ${n.date || 'TBD'}`}
                                                 </Text>
-                                                <Text style={styles.notifSub}>📅 {n.date}  ·  🕐 {n.timeSlot || n.time}</Text>
+                                                <Text style={styles.notifSub}>📅 {n.date || 'TBD'}  ·  🕐 {n.timeSlot || n.time || 'TBD'}</Text>
                                             </View>
                                         </View>
                                     );
