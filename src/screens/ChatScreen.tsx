@@ -20,6 +20,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const [text, setText] = useState("");
+const [suggestions, setSuggestions] = useState([]);
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Message {
