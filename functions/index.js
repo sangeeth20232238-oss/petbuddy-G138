@@ -363,5 +363,18 @@ exports.suggestions = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     // Get user input from query parameter (?q=...)
     const query = req.query.q || "";
-    
+    const normalized = normalizeText(query); // Normalize input (lowercase, remove special chars)
+
+    /**
+     * Filter symptoms based on user input
+     * - Checks if symptom includes the typed text
+     * - Example: "bone" → "broken bones"
+     */
+
+    const matches = ALL_SYMPTOMS.filter(symptom =>
+      symptom.includes(normalized)
+    )
+    .slice(0, 5); // Limit to top 5 suggestions
+
+
 
