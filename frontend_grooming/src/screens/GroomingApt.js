@@ -45,6 +45,7 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
   const [petName, setPetName] = useState('');
   const [ownerName, setOwnerName] = useState('');
   const [ownerPhone, setOwnerPhone] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const toggleReason = (r) => {
     setSelectedReason(prev =>
@@ -290,7 +291,9 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
           </TouchableOpacity>
         ))}
 
-        <TouchableOpacity style={styles.bookBtn} onPress={async () => {
+        <TouchableOpacity style={styles.bookBtn} disabled={submitting} onPress={async () => {
+          if (submitting) return;
+          setSubmitting(true);
           const data = { salon: salon.name, date: `${selectedDate} ${MONTH_NAMES[month]} ${year}`, time: selectedTime, services: selectedReason, petName, ownerName, ownerPhone };
           try {
             const { initializeApp, getApps } = await import('firebase/app');
@@ -308,6 +311,8 @@ const GroomingApt = ({ onBack, onConfirm, location }) => {
             await addDoc(collection(db, 'groomingBookings'), { ...data, status: 'pending', createdAt: serverTimestamp() });
           } catch (e) {
             console.log('Firebase error:', e.message);
+            setSubmitting(false);
+            return;
           }
           onConfirm(data);
         }}>
