@@ -6,9 +6,9 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web",
+    "web": "npx expo start --web",
     "build:web": "npx expo export -p web",
-    "vercel-build": "npm run build:web"
+    "vercel-build": "chmod +x node_modules/.bin/expo && npm run build:web"
   },
   "dependencies": {
     "@expo-google-fonts/fredoka": "^0.4.1",
