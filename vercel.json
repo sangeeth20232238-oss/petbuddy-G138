@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "name": "petbuddy-mobile-web",
+  "builds": [
+    {
+      "src": "login_emergency/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist",
+        "installCommand": "npm install --legacy-peer-deps && npm run build:web"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "login_emergency/dist/$1"
+    }
+  ]
+}
