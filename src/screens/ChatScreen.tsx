@@ -12,6 +12,7 @@ import {
     Dimensions,
     StatusBar,
     Keyboard,
+    TouchableWithoutFeedback,
     Modal,
     ScrollView,
 } from 'react-native';
@@ -298,10 +299,26 @@ export default function ChatScreen() {
     const [isTyping, setIsTyping] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
+    const [keyboardHeight, setKeyboardHeight] = useState(0);
     const flatListRef = useRef<FlatList>(null);
     const sendBtnScale = useRef(new Animated.Value(1)).current;
-   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [suggestions, setSuggestions] = useState([]);
+
+    useEffect(() => {
+        const showSub = Keyboard.addListener('keyboardDidShow', (e) => {
+            setKeyboardHeight(e.endCoordinates.height);
+        });
+
+        const hideSub = Keyboard.addListener('keyboardDidHide', () => {
+            setKeyboardHeight(0);
+        });
+
+        return () => {
+            showSub.remove();
+            hideSub.remove();
+        };
+    }, []);
 
     const fetchSuggestions = (input: string) => {
         if (timeoutRef.current) { // clear previous timer 
@@ -406,10 +423,17 @@ useEffect(() => {
         setMessages([]);
         setShowMenu(false);
     };
-
-    return (
-        <View style={styles.root}>
+        return (
+        <TouchableWithoutFeedback
+            onPress={() => {
+                Keyboard.dismiss();     
+                setShowMenu(false);     
+            }}
+            accessible={false}          
+        >
+        <View style={[styles.root, { flex: 1 }]}>
             <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+
             <LinearGradient
                 colors={['#FFFFFF', '#FFFFFF', '#FFF0E6', '#FF741C']}
                 locations={[0, 0.43, 0.75, 1]}
@@ -417,16 +441,34 @@ useEffect(() => {
             />
 
             <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
-                {/* ── Header ── */}
+
+                {/* HEADER */}
+                {showMenu && (
+                    <View style={styles.dropdownMenu}>
+                        
+                        <TouchableOpacity 
+                            style={styles.menuItem}
+                            onPress={() => {
+                                handleNewChat();
+                                setShowMenu(false);
+                            }}
+                        >
+                            <Feather name="plus-circle" size={18} color="#1A1A1A" />
+                            <Text style={styles.menuText}>New Chat</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                )}
                 <View style={styles.header}>
-                    <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7}>
-                        <Ionicons name="chevron-back" size={22} color="#1A1A1A" />
+                    <TouchableOpacity style={styles.headerBtn}>
+                        <Ionicons name="chevron-back" size={22} />
                     </TouchableOpacity>
 
                     <View style={styles.headerCenter}>
                         <LinearGradient colors={['#FF9A5C', '#FF741C']} style={styles.headerAvatar}>
                             <MaterialCommunityIcons name="robot-excited-outline" size={18} color="#FFF" />
                         </LinearGradient>
+
                         <View>
                             <Text style={styles.headerTitle}>AI Chat Bot</Text>
                             <View style={styles.onlineRow}>
@@ -436,29 +478,13 @@ useEffect(() => {
                         </View>
                     </View>
 
-                    <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7} onPress={() => setShowMenu(true)}>
-                        <Feather name="more-vertical" size={20} color="#1A1A1A" />
+                    <TouchableOpacity style={styles.headerBtn}onPress={() => setShowMenu(!showMenu)}>
+                        <Feather name="more-vertical" size={20} color="#1A1A1A"  />
                     </TouchableOpacity>
                 </View>
 
-                {/* ── Menu Modal ── */}
-                <Modal visible={showMenu} transparent animationType="fade" onRequestClose={() => setShowMenu(false)}>
-                    <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowMenu(false)}>
-                        <View style={styles.menuContainer}>
-                            <TouchableOpacity style={styles.menuItem} onPress={handleNewChat}>
-                                <Feather name="plus-circle" size={20} color="#1A1A1A" />
-                                <Text style={styles.menuText}>New Chat</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
-
-                {/* ── Chat Area ── */}
-               <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}  // 🔥 IMPORTANT
-                    keyboardVerticalOffset={10}
-                >
+                {/* MAIN CONTENT */}
+                <View style={{ flex: 1 }}>
 
                     {/* CHAT */}
                     <FlatList
@@ -470,91 +496,78 @@ useEffect(() => {
                         )}
                         ListEmptyComponent={<EmptyState onSuggestionPress={handleSuggestionPress} />}
                         ListFooterComponent={isTyping ? <TypingIndicator /> : null}
-                        onContentSizeChange={scrollToBottom}
                         showsVerticalScrollIndicator={false}
-                        contentContainerStyle={[
-                            styles.chatContent,
-                            messages.length === 0 && styles.chatContentEmpty,
-                        ]}
+                        contentContainerStyle={styles.chatContent}
                     />
-                    
 
-                        {/* ── Input Bar ── */}
-                        <View style={styles.inputBar}>
-                            <TouchableOpacity style={styles.micBtn} activeOpacity={0.7}>
-                                <Feather name="mic" size={20} color="#FF741C" />
-                            </TouchableOpacity>
+                    {/* INPUT AREA */}
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        keyboardVerticalOffset={0}
+                    >
+                        <View style={[
+                            styles.bottomContainer,
+                             { marginBottom: keyboardHeight + 47 } 
+                        ]}>
 
-                            <TextInput
-                                style={styles.textInput}
-                                value={inputText}
-                                onChangeText={(value) => {
-                                    setInputText(value);
-                                    fetchSuggestions(value);
-                                }}
-                                placeholder="What happened to your dog?"
-                                placeholderTextColor="#787878"
-                                multiline
-                                maxLength={1000}
-                                returnKeyType="send"
-                                onSubmitEditing={handleSend}
-                            />
+                            {/* Suggestions */}
+                            {suggestions.length > 0 && inputText.length >= 2 && (
+                                <View style={styles.suggestionBox}>
+                                    {suggestions.map((item, index) => (
+                                        <TouchableOpacity
+                                            key={index}
+                                            onPress={() => {
+                                                setInputText(item);
+                                                setSuggestions([]);
+                                                sendMessage(item);
+                                            }}
+                                        >
+                                            <Text style={styles.suggestionItem}>{item}</Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            )}
 
-                            <Animated.View style={{ transform: [{ scale: sendBtnScale }] }}>
+                            {/* INPUT BAR */}
+                            <View style={styles.inputBar}>
+
+                                <TextInput
+                                    style={styles.textInput}
+                                    value={inputText}
+                                    onChangeText={(value) => {
+                                        setInputText(value);
+                                        fetchSuggestions(value);
+                                    }}
+                                    placeholder="What happened to your dog?"
+                                    multiline
+                                />
+
                                 <TouchableOpacity
-                                    style={[styles.sendBtn, !inputText.trim() && styles.sendBtnDisabled]}
+                                    style={styles.sendBtn}
                                     onPress={handleSend}
-                                    disabled={!inputText.trim()}
                                 >
                                     <LinearGradient
-                                        colors={inputText.trim() ? ['#FF9A5C', '#FF741C'] : ['#E0E0E0', '#CCCCCC']}
+                                        colors={['#FF9A5C', '#FF741C']}
                                         style={styles.sendBtnGradient}
                                     >
                                         <Ionicons name="arrow-up" size={20} color="#3e3d3d" />
                                     </LinearGradient>
                                 </TouchableOpacity>
-                            </Animated.View>
+                            </View>
                         </View>
-                            {suggestions.length > 0 && inputText.length >= 2 && (  //Show suggestions only if there are results 
-                                <View style={{   //Container for the dropdown popup
-                                    position: 'absolute', 
-                                    bottom: 90,
-                                    left: 16,
-                                    right: 16,
-                                    backgroundColor: '#FFF7F0',
-                                    borderWidth: 0,
-                                    borderColor: '#FFD4B3',
-                                    borderRadius: 12,
-                                    padding: 8,
-                                    elevation: 6,
-                                    zIndex: 1000,
-                                    maxHeight: 150
-                                }}>
-                                    {suggestions.map((item, index) => (  //Loop through suggestions list
-                                        <TouchableOpacity // Each suggestion is clickable
-                                            key={index}
-                                            onPress={() => {
-                                                setInputText(item);   //  fill input with selected suggestion
-                                                setSuggestions([]);   //  hide dropdown after selection
-                                                sendMessage(item); // auto send 
-                                            }}
-                                        >
-                                             <Text style={{
-                                                        padding: 10,
-                                                        fontSize: 14,
-                                                        color: '#1A1A1A'
-                                                    }}>
-                                                        {item}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            ))}
-                                            <Text style={styles.disclaimer}>Always consult a qualified vet for medical advice. 🐾</Text>
-                                        </View>
-                                    )}
-                 </KeyboardAvoidingView>
+                    </KeyboardAvoidingView>
+
+                            {/* DISCLAIMER */}
+                             <View style={styles.disclaimerContainer}>
+                                <Text style={styles.disclaimerText}>
+                                    Always consult a qualified vet for medical advice. 🐾
+                                </Text>
+                            </View>
+                        </View>
             </SafeAreaView>
         </View>
-    );
+        </TouchableWithoutFeedback>
+        );
 }
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
@@ -577,7 +590,6 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: 'rgba(0,0,0,0.05)',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -609,7 +621,8 @@ const styles = StyleSheet.create({
     chatContent: {
         paddingHorizontal: 16,
         paddingTop: 16,
-        paddingBottom: 120,
+        paddingBottom: 80, 
+        flexGrow: 1,       
     },
     chatContentEmpty: {
         flex: 1,
@@ -790,6 +803,7 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(0,0,0,0.05)',
         width: '95%', 
         alignSelf: 'center',
+        marginBottom: 2,
     },
 
     inputSafeArea: {
@@ -801,19 +815,12 @@ const styles = StyleSheet.create({
         shadowColor: '#FF741C',
         shadowOpacity: 0.15,
     },
-    micBtn: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(255,116,28,0.08)',
-    },
+
     textInput: {
         flex: 1,
         fontSize: 16,
         color: '#1A1A1A',
-        paddingHorizontal: 8,
+        paddingHorizontal: 12,
         paddingVertical: 6,
         maxHeight: 500,
         lineHeight: 22,
@@ -832,14 +839,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    disclaimer: {
-        fontSize: 14,
-        color: 'rgba(37, 36, 36, 0.7)',
-        textAlign: 'center',
-        marginTop: 8,
-        marginBottom: -1,
+   disclaimerContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 6,
+        right: 0,
+        alignItems: 'center',
+        paddingBottom: 2,
     },
 
+    disclaimerText: {
+        fontSize: 14,
+        color: 'rgba(37,36,36,0.7)',
+    },
     // Menu
     modalOverlay: {
         flex: 1,
@@ -862,13 +874,55 @@ const styles = StyleSheet.create({
     menuItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        paddingVertical: 12,
-        paddingHorizontal: 16,
+        gap: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 14,
     },
     menuText: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#1A1A1A',
         fontWeight: '500',
+    },
+
+    dropdownMenu: {
+        position: 'absolute',
+        top: 70,          // adjust if needed
+        right: 16,
+        backgroundColor: '#FFF',
+        borderRadius: 12,
+        paddingVertical: 6,
+        width: 150,
+
+        // shadow
+    shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 8,
+        zIndex: 999,
+    },
+    bottomContainer: {
+        backgroundColor: 'transparent',
+        paddingTop: 0,
+    },
+    suggestionBox: {
+        backgroundColor: '#FFF7F0',
+        borderRadius: 12,
+        marginHorizontal: 16,
+        marginBottom: 8,
+        paddingVertical: 6,
+        elevation: 6,
+        maxHeight: 150,
+    },
+
+    suggestionItem: {
+        padding: 10,
+        fontSize: 14,
+        color: '#1A1A1A',
+    },
+
+    inputWrapper: {
+        backgroundColor: 'transparent',
+        paddingBottom: 6,
     },
 });
