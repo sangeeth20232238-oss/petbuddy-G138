@@ -3,8 +3,8 @@ import {
   StyleSheet, View, Text, TouchableOpacity, TextInput, 
   ScrollView, StatusBar, Alert, Platform 
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, Calendar } from 'lucide-react-native';
+import { Calendar } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 
@@ -14,7 +14,6 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
 export default function AddPrescription({ onBack }) {
-  const insets = useSafeAreaInsets();
   
   const [medName, setMedName] = useState('');
   const [dosage, setDosage] = useState('');
@@ -62,14 +61,16 @@ export default function AddPrescription({ onBack }) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      <View style={[styles.headerBackground, { paddingTop: insets.top + 10 }]}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ChevronLeft color="#333" size={24} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Add Prescription</Text>
-          <View style={{ width: 40 }} />
-        </View>
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Add Prescription</Text>
+      </View>
+
+      <View style={styles.headerBackground}>
+        {/* Header background */}
       </View>
 
       <ScrollView style={styles.content}>
@@ -153,6 +154,23 @@ export default function AddPrescription({ onBack }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF9F5' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
+  },
+  backButton: {
+    padding: 4,
+  },
   headerBackground: {
     backgroundColor: COLORS.cardBg,
     borderBottomLeftRadius: 45,
@@ -160,9 +178,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     paddingBottom: 25,
   },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#333' },
-  backButton: { backgroundColor: '#FFF', borderRadius: 12, padding: 8, elevation: 2 },
   content: { padding: 25 },
   inputGroup: { marginBottom: 20 },
   label: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 8 },

@@ -3,7 +3,6 @@ import {
   StyleSheet, View, Text, TouchableOpacity, TextInput, 
   ScrollView, StatusBar, Alert, Image, Platform 
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, Upload, Calendar } from 'lucide-react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -12,7 +11,6 @@ import { db } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
 
 export default function EditVaccination({ onBack, params }) {
-  const insets = useSafeAreaInsets();
   
   const [vaccineName, setVaccineName] = useState(params?.vaccineName || '');
   const [dateTaken, setDateTaken] = useState(() => {
@@ -102,14 +100,11 @@ export default function EditVaccination({ onBack, params }) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      <View style={[styles.headerBackground, { paddingTop: insets.top + 10 }]}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ChevronLeft color="#333" size={24} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Edit Vaccination</Text>
-          <View style={{ width: 40 }} />
-        </View>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Edit Vaccination</Text>
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -194,32 +189,22 @@ const styles = StyleSheet.create({
     flex: 1, 
     backgroundColor: '#FFF9F5' 
   },
-  headerBackground: {
-    backgroundColor: COLORS.cardBg,
-    borderBottomLeftRadius: 45,
-    borderBottomRightRadius: 45,
-    paddingHorizontal: 25,
-    paddingBottom: 25,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
   },
-  headerRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between' 
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
   },
-  headerTitle: { 
-    fontSize: 20, 
-    fontWeight: '700', 
-    color: '#333' 
-  },
-  backButton: { 
-    backgroundColor: '#FFF', 
-    borderRadius: 12, 
-    padding: 8, 
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+  backButton: {
+    padding: 4,
   },
   content: { 
     padding: 25 

@@ -6,9 +6,10 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   TextInput,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 const LOCATIONS = [
   {
@@ -82,10 +83,9 @@ const GroomingLocation = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>←</Text>
+          <Ionicons name="arrow-back" size={28} color="#222" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Grooming</Text>
-        <View style={{ width: 40 }} />
       </View>
 
       <View style={styles.searchContainer}>
@@ -121,10 +121,9 @@ const GroomingLocation = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FCF8F4' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 45, marginBottom: 16 },
-  backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
-  backButtonText: { fontSize: 20, color: '#000' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#1A1A1A' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10, backgroundColor: '#FCF8F4' },
+  backButton: { padding: 4 },
+  headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
   searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 12, marginHorizontal: 20, marginBottom: 16, paddingHorizontal: 12, paddingVertical: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2 },
   searchIcon: { fontSize: 16, marginLeft: 8 },
   searchInput: { flex: 1, fontSize: 14, color: '#1A1A1A' },

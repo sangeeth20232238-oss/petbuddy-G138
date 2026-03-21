@@ -11,15 +11,16 @@ const createPostStyles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
     paddingTop: 45,
-    paddingBottom: 8,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
   },
   backButton: {
     padding: 4,
   },
   headerTitle: {
     fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
     color: '#222',
     marginLeft: 50,
   },

@@ -46,10 +46,9 @@ export default function TermsScreen({ navigation }) {
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <Ionicons name="arrow-back" size={24} color="#FF741C" />
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
-                <Text style={[styles.headerTitle, { fontFamily: 'Fredoka-Bold' }]}>Terms & Conditions</Text>
-                <View style={{ width: 44 }} />
+                <Text style={styles.headerTitle}>Terms & Conditions</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
@@ -87,13 +86,12 @@ export default function TermsScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFF' },
     header: {
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-        paddingHorizontal: 16, paddingTop: 45, paddingBottom: 14,
-        borderBottomWidth: 1, borderBottomColor: '#F0F0F0',
+        flexDirection: 'row', alignItems: 'center',
+        paddingHorizontal: 20, paddingTop: 45, paddingBottom: 10,
         backgroundColor: '#FFF',
     },
-    backBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-    headerTitle: { fontSize: 20, color: '#333' },
+    backBtn: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     content: { padding: 20, paddingBottom: 50 },
     banner: {
         alignItems: 'center', paddingVertical: 30,

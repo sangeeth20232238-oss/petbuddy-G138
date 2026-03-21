@@ -3,8 +3,8 @@ import {
   StyleSheet, View, Text, TouchableOpacity, ScrollView, 
   StatusBar, ActivityIndicator, Alert 
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, Plus, ChevronRight, MessageSquare, Pill, Trash2, Edit } from 'lucide-react-native';
+import { Plus, ChevronRight, MessageSquare, Pill, Trash2, Edit } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 
 // Firebase Imports: Importing the database and Firestore query tools
@@ -39,8 +39,6 @@ const RecordCard = ({ title, dosage, onPress, onDelete, onEdit }) => (
 );
 
 export default function PrescriptionList({ onBack, navigate }) {
-  const insets = useSafeAreaInsets(); // FIX: Dynamically handles the status bar / notch height
-  
   // --- STATE MANAGEMENT ---
   const [prescriptions, setPrescriptions] = useState([]); // Stores the list of medication documents
   const [loading, setLoading] = useState(true); // Manages the loading state for the data fetch
@@ -130,21 +128,16 @@ export default function PrescriptionList({ onBack, navigate }) {
       {/* Set status bar icons to dark to ensure visibility on the off-white background */}
       <StatusBar barStyle="dark-content" />
       
-      {/* HEADER SECTION: 
-          Uses insets.top to ensure the header starts below notches/camera holes. 
-      */}
-      <View style={[styles.headerBackground, { paddingTop: insets.top + 10 }]}>
-        <View style={styles.headerRow}>
-          {/* Back Button */}
-          <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ChevronLeft color="#333" size={24} />
-          </TouchableOpacity>
-          
-          <Text style={styles.headerTitle}>Prescriptions</Text>
-          
-          {/* Empty balancer view to keep title centered via flex space-between */}
-          <View style={{ width: 40 }} /> 
-        </View>
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Prescriptions</Text>
+      </View>
+
+      <View style={styles.headerBackground}>
+        {/* Header background can be used for pet context if needed */}
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -179,7 +172,7 @@ export default function PrescriptionList({ onBack, navigate }) {
       </ScrollView>
 
       {/* FLOATING ACTION BUTTON (FAB): Centered bottom chat/AI button */}
-      <View style={[styles.fabContainer, { bottom: insets.bottom + 20 }]}>
+      <View style={styles.fabContainer}>
         <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
           <MessageSquare color="white" size={30} fill="white" />
         </TouchableOpacity>
@@ -190,6 +183,23 @@ export default function PrescriptionList({ onBack, navigate }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF9F5' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
+  },
+  backButton: {
+    padding: 4,
+  },
   headerBackground: { 
     backgroundColor: COLORS.cardBg, 
     borderBottomLeftRadius: 45, 
@@ -197,9 +207,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25, 
     paddingBottom: 25 
   },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#333' },
-  backButton: { backgroundColor: '#FFF', borderRadius: 12, padding: 8, elevation: 2 },
   content: { padding: 25, paddingBottom: 150 },
   addButton: { 
     backgroundColor: COLORS.primary, 
@@ -241,7 +248,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     elevation: 1
   },
-  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center' },
+  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center', bottom: 40 },
   fab: { 
     backgroundColor: COLORS.primary, 
     width: 70, 

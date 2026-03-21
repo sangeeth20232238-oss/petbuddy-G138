@@ -144,9 +144,12 @@ export default function PetBuddyPaywallScreen({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={26} color="#FF741C" />
-            </TouchableOpacity>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Pet Buddy</Text>
+            </View>
 
             <LinearGradient
                 colors={['#FFF5EF', '#FFFBF7']}
@@ -156,7 +159,7 @@ export default function PetBuddyPaywallScreen({ navigation }) {
                     <MaterialCommunityIcons name="paw" size={52} color="#FF741C" />
                 </View>
                 <Text style={styles.premiumLabel}>PREMIUM FEATURE</Text>
-                <Text style={styles.title}>Pet Buddy</Text>
+                <Text style={styles.title}>Premium Access</Text>
                 <Text style={styles.subtitle}>
                     Connect with trusted volunteers who care for your pet like family.
                 </Text>
@@ -213,7 +216,9 @@ export default function PetBuddyPaywallScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
     loadingBox: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    backBtn: { padding: 20 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
+    backButton: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     topSection: { alignItems: 'center', paddingHorizontal: 30, paddingBottom: 24, paddingTop: 10 },
     iconRing: {
         width: 100, height: 100, borderRadius: 50,

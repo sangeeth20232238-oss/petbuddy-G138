@@ -15,8 +15,10 @@ export default function PetBuddyTrackingScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.navigate('Dashboard')}><Ionicons name="close" size={30} /></TouchableOpacity>
-                <Text style={styles.title}>Live Tracking</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('Dashboard')} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Live Tracking</Text>
             </View>
 
             <LinearGradient colors={['#E3F2FD', '#BBDEFB']} style={styles.mapMock}>
@@ -48,8 +50,9 @@ export default function PetBuddyTrackingScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFF' },
-    header: { flexDirection: 'row', padding: 20, alignItems: 'center', justifyContent: 'space-between' },
-    title: { fontSize: 20, fontFamily: 'Fredoka-Bold' },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
+    backButton: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     mapMock: { height: 200, margin: 20, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
     mapLabel: { marginTop: 10, fontFamily: 'Fredoka-SemiBold', color: '#1976D2' },
     buddyInfo: { flexDirection: 'row', marginHorizontal: 20, padding: 15, backgroundColor: '#FDF2EB', borderRadius: 15, alignItems: 'center' },

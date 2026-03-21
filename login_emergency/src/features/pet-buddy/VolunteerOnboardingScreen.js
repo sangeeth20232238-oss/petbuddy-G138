@@ -79,10 +79,10 @@ export default function VolunteerOnboardingScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="close" size={28} color="black" />
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
-                <Text style={styles.title}>Become a Buddy</Text>
+                <Text style={styles.headerTitle}>Become a Buddy</Text>
             </View>
 
             <View style={styles.progressRow}>
@@ -186,8 +186,9 @@ export default function VolunteerOnboardingScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFF' },
-    header: { flexDirection: 'row', padding: 20, alignItems: 'center' },
-    title: { fontSize: 20, fontFamily: 'Fredoka-Bold', marginLeft: 40 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
+    backButton: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     progressRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 40, marginBottom: 30 },
     bar: { height: 6, width: '30%', backgroundColor: '#EEE', borderRadius: 3 },
     activeBar: { backgroundColor: '#FF741C' },

@@ -76,10 +76,9 @@ export default function EditProfileScreen({ navigation }) {
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <Ionicons name="arrow-back" size={24} color="#FF741C" />
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
-                <Text style={[styles.headerTitle, { fontFamily: 'Fredoka-Bold' }]}>Edit Profile</Text>
-                <View style={{ width: 44 }} />
+                <Text style={styles.headerTitle}>Edit Profile</Text>
             </View>
 
             {/* Avatar */}
@@ -138,12 +137,12 @@ export default function EditProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFF', alignItems: 'center' },
     header: {
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-        width: '100%', paddingHorizontal: 16, paddingTop: 45, paddingBottom: 14,
-        borderBottomWidth: 1, borderBottomColor: '#F0F0F0',
+        flexDirection: 'row', alignItems: 'center',
+        width: '100%', paddingHorizontal: 20, paddingTop: 45, paddingBottom: 10,
+        backgroundColor: '#FFF',
     },
-    backBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-    headerTitle: { fontSize: 20, color: '#333' },
+    backBtn: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     avatarWrapper: { marginTop: 40, position: 'relative' },
     avatar: { width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: '#FF741C' },
     avatarFallback: { backgroundColor: '#FFF0E8', justifyContent: 'center', alignItems: 'center' },

@@ -175,7 +175,7 @@ const HomeScreen: React.FC = () => {
           <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
             <Ionicons name="arrow-back" size={28} color="#222" />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { fontFamily: 'Fredoka-Bold' }]}>Pet SOS</Text>
+          <Text style={styles.headerTitle}>Pet SOS</Text>
         </View>
 
         {/* Hero Section with Pet Illustrations + Emergency Button */}

@@ -58,8 +58,8 @@ export default function PetBuddyRequestScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name="arrow-back" size={28} />
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Pet Buddy Network</Text>
             </View>
@@ -149,8 +149,9 @@ export default function PetBuddyRequestScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFBF7' },
-    header: { flexDirection: 'row', alignItems: 'center', padding: 20 },
-    headerTitle: { fontSize: 22, fontFamily: 'Fredoka-Bold', marginLeft: 20 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
+    backButton: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     tabBar: { flexDirection: 'row', margin: 20, backgroundColor: '#EEE', borderRadius: 12, padding: 5 },
     tab: { flex: 1, paddingVertical: 12, alignItems: 'center', borderRadius: 10 },
     activeTab: { backgroundColor: '#FF741C' },

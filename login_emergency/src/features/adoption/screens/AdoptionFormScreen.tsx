@@ -10,6 +10,7 @@ import {
     Dimensions,
     Alert,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
 
@@ -53,9 +54,10 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
         setIsLoading(true);
         try {
             const { addDoc, collection, serverTimestamp } = require('firebase/firestore');
-            const { db } = require('../../../../firebaseConfig');
+            const { db, auth } = require('../../../../firebaseConfig');
 
             await addDoc(collection(db, 'adoptions'), {
+                userId: auth.currentUser?.uid,
                 petId: pet.id,
                 petName: pet.name,
                 applicantName: fullName,
@@ -88,12 +90,11 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
                     style={styles.backButton}
                     onPress={() => navigation.goBack()}
                 >
-                    <Text style={styles.backIcon}>←</Text>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>
                     Pet Adoption Request
                 </Text>
-                <View style={styles.placeholder} />
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -231,37 +232,21 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFEFE5',
     },
     header: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         paddingHorizontal: 20,
-        paddingTop: 60,
-        paddingBottom: 15,
+        paddingTop: 45,
+        paddingBottom: 10,
         backgroundColor: '#FFFFFF',
-        zIndex: 1000,
-        elevation: 5,
     },
     backButton: {
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    backIcon: {
-        fontSize: 24,
-        color: '#000',
+        padding: 4,
     },
     headerTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#000',
-    },
-    placeholder: {
-        width: 40,
+        fontSize: 24,
+        fontFamily: 'Fredoka-Bold',
+        color: '#222',
+        marginLeft: 50,
     },
     scrollContent: {
         paddingTop: 105,

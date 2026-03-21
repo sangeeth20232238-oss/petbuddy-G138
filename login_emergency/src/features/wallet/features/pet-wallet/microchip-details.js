@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, ScrollView, StatusBar, TextInput, Alert 
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, MessageSquare, Cpu, Edit, Save } from 'lucide-react-native';
+import { MessageSquare, Cpu, Edit, Save } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
@@ -11,7 +11,6 @@ import { db, auth } from '../../services/firebaseConfig';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 export default function MicrochipDetails({ onBack }) {
-  const insets = useSafeAreaInsets();
   
   const [isEditing, setIsEditing] = useState(false);
   const [chipId, setChipId] = useState('');
@@ -92,20 +91,25 @@ export default function MicrochipDetails({ onBack }) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      <View style={[styles.headerBackground, { paddingTop: insets.top + 10 }]}>
-        <View style={styles.headerRow}>
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ChevronLeft color="#333" size={24} />
+            <Ionicons name="arrow-back" size={28} color="#222" />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Microchip Details</Text>
-          <TouchableOpacity 
-            onPress={isEditing ? handleSave : () => setIsEditing(true)} 
-            style={styles.editButton}
-            disabled={loading}
-          >
-            {isEditing ? <Save color={COLORS.primary} size={20} /> : <Edit color={COLORS.primary} size={20} />}
-          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Microchip</Text>
         </View>
+        <TouchableOpacity 
+          onPress={isEditing ? handleSave : () => setIsEditing(true)} 
+          style={styles.rightEditButton}
+          disabled={loading}
+        >
+          {isEditing ? <Save color={COLORS.primary} size={20} /> : <Edit color={COLORS.primary} size={20} />}
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.headerBackground}>
+        {/* Header background */}
       </View>
 
       <ScrollView style={styles.content}>
@@ -195,7 +199,7 @@ export default function MicrochipDetails({ onBack }) {
         </View>
       </ScrollView>
 
-      <View style={[styles.fabContainer, { bottom: insets.bottom + 20 }]}>
+      <View style={styles.fabContainer}>
         <TouchableOpacity style={styles.fab}>
           <MessageSquare color="white" size={30} fill="white" />
         </TouchableOpacity>
@@ -206,21 +210,44 @@ export default function MicrochipDetails({ onBack }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF9F5' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
+  },
+  backButton: {
+    padding: 4,
+  },
+  rightEditButton: {
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 8,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
   headerBackground: {
     backgroundColor: COLORS.cardBg,
     borderBottomLeftRadius: 45,
     borderBottomRightRadius: 45,
     paddingHorizontal: 25,
     paddingBottom: 25,
-  },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#333' },
-  backButton: { backgroundColor: '#FFF', borderRadius: 12, padding: 8, elevation: 2 },
-  editButton: {
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    padding: 8,
-    elevation: 2
   },
   content: { padding: 25, paddingBottom: 150 },
   chipCard: {
@@ -262,7 +289,7 @@ const styles = StyleSheet.create({
   },
   noteTitle: { fontSize: 18, fontWeight: '600', color: '#333', marginBottom: 10 },
   noteText: { fontSize: 14, color: '#666', lineHeight: 20 },
-  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center' },
+  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center', bottom: 40 },
   fab: {
     backgroundColor: COLORS.primary,
     width: 70,

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -44,16 +44,17 @@ export default function PetDetailScreen({ route, navigation }: Props) {
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" />
+            <StatusBar barStyle="dark-content" />
 
-            {/* Fixed Header Overlay */}
+            {/* Standard Header */}
             <View style={styles.header}>
                 <TouchableOpacity
                     style={styles.backButton}
                     onPress={() => navigation.goBack()}
                 >
-                    <Text style={styles.backIcon}>←</Text>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
                 </TouchableOpacity>
+                <Text style={styles.headerTitle}>Pet Adoption</Text>
             </View>
 
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -159,22 +160,21 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     header: {
-        position: 'absolute',
-        top: 60,
-        left: 20,
-        right: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        zIndex: 1000,
+        paddingTop: 45,
+        paddingHorizontal: 20,
+        paddingBottom: 10,
+        backgroundColor: '#FFF5EF',
     },
     backButton: {
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 4,
     },
-    backIcon: {
+    headerTitle: {
         fontSize: 24,
-        color: '#000',
+        fontFamily: 'Fredoka-Bold',
+        color: '#222',
+        marginLeft: 50,
     },
     detailsContainer: {
         flex: 1,

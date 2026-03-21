@@ -20,9 +20,12 @@ export default function PetBuddyConfigScreen({ route, navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
-                <Ionicons name="arrow-back" size={26} color="#FF741C" />
-            </TouchableOpacity>
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#222" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>Pet Buddy</Text>
+            </View>
 
             <View style={styles.body}>
                 {/* Big Avatar */}
@@ -70,8 +73,10 @@ export default function PetBuddyConfigScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#FFFBF7', alignItems: 'center' },
-    backBtn: { alignSelf: 'flex-start', padding: 20 },
+    container: { flex: 1, backgroundColor: '#FFFBF7' },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10 },
+    backButton: { padding: 4 },
+    headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
     body: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 30, marginTop: -30 },
     avatarRing: { width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: '#FF741C', alignItems: 'center', justifyContent: 'center', marginBottom: 16, backgroundColor: '#FFF5EF' },
     avatarCircle: { width: 100, height: 100, borderRadius: 50, backgroundColor: '#FF741C', alignItems: 'center', justifyContent: 'center' },
