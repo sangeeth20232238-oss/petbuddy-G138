@@ -210,7 +210,7 @@
             return;
         }
         document.getElementById('shelterEmail').textContent = user.email;
-        window.loadRequests();
+        listenToRequests();
     });
 
     window.handleLogout = async () => {
@@ -283,80 +283,88 @@
         }
     };
 
-    // Load ADOPTION REQUESTS
-    window.loadRequests = async () => {
+    // Real-time listener for ADOPTION REQUESTS
+    function listenToRequests() {
         const requestsContainer = document.getElementById('requestsContainer');
-        try {
-            const snapshot = await getDocs(collection(db, 'adoptions'));
-            requestsContainer.innerHTML = '';
-            
-            if (snapshot.empty) {
-                requestsContainer.innerHTML = '<p>No adoption requests found.</p>';
-                return;
-            }
-
-            let pendingCount = 0;
-            snapshot.forEach(docSnap => {
-                const reqData = docSnap.data();
-                // Filter locally to avoid missing firestore indexes
-                if (reqData.status === 'accepted') return; 
+        const q = collection(db, 'adoptions');
+        
+        onSnapshot(q, (snapshot) => {
+            try {
+                requestsContainer.innerHTML = '';
                 
-                pendingCount++;
-
-                // Dynamically grab ALL extra keys from the database so nothing is ever hidden
-                let extraDetailsHtml = '';
-                const skipKeys = ['petName', 'petId', 'applicantName', 'applicantPhone', 'reason', 'status', 'userId', 'createdAt'];
-                
-                for (let key in reqData) {
-                    if (!skipKeys.includes(key)) {
-                        let formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                        let value = reqData[key];
-                        
-                        if (value && typeof value === 'object' && !value.toDate) { 
-                            // Unpack nested objects like "lifestyle" instead of showing [object Object]
-                            let nestedHtml = '';
-                            for (let subKey in value) {
-                                let formattedSubKey = subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                                nestedHtml += `<li style="margin-bottom: 4px;"><strong>${formattedSubKey}:</strong> ${value[subKey]}</li>`;
-                            }
-                            extraDetailsHtml += `<p style="margin-bottom:5px;"><strong>${formattedKey}:</strong></p><ul style="margin-top:2px; margin-bottom:12px; padding-left:20px; font-size:14.5px; color:#444;">${nestedHtml}</ul>`;
-                        } else {
-                            // Handle standard strings and numbers
-                            if (!value) value = 'Not specified';
-                            if (value.toDate) value = value.toDate().toLocaleString(); // Format dates if they exist
-                            extraDetailsHtml += `<p style="margin-bottom:5px;"><strong>${formattedKey}:</strong> ${value}</p>`;
-                        }
-                    }
+                if (snapshot.empty) {
+                    requestsContainer.innerHTML = '<p style="color:#888;">No adoption requests found.</p>';
+                    return;
                 }
 
-                const reqHtml = `
-                    <div class="form-wrap" style="margin-bottom: 0; padding: 20px;">
-                        <h3 style="color:#FF741C; margin-bottom:8px;">🐾 Pet: ${reqData.petName || 'Unknown'}</h3>
-                        <p style="margin-bottom:5px;"><strong>Applicant:</strong> ${reqData.applicantName || 'Not specified'}</p>
-                        <p style="margin-bottom:5px;"><strong>Phone:</strong> ${reqData.applicantPhone || 'Not specified'}</p>
-                        ${extraDetailsHtml}
-                        <p style="margin-bottom:12px;"><strong>Reason:</strong> ${reqData.reason || 'Not specified'}</p>
-                        <div style="display:flex; gap:10px; margin-top: 16px;">
-                            <button onclick="acceptRequest('${docSnap.id}', '${reqData.petId}')" style="background-color: #4CAF50; border-radius: 8px;">
-                                Accept & Remove Pet
-                            </button>
-                            <button onclick="rejectRequest('${docSnap.id}')" style="background-color: #F44336; border-radius: 8px;">
-                                Reject Request
-                            </button>
-                        </div>
-                    </div>
-                `;
-                requestsContainer.innerHTML += reqHtml;
-            });
+                let pendingCount = 0;
+                let requests = [];
+                snapshot.forEach(docSnap => {
+                    const reqData = docSnap.data();
+                    if (reqData.status === 'accepted') return; 
+                    requests.push({ id: docSnap.id, ...reqData });
+                    pendingCount++;
+                });
 
-            if (pendingCount === 0) {
-                 requestsContainer.innerHTML = '<p style="color:#888;">No pending adoption requests. All caught up!</p>';
+                // Sort by createdAt descending
+                requests.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+                requests.forEach(reqData => {
+                    // Dynamically grab ALL extra keys from the database so nothing is ever hidden
+                    let extraDetailsHtml = '';
+                    const skipKeys = ['petName', 'petId', 'applicantName', 'applicantPhone', 'reason', 'status', 'userId', 'createdAt', 'id'];
+                    
+                    for (let key in reqData) {
+                        if (!skipKeys.includes(key)) {
+                            let formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                            let value = reqData[key];
+                            
+                            if (value && typeof value === 'object' && !value.toDate) { 
+                                // Unpack nested objects like "lifestyle" instead of showing [object Object]
+                                let nestedHtml = '';
+                                for (let subKey in value) {
+                                    let formattedSubKey = subKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                                    nestedHtml += `<li style="margin-bottom: 4px;"><strong>${formattedSubKey}:</strong> ${value[subKey]}</li>`;
+                                }
+                                extraDetailsHtml += `<p style="margin-bottom:5px;"><strong>${formattedKey}:</strong></p><ul style="margin-top:2px; margin-bottom:12px; padding-left:20px; font-size:14.5px; color:#444;">${nestedHtml}</ul>`;
+                            } else {
+                                // Handle standard strings and numbers
+                                if (!value) value = 'Not specified';
+                                if (value.toDate) value = value.toDate().toLocaleString(); // Format dates if they exist
+                                extraDetailsHtml += `<p style="margin-bottom:5px;"><strong>${formattedKey}:</strong> ${value}</p>`;
+                            }
+                        }
+                    }
+
+                    const reqHtml = `
+                        <div class="form-wrap" style="margin-bottom: 0; padding: 20px;">
+                            <h3 style="color:#FF741C; margin-bottom:8px;">🐾 Pet: ${reqData.petName || 'Unknown'}</h3>
+                            <p style="margin-bottom:5px;"><strong>Applicant:</strong> ${reqData.applicantName || 'Not specified'}</p>
+                            <p style="margin-bottom:5px;"><strong>Phone:</strong> ${reqData.applicantPhone || 'Not specified'}</p>
+                            ${extraDetailsHtml}
+                            <p style="margin-bottom:12px;"><strong>Reason:</strong> ${reqData.reason || 'Not specified'}</p>
+                            <div style="display:flex; gap:10px; margin-top: 16px;">
+                                <button onclick="acceptRequest('${reqData.id}', '${reqData.petId}')" style="background-color: #4CAF50; border-radius: 8px;">
+                                    Accept & Remove Pet
+                                </button>
+                                <button onclick="rejectRequest('${reqData.id}')" style="background-color: #F44336; border-radius: 8px;">
+                                    Reject Request
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    requestsContainer.innerHTML += reqHtml;
+                });
+
+                if (pendingCount === 0) {
+                     requestsContainer.innerHTML = '<p style="color:#888;">No pending adoption requests. All caught up!</p>';
+                }
+            } catch (error) {
+                console.error(error);
+                requestsContainer.innerHTML = `<p class="message error">Error loading requests: ${error.message}</p>`;
             }
-        } catch (error) {
-            console.error(error);
-            requestsContainer.innerHTML = `<p class="message error">Error loading requests: ${error.message}</p>`;
-        }
-    };
+        });
+    }
 
     // Accept an ADOPTION REQUEST
     window.acceptRequest = async (requestId, petId) => {
@@ -374,8 +382,7 @@
                 alert('Request accepted, but it did not contain a valid petId so no pet was deleted.');
             }
             
-            // 3. Reload list
-            window.loadRequests();
+            // No need to manually reload, onSnapshot handles it!
         } catch (error) {
             console.error(error);
             alert('Error updating request: ' + error.message);
@@ -391,13 +398,13 @@
             await deleteDoc(doc(db, 'adoptions', requestId));
             alert('Adoption request rejected successfully.');
             
-            // Reload list
-            window.loadRequests();
+            // No need to manually reload, onSnapshot handles it!
         } catch (error) {
             console.error(error);
             alert('Error rejecting request: ' + error.message);
         }
     };
+
 </script>
 </body>
 </html>

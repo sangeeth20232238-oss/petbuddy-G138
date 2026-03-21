@@ -53,9 +53,10 @@ export default function AdoptionFormScreen({ route, navigation }: Props) {
         setIsLoading(true);
         try {
             const { addDoc, collection, serverTimestamp } = require('firebase/firestore');
-            const { db } = require('../../../../firebaseConfig');
+            const { db, auth } = require('../../../../firebaseConfig');
 
             await addDoc(collection(db, 'adoptions'), {
+                userId: auth.currentUser?.uid,
                 petId: pet.id,
                 petName: pet.name,
                 applicantName: fullName,
