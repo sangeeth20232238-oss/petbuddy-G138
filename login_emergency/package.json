@@ -1,13 +1,19 @@
 {
   "name": "petbuddymobile",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "index.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+<<<<<<< HEAD
     "web": "expo start --web",
     "build:web": "expo export -p web"
+=======
+    "web": "npx expo start --web",
+    "build:web": "npx expo export -p web",
+    "vercel-build": "chmod +x node_modules/.bin/expo && npm run build:web"
+>>>>>>> main
   },
   "dependencies": {
     "@expo-google-fonts/fredoka": "^0.4.1",

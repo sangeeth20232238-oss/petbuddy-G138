@@ -31,9 +31,9 @@ const labradorImg = require('../../../../../assets/peeking-pets/labrador.png');
 const catImg = require('../../../../../assets/peeking-pets/cat.png');
 
 // Demo pet images for alert cards
-const goldyImg = require('../../../../../assets/demo-pets/goldy.png');
-const maxImg = require('../../../../../assets/demo-pets/max.png');
-const lunaImg = require('../../../../../assets/demo-pets/luna.png');
+const goldyImg = { uri: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400' };
+const maxImg = { uri: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400' };
+const lunaImg = { uri: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400' };
 
 // Mock data for demo (used when Firebase is not configured)
 const MOCK_ALERTS: LostPetAlert[] = [
