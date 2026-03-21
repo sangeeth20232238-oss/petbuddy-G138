@@ -517,7 +517,7 @@ useEffect(() => {
                                         <TouchableOpacity
                                             key={index}
                                             onPress={() => {
-                                                setInputText(item);
+                                                setInputText('');
                                                 setSuggestions([]);
                                                 sendMessage(item);
                                             }}
