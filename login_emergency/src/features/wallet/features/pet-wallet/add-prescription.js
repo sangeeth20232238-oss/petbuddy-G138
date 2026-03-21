@@ -13,7 +13,7 @@ import { db } from '../../services/firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
-export default function AddPrescription({ onBack }) {
+export default function AddPrescription({ onBack, navigate }) {
   
   const [medName, setMedName] = useState('');
   const [dosage, setDosage] = useState('');

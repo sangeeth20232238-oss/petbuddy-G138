@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, ScrollView, StatusBar, TextInput, Alert 
 } from 'react-native';
-import { MessageSquare, Cpu, Edit, Save } from 'lucide-react-native';
+import { Cpu, Edit, Save } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 

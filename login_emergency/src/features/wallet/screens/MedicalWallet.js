@@ -5,8 +5,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Syringe, Pill, Cpu, Stethoscope } from 'lucide-react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
+import { Ionicons } from '@expo/vector-icons';
 
 import VaccinationList from '../features/pet-wallet/vaccination-list';
 import PrescriptionList from '../features/pet-wallet/prescription-list';
