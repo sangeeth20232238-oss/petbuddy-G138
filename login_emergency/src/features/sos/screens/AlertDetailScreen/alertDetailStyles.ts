@@ -6,7 +6,21 @@ const IMAGE_HEIGHT = 380;
 const alertDetailStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFBF7',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFFBF7',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
   },
   scrollContent: {
     paddingBottom: 40,
@@ -35,15 +49,7 @@ const alertDetailStyles = StyleSheet.create({
     alignItems: 'center',
   },
   backButton: {
-    position: 'absolute',
-    top: 50,
-    left: 20,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 4,
   },
 
   // ---------- White Content Card ----------

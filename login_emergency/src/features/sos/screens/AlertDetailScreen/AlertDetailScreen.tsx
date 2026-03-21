@@ -91,7 +91,18 @@ const AlertDetailScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <StatusBar barStyle="dark-content" />
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={28} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Pet SOS</Text>
+      </View>
+
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={styles.scrollContent}
@@ -107,14 +118,6 @@ const AlertDetailScreen: React.FC = () => {
               <Ionicons name="image-outline" size={80} color="#ccc" />
             </View>
           )}
-
-          {/* Back button overlay */}
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}
-          >
-            <Ionicons name="arrow-back" size={28} color="#222" />
-          </TouchableOpacity>
         </View>
 
         {/* White card content overlapping the image */}

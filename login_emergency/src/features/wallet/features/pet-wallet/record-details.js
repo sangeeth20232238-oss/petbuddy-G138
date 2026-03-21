@@ -2,14 +2,14 @@ import React from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, ScrollView, StatusBar, Image, Alert 
 } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ChevronLeft, MessageSquare, Syringe, Pill, Stethoscope, FileText, Trash2 } from 'lucide-react-native';
+import { Syringe, Pill, Stethoscope, FileText, Trash2 } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 import { db } from '../../services/firebaseConfig';
 import { doc, deleteDoc } from 'firebase/firestore';
 
 export default function RecordDetails({ onBack, params, navigate }) {
-  const insets = useSafeAreaInsets();
+  // --- STATE MANAGEMENT ---
 
   const isVaccination = params?.type === 'vaccinations';
   const isPrescription = params?.type === 'prescriptions';
@@ -44,18 +44,23 @@ export default function RecordDetails({ onBack, params, navigate }) {
     <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      <View style={[styles.headerBackground, { paddingTop: insets.top + 10 }]}>
-        <View style={styles.headerRow}>
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ChevronLeft color="#333" size={24} />
+            <Ionicons name="arrow-back" size={28} color="#222" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>
-            {isVaccination ? 'Vaccination Details' : isPrescription ? 'Prescription Details' : 'Vet Visit Details'}
+            {isVaccination ? 'Vaccination' : isPrescription ? 'Medication' : 'Vet Visit'}
           </Text>
-          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton}>
-            <Trash2 color="#FF4444" size={20} />
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={handleDelete} style={styles.rightDeleteButton}>
+          <Trash2 color="#FF4444" size={20} />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.headerBackground}>
+        {/* Header background */}
       </View>
 
       <ScrollView style={styles.content}>
@@ -149,32 +154,50 @@ export default function RecordDetails({ onBack, params, navigate }) {
         </View>
       </ScrollView>
 
-      <View style={[styles.fabContainer, { bottom: insets.bottom + 20 }]}>
-        <TouchableOpacity style={styles.fab}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF9F5' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
+  },
+  backButton: {
+    padding: 4,
+  },
+  rightDeleteButton: { 
+    backgroundColor: '#FFE6E6', 
+    borderRadius: 12, 
+    padding: 8, 
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
   headerBackground: {
     backgroundColor: COLORS.cardBg,
     borderBottomLeftRadius: 45,
     borderBottomRightRadius: 45,
     paddingHorizontal: 25,
     paddingBottom: 25,
-  },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#333' },
-  backButton: { backgroundColor: '#FFF', borderRadius: 12, padding: 8, elevation: 2 },
-  deleteButton: { 
-    backgroundColor: '#FFE6E6', 
-    borderRadius: 12, 
-    padding: 8, 
-    elevation: 2 
   },
   content: { padding: 25, paddingBottom: 150 },
   detailCard: {
@@ -224,15 +247,5 @@ const styles = StyleSheet.create({
     borderLeftColor: COLORS.primary
   },
   noteTitle: { fontSize: 18, fontWeight: '600', color: '#333', marginBottom: 10 },
-  noteText: { fontSize: 14, color: '#666', lineHeight: 20 },
-  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center' },
-  fab: {
-    backgroundColor: COLORS.primary,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 10
-  }
+  noteText: { fontSize: 14, color: '#666', lineHeight: 20 }
 });

@@ -21,6 +21,7 @@ const allAlertsStyles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
     color: '#222',
     marginLeft: 50,
   },

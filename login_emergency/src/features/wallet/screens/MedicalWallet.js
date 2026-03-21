@@ -4,7 +4,8 @@ import {
   ActivityIndicator, Alert, StatusBar, BackHandler
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft, Syringe, Pill, Cpu, Stethoscope } from 'lucide-react-native';
+import { Syringe, Pill, Cpu, Stethoscope } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../theme/colors';
 
 import VaccinationList from '../features/pet-wallet/vaccination-list';
@@ -119,14 +120,15 @@ export default function MedicalWallet({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={28} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Medical Wallet</Text>
+      </View>
+
       <View style={styles.headerBackground}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <ChevronLeft color="#333" size={24} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Medical Wallet</Text>
-          <View style={{ width: 40 }} />
-        </View>
         <View style={styles.profileCard}>
           <View style={styles.avatarPlaceholder} />
           <View style={styles.profileInfo}>
@@ -155,17 +157,31 @@ export default function MedicalWallet({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF9F5' },
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
+  },
+  backButton: {
+    padding: 4,
+  },
   headerBackground: {
     backgroundColor: COLORS.cardBg || '#FFF0E8',
     borderBottomLeftRadius: 45,
     borderBottomRightRadius: 45,
     paddingHorizontal: 25,
-    paddingTop: 45,
+    paddingTop: 10,
     paddingBottom: 40,
   },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 },
-  headerTitle: { fontSize: 22, fontWeight: '700', color: '#333' },
-  backButton: { backgroundColor: '#FFF', borderRadius: 12, padding: 8, elevation: 2 },
   profileCard: {
     backgroundColor: COLORS.primary,
     borderRadius: 25, flexDirection: 'row',

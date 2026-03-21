@@ -3,7 +3,8 @@ import {
   StyleSheet, View, Text, TouchableOpacity, ScrollView, 
   SafeAreaView, StatusBar, ActivityIndicator, Image, Platform, Alert 
 } from 'react-native';
-import { ChevronLeft, Plus, ChevronRight, MessageSquare, FileText, Trash2, Edit } from 'lucide-react-native';
+import { Plus, ChevronRight, MessageSquare, FileText, Trash2, Edit } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 
 // --- FIREBASE IMPORTS ---
@@ -152,26 +153,16 @@ export default function VaccinationList({ onBack, navigate }) {
       {/* 1. STATUS BAR: Translucent allows background color to flow behind the bar */}
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       
-      {/* --- HEADER SECTION --- */}
+      {/* Standard Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="#222" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Vaccinations</Text>
+      </View>
+
       <View style={styles.headerBackground}>
-        {/* 2. ANDROID FIX: Using a View with paddingTop based on actual StatusBar height */}
-        <View style={styles.androidSafeHeader}>
-          <View style={styles.headerRow}>
-            {/* Back Button with hitSlop for easier clicking on small icons */}
-            <TouchableOpacity 
-              onPress={onBack} 
-              style={styles.backButton}
-              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
-            >
-              <ChevronLeft color="#333" size={24} />
-            </TouchableOpacity>
-            
-            <Text style={styles.headerTitle}>Vaccination List</Text>
-            
-            {/* Spacer to balance the Flexbox header layout */}
-            <View style={{ width: 40 }} /> 
-          </View>
-        </View>
+        {/* Profile/Pet info can go here if needed, keeping it consistent with MedicalWallet.js */}
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
@@ -221,37 +212,29 @@ export default function VaccinationList({ onBack, navigate }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFF9F5' },
   
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 45,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+    backgroundColor: '#FFF9F5',
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontFamily: 'Fredoka-Bold',
+    color: '#222',
+    marginLeft: 50,
+  },
+  backButton: {
+    padding: 4,
+  },
   headerBackground: {
     backgroundColor: COLORS.cardBg,
     borderBottomLeftRadius: 45,
     borderBottomRightRadius: 45,
     paddingHorizontal: 25,
     paddingBottom: 25,
-  },
-
-  // This creates the space needed for the Android Status Bar
-  androidSafeHeader: {
-    paddingTop: Platform.OS === 'android' ? (StatusBar.currentHeight + 10) : 50,
-  },
-
-  headerRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
-    marginTop: 10 
-  },
-
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#333' },
-
-  backButton: { 
-    backgroundColor: '#FFF', 
-    borderRadius: 12, 
-    padding: 10,
-    elevation: 2, // Shadow for Android
-    shadowColor: "#000", // Shadow for iOS
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
   },
 
   content: { padding: 25, paddingBottom: 150 }, // Padding for floating chat button

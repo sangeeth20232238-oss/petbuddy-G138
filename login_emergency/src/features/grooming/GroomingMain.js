@@ -8,6 +8,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 const SERVICES = [
   { id: '1', title: 'Bathing & Drying', image: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300&q=80' },
@@ -29,10 +30,9 @@ const GroomingMain = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>←</Text>
+          <Ionicons name="arrow-back" size={28} color="#222" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Grooming</Text>
-        <View style={{ width: 40 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -67,12 +67,11 @@ const GroomingMain = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FCF8F4' },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, marginTop: 45, marginBottom: 20 },
-  backButton: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#FFFFFF', justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 3 },
-  backButtonText: { fontSize: 20, color: '#000' },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#1A1A1A' },
+  header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10, backgroundColor: '#FCF8F4' },
+  backButton: { padding: 4 },
+  headerTitle: { fontSize: 24, fontFamily: 'Fredoka-Bold', color: '#222', marginLeft: 50 },
   scrollContent: { paddingHorizontal: 20, paddingBottom: 80 },
-  bannerContainer: { flexDirection: 'row', backgroundColor: '#A3D611', borderRadius: 15, padding: 20, alignItems: 'center', justifyContent: 'space-between', marginBottom: 25 },
+  bannerContainer: { flexDirection: 'row', backgroundColor: '#E87A3A', borderRadius: 15, padding: 20, alignItems: 'center', justifyContent: 'space-between', marginBottom: 25 },
   bannerTextContainer: { flex: 1 },
   bannerText: { fontSize: 18, fontWeight: 'bold', color: '#FFFFFF', lineHeight: 24 },
   bannerImageContainer: { width: 70, height: 70, backgroundColor: '#FFFFFF', borderRadius: 12, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' },

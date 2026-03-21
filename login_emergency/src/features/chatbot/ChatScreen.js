@@ -254,22 +254,22 @@ export default function ChatScreen({ navigation }) {
             <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7} onPress={() => navigation.goBack()}>
-                        <Ionicons name="chevron-back" size={22} color="#1A1A1A" />
+                    <TouchableOpacity style={styles.backButton} activeOpacity={0.7} onPress={() => navigation.goBack()}>
+                        <Ionicons name="arrow-back" size={28} color="#222" />
                     </TouchableOpacity>
                     <View style={styles.headerCenter}>
                         <LinearGradient colors={['#FF9A5C', '#FF741C']} style={styles.headerAvatar}>
                             <MaterialCommunityIcons name="robot-excited-outline" size={18} color="#FFF" />
                         </LinearGradient>
                         <View>
-                            <Text style={styles.headerTitle}>AI Chat Bot</Text>
+                            <Text style={styles.headerTitleText}>AI Chat Bot</Text>
                             <View style={styles.onlineRow}>
                                 <View style={styles.onlineDot} />
                                 <Text style={styles.onlineText}>Online</Text>
                             </View>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7} onPress={() => setShowMenu(true)}>
+                    <TouchableOpacity style={styles.menuBtn} activeOpacity={0.7} onPress={() => setShowMenu(true)}>
                         <Feather name="more-vertical" size={20} color="#1A1A1A" />
                     </TouchableOpacity>
                 </View>
@@ -347,11 +347,12 @@ const styles = StyleSheet.create({
     root: { flex: 1 },
     flex: { flex: 1 },
     safeArea: { flex: 1 },
-    header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: 'rgba(0,0,0,0.06)', backgroundColor: 'rgba(255,255,255,0.85)' },
-    headerBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.05)', alignItems: 'center', justifyContent: 'center' },
-    headerCenter: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, paddingLeft: 8 },
+    header: { flexDirection: 'row', alignItems: 'center', paddingTop: 45, paddingHorizontal: 20, paddingBottom: 10, backgroundColor: '#FFF' },
+    backButton: { padding: 4 },
+    menuBtn: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.05)', alignItems: 'center', justifyContent: 'center' },
+    headerCenter: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, marginLeft: 20 },
     headerAvatar: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-    headerTitle: { fontSize: 16, fontWeight: '600', color: '#1A1A1A', letterSpacing: 0.3 },
+    headerTitleText: { fontSize: 20, fontFamily: 'Fredoka-Bold', color: '#1A1A1A', letterSpacing: 0.3 },
     onlineRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 1 },
     onlineDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#4CAF50' },
     onlineText: { fontSize: 12, color: '#666', fontWeight: '400' },
