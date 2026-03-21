@@ -3,6 +3,7 @@ import React, { useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { registerRootComponent } from 'expo';
+import { AppRegistry } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Fredoka_400Regular, Fredoka_600SemiBold, Fredoka_700Bold } from '@expo-google-fonts/fredoka';
 
@@ -127,4 +128,8 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
+}
+
+if (!AppRegistry.getAppKeys().includes('main')) {
+  registerRootComponent(App);
 }
