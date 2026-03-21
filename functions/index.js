@@ -189,10 +189,7 @@ function extractSymptomsFromMessage(userMessage) {
   if (text.includes(p)) {
     const normalized = normalizeSymptom(phrase);
     if (CLEAN_SET.has(normalized)) found.add(normalized);
-  } else if (words.some(word => word.length > 3 && phrase.includes(word))) {
-    const normalized = normalizeSymptom(phrase);
-    if (CLEAN_SET.has(normalized)) found.add(normalized);
-  }
+  } 
 }
 
   return Array.from(found);
@@ -218,7 +215,7 @@ function getFuse() {
 
   fuse = new Fuse(symptoms, {
     includeScore: true,
-    threshold: 0.35,
+    threshold: 0.25,
   });
 
   return fuse;
@@ -406,6 +403,7 @@ exports.suggestions = functions.https.onRequest((req, res) => {
     });
   });
 });
+
 
 
 

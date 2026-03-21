@@ -1,16 +1,21 @@
-[debug] [2026-03-20T11:02:26.250Z] ----------------------------------------------------------------------
-[debug] [2026-03-20T11:02:26.253Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\LENOVO\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
-[debug] [2026-03-20T11:02:26.253Z] CLI Version:   15.9.1
-[debug] [2026-03-20T11:02:26.253Z] Platform:      win32
-[debug] [2026-03-20T11:02:26.254Z] Node Version:  v24.13.0
-[debug] [2026-03-20T11:02:26.254Z] Time:          Fri Mar 20 2026 06:02:26 GMT-0500 (Colombia Standard Time)
-[debug] [2026-03-20T11:02:26.254Z] ----------------------------------------------------------------------
+[debug] [2026-03-21T08:58:04.143Z] ----------------------------------------------------------------------
+[debug] [2026-03-21T08:58:04.145Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\LENOVO\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2026-03-21T08:58:04.145Z] CLI Version:   15.9.1
+[debug] [2026-03-21T08:58:04.145Z] Platform:      win32
+[debug] [2026-03-21T08:58:04.145Z] Node Version:  v24.13.0
+[debug] [2026-03-21T08:58:04.145Z] Time:          Sat Mar 21 2026 14:28:04 GMT+0530 (India Standard Time)
+[debug] [2026-03-21T08:58:04.145Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2026-03-20T11:02:28.366Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2026-03-20T11:02:28.366Z] > authorizing via signed-in user (petbuddy138@gmail.com)
-[debug] [2026-03-20T11:02:28.366Z] [iam] checking project petbuddy-138 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
-[debug] [2026-03-20T11:02:28.368Z] Checked if tokens are valid: true, expires at: 1774006568038
-[debug] [2026-03-20T11:02:28.368Z] Checked if tokens are valid: true, expires at: 1774006568038
-[debug] [2026-03-20T11:02:28.369Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138:testIamPermissions [none]
-[debug] [2026-03-20T11:02:28.369Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138:testIamPermissions  x-goog-user-project=petbuddy-138
-[debug] [2026-03-20T11:02:28.369Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-21T08:58:07.659Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-21T08:58:07.660Z] > authorizing via signed-in user (petbuddy138@gmail.com)
+[debug] [2026-03-21T08:58:07.661Z] [iam] checking project petbuddy-138 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2026-03-21T08:58:07.662Z] Checked if tokens are valid: false, expires at: 1774006568038
+[debug] [2026-03-21T08:58:07.662Z] Checked if tokens are valid: false, expires at: 1774006568038
+[debug] [2026-03-21T08:58:07.663Z] > refreshing access token with scopes: []
+[debug] [2026-03-21T08:58:07.668Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-03-21T08:58:07.668Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-21T08:58:08.174Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-03-21T08:58:08.174Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-21T08:58:08.182Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138:testIamPermissions [none]
+[debug] [2026-03-21T08:58:08.182Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138:testIamPermissions  x-goog-user-project=petbuddy-138
+[debug] [2026-03-21T08:58:08.182Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
