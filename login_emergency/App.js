@@ -129,7 +129,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-if (!AppRegistry.getAppKeys().includes('main')) {
-  registerRootComponent(App);
-}

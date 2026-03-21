@@ -1,7 +1,12 @@
 import { registerRootComponent } from 'expo';
-import { AppRegistry } from 'react-native';
 import App from './App';
 
-if (!AppRegistry.getAppKeys().includes('main')) {
+// Global flag to prevent double mounting on web
+if (typeof window !== 'undefined') {
+  if (!window.__PETBUDDY_APP_MOUNTED__) {
+    window.__PETBUDDY_APP_MOUNTED__ = true;
+    registerRootComponent(App);
+  }
+} else {
   registerRootComponent(App);
 }
