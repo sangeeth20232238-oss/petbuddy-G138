@@ -14,7 +14,7 @@ import { db } from '../../services/firebaseConfig';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 
-export default function AddVaccination({ onBack }) {
+export default function AddVaccination({ onBack, navigate }) {
   
   const [vaccineName, setVaccineName] = useState('');
   const [dateTaken, setDateTaken] = useState(new Date());
