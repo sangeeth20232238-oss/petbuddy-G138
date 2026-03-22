@@ -20,3 +20,67 @@
 [debug] [2026-03-22T08:03:55.032Z] Checked if tokens are valid: true, expires at: 1774168876976
 [debug] [2026-03-22T08:03:55.032Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/petbuddy-138/serviceAccounts/petbuddy-138@appspot.gserviceaccount.com:testIamPermissions [none]
 [debug] [2026-03-22T08:03:55.032Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/petbuddy-138/serviceAccounts/petbuddy-138@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-03-22T08:03:56.891Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/petbuddy-138/serviceAccounts/petbuddy-138@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-03-22T08:03:56.891Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/petbuddy-138/serviceAccounts/petbuddy-138@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'petbuddy-138'...
+[info] 
+[info] i  deploying functions 
+[debug] [2026-03-22T08:03:56.898Z] Checked if tokens are valid: true, expires at: 1774168876976
+[debug] [2026-03-22T08:03:56.898Z] Checked if tokens are valid: true, expires at: 1774168876976
+[debug] [2026-03-22T08:03:56.898Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138 [none]
+[debug] [2026-03-22T08:03:57.256Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138 200
+[debug] [2026-03-22T08:03:57.256Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/petbuddy-138 {"projectNumber":"506859726227","projectId":"petbuddy-138","lifecycleState":"ACTIVE","name":"petbuddy-138","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2026-02-16T09:47:55.230253Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2026-03-22T08:03:57.260Z] Checked if tokens are valid: true, expires at: 1774168876976
+[debug] [2026-03-22T08:03:57.260Z] Checked if tokens are valid: true, expires at: 1774168876976
+[debug] [2026-03-22T08:03:57.260Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/petbuddy-138/adminSdkConfig [none]
+[debug] [2026-03-22T08:03:58.241Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/petbuddy-138/adminSdkConfig 200
+[debug] [2026-03-22T08:03:58.241Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/petbuddy-138/adminSdkConfig {"projectId":"petbuddy-138","databaseURL":"https://petbuddy-138-default-rtdb.firebaseio.com","storageBucket":"petbuddy-138.firebasestorage.app"}
+[debug] [2026-03-22T08:03:58.243Z] Validating nodejs source
+[debug] [2026-03-22T08:03:59.644Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "24"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "csv-parse": "^6.1.0",
+    "firebase-admin": "^13.6.0",
+    "firebase-functions": "^7.2.2",
+    "fuse.js": "^7.1.0",
+    "natural": "^8.1.1"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^3.4.1"
+  },
+  "private": true
+}
+[debug] [2026-03-22T08:03:59.644Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2026-03-22T08:03:59.646Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-03-22T08:03:59.663Z] Found firebase-functions binary at 'C:\Users\LENOVO\OneDrive\Desktop\Ai-chatbot-firebase\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8618
+
+[info] [dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+
+[info] [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+
+[info] [dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+[info] [dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+
+[info] [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+
+[debug] [2026-03-22T08:04:02.367Z] Got response from /__/functions.yaml {"endpoints":{"chatbot":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"chatbot"},"suggestions":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"suggestions"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
