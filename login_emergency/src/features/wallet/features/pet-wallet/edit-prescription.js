@@ -4,6 +4,7 @@ import {
   ScrollView, StatusBar, Alert, Platform 
 } from 'react-native';
 import { ChevronLeft, Calendar } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 import { db } from '../../services/firebaseConfig';

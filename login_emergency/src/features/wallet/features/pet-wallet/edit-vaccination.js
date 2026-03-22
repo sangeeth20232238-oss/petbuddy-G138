@@ -4,6 +4,7 @@ import {
   ScrollView, StatusBar, Alert, Image, Platform 
 } from 'react-native';
 import { ChevronLeft, Upload, Calendar } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
