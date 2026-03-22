@@ -255,8 +255,21 @@ function findBestSymptoms(userMessage) {
     if (msg === a || msg.includes(a)) aliasHits.push(canonical);
   }
 
+  // direct word check (prevents wrong fuzzy matches)
+  const words = msg.split(" ");
+
+  for (const key of getSymptomMap().keys()) {
+    const normalizedKey = normalizeText(key);
+
+    for (const word of words) {
+      if (normalizedKey.includes(word)) {
+        return [key];   //  return correct match early
+      }
+    }
+  }
+
   // 2) fuzzy match whole message
- const fuzzy = getFuse().search(msg).filter(r => r.score < 0.45).slice(0, 3).map((r) => r.item);
+ const fuzzy = getFuse().search(msg).filter(r => r.score < 0.35).slice(0, 3).map((r) => r.item);
 
   // unique + keep valid
   const combined = [...aliasHits, ...fuzzy].map((s) => normalizeText(s));
@@ -317,7 +330,7 @@ function buildAdviceReply(symptoms) {
 🐾 I'm here to help. Stay safe!
 `;  
 
-  return header + parts.join("\n\n--------------------\n\n")+ emergencyMsg + followUp;
+  return header + parts.join("\n\n---------\n\n")+ emergencyMsg + followUp;
 };
 
 
@@ -364,7 +377,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       const msg = String(message || "").toLowerCase().trim();
 
       // Block short messages
-      if (!msg || msg.length < 3) {
+      if (!msg || msg.length < 5 ) {
         return res.json({
           found: false,
           reply: "Please describe your dog's symptoms 🐶"
@@ -372,7 +385,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       }
 
       // Handle greetings
-      const greetings = ["hi", "hello", "hey", "yo","Good mornging","Good evening","good mornging","good evening"];
+      const greetings = ["hi", "Hi","Hello","hello","hlo", "Hy","hy","hey", "yo","Good mornging","Good evening","good mornging","good evening"];
 
       if (greetings.includes(msg)) {
         return res.json({
@@ -382,7 +395,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       }
 
       //handle goodbyes
-      const goodbyes = ["bye", "thanks", "thank you", "ok thanks", "bye bye"];
+      const goodbyes = ["bye", "thanks", "thank you", "ok thanks", "bye bye","thnx"];
 
         if (goodbyes.includes(msg)) {
           return res.json({
