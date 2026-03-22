@@ -151,6 +151,9 @@ const SYMPTOM_ALIASES = {
   "broken bone": "broken bones",
   "bone fracture": "broken bones",
   "fractured bone": "broken bones",
+  "broke":"broken bones",
+  "break":"broken bones",
+  "fracture": "broken bones",
 };
 
 
@@ -373,9 +376,9 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       const msg = String(message || "").toLowerCase().trim();
 
       // Handle greetings
-      const greetings = ["hi", "Hi","Hello","hello","hlo", "Hy","hy","hey", "yo","Good mornging","Good evening","good mornging","good evening"];
+      const greetings = ["hi", "Hi","Hello","hello","hlo", "Hy","hy","hey", "yo","Good morning","Good evening","good morning","good evening","good mrng","good eve"];
 
-      if (greetings.includes(msg)) {
+      if (greetings.some(g => msg.includes(g))) {
         return res.json({
           found: false,
           reply: "Hi 👋 Tell me your dog's symptoms and I’ll help you."
@@ -383,7 +386,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       }
 
       //handle goodbyes
-      const goodbyes = ["bye", "thanks", "thank you", "ok thanks", "bye bye","thnx"];
+      const goodbyes = ["bye", "thanks", "thank you", "ok thanks", "bye bye","thnx","thanx"];
 
       if (goodbyes.includes(msg)) {
         return res.json({
@@ -394,7 +397,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
 
 
       // Block short messages
-      if (!msg || msg.length < 3 ) {
+      if (!msg || msg.length < 4 ) {
         return res.json({
           found: false,
           reply: "Please describe your dog's symptoms 🐶"
