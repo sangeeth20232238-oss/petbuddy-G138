@@ -3,7 +3,7 @@ import {
   StyleSheet, View, Text, TouchableOpacity, ScrollView, 
   StatusBar, ActivityIndicator, Platform, Alert 
 } from 'react-native';
-import { Plus, ChevronRight, Stethoscope, Trash2, Edit } from 'lucide-react-native';
+import { Plus, ChevronRight, Stethoscope, Trash2, Edit, MessageSquare } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 
