@@ -211,7 +211,7 @@ let fuse = null;
 function getFuse() {
   if (fuse) return fuse;
 
-  const symptoms = Array.from(getSymptomMap().keys());
+  const symptoms = Array.from(getSymptomMap().keys()).map(s => normalizeText(s));
 
   fuse = new Fuse(symptoms, {
     includeScore: true,
@@ -225,15 +225,20 @@ function normalizeText(s) {
   return String(s || "")
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
+    .split(" ")
+    .map(word => stemmer.stem(word))   //  MAGIC LINE
+    .join(" ")
     .trim();
 }
-
 /**
+ * ------------------------------------------------
  * Fallback when sentence-extraction finds nothing.
+ * ------------------------------------------------
  */
 function findBestSymptoms(userMessage) {
   const msg = normalizeText(userMessage);
+
+    if (msg.length < 4) return []; //  Block short useless inputs like "hi", "ok"
 
   // 1) alias phrase appears in message
   const aliasHits = [];
@@ -243,7 +248,7 @@ function findBestSymptoms(userMessage) {
   }
 
   // 2) fuzzy match whole message
- const fuzzy = getFuse().search(msg).slice(0, 5).map((r) => r.item);
+ const fuzzy = getFuse().search(msg).filter(r => r.score < 0.35).slice(0, 3).map((r) => r.item);
 
   // unique + keep valid
   const combined = [...aliasHits, ...fuzzy].map((s) => normalizeText(s));
@@ -251,7 +256,16 @@ function findBestSymptoms(userMessage) {
   for (const s of combined) if (s && !unique.includes(s)) unique.push(s);
 
   const map = getSymptomMap();
-  return unique.filter((s) => map.has(s));
+
+  return unique
+    .map(s => {
+      // find original symptom from map
+      for (const key of map.keys()) {
+        if (normalizeText(key) === s) return key;
+      }
+      return null;
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -323,6 +337,27 @@ exports.chatbot = functions.https.onRequest((req, res) => {
     try {
      
       const message = req.body?.message;
+
+      // Normalize message
+      const msg = String(message || "").toLowerCase().trim();
+
+      // Block short messages
+      if (!msg || msg.length < 3) {
+        return res.json({
+          found: false,
+          reply: "Please describe your dog's symptoms 🐶"
+        });
+      }
+
+      // Handle greetings
+      const greetings = ["hi", "hello", "hey", "yo"];
+
+      if (greetings.includes(msg)) {
+        return res.json({
+          found: false,
+          reply: "Hi 👋 Tell me your dog's symptoms and I’ll help you."
+        });
+      }
 
      
       if (!message) {
