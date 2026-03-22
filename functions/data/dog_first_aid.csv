@@ -378,7 +378,7 @@ case_id,animalname,symptom,first_aid_advice,emergency
 53,dog,sneezing,"Remove irritants and monitor. If sneezing continues or is paired with discharge or breathing trouble, consult a veterinarian.",no
 13,dog,stiffness,This symptom requires veterinary assessment. Please contact a veterinarian.,no
 29,dog,straining,This symptom requires veterinary assessment. Please contact a veterinarian.,no
-6,dog,sudden death,This symptom requires veterinary assessment. Please contact a veterinarian.,no
+6,dog,sudden death,This symptom requires veterinary assessment. Please contact a veterinarian.,yes
 8,dog,swelling,Apply a cool compress briefly and prevent licking. Swelling of the face or breathing issues should be treated as an emergency.,no
 10,dog,swelling,Apply a cool compress briefly and prevent licking. Swelling of the face or breathing issues should be treated as an emergency.,no
 14,dog,swelling,Apply a cool compress briefly and prevent licking. Swelling of the face or breathing issues should be treated as an emergency.,no

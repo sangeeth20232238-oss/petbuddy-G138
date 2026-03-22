@@ -101,6 +101,8 @@ const SYMPTOM_ALIASES = {
   "dog not eating": "loss of appetite",
   "loss appetite": "loss of appetite",
   "unable to eat": "loss of appetite",
+  "eating":"loss of appetite",
+  "Eating":"loss of appetite",
 
   // fever
   "high temperature": "fever",
@@ -255,16 +257,10 @@ function findBestSymptoms(userMessage) {
     if (msg === a || msg.includes(a)) aliasHits.push(canonical);
   }
 
-  // direct word check (prevents wrong fuzzy matches)
-  const words = msg.split(" ");
-
+  //  exact word match 
   for (const key of getSymptomMap().keys()) {
-    const normalizedKey = normalizeText(key);
-
-    for (const word of words) {
-      if (normalizedKey.includes(word)) {
-        return [key];   //  return correct match early
-      }
+    if (msg === normalizeText(key)) {
+      return [key];
     }
   }
 
@@ -376,14 +372,6 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       // Normalize message
       const msg = String(message || "").toLowerCase().trim();
 
-      // Block short messages
-      if (!msg || msg.length < 5 ) {
-        return res.json({
-          found: false,
-          reply: "Please describe your dog's symptoms 🐶"
-        });
-      }
-
       // Handle greetings
       const greetings = ["hi", "Hi","Hello","hello","hlo", "Hy","hy","hey", "yo","Good mornging","Good evening","good mornging","good evening"];
 
@@ -397,12 +385,21 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       //handle goodbyes
       const goodbyes = ["bye", "thanks", "thank you", "ok thanks", "bye bye","thnx"];
 
-        if (goodbyes.includes(msg)) {
-          return res.json({
-            found: false,
-            reply: "👋 Take care! If your pet needs help again, I’m here 🐾"
-          });
-        }
+      if (goodbyes.includes(msg)) {
+        return res.json({
+          found: false,
+          reply: "👋 Take care! If your pet needs help again, I’m here 🐾"
+        });
+      }
+
+
+      // Block short messages
+      if (!msg || msg.length < 3 ) {
+        return res.json({
+          found: false,
+          reply: "Please describe your dog's symptoms 🐶"
+        });
+      }
 
      
       if (!message) {
