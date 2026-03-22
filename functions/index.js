@@ -3,8 +3,14 @@ const fs = require("fs");
 const path = require("path");
 const cors = require("cors")({ origin: true });
 
+const admin = require("firebase-admin");
+admin.initializeApp();
+const db = admin.firestore();
+
 const { parse } = require("csv-parse/sync");
 const Fuse = require("fuse.js");
+const natural = require("natural");
+const stemmer = natural.PorterStemmer;
 
 /**
  * ----------------------------
@@ -56,7 +62,9 @@ function getSymptomMap() {
 
 
 /**
+ * ----------------------------------------
  * Normalize user symptom (alias -> clean)
+ * ----------------------------------------
  */
 function normalizeSymptom(userInput) {
   const text = String(userInput || "").toLowerCase().trim();
@@ -238,7 +246,7 @@ function normalizeText(s) {
 function findBestSymptoms(userMessage) {
   const msg = normalizeText(userMessage);
 
-    if (msg.length < 4) return []; //  Block short useless inputs like "hi", "ok"
+  if (msg.length < 3) return []; //  Block short useless inputs like "hi", "ok"
 
   // 1) alias phrase appears in message
   const aliasHits = [];
@@ -248,7 +256,7 @@ function findBestSymptoms(userMessage) {
   }
 
   // 2) fuzzy match whole message
- const fuzzy = getFuse().search(msg).filter(r => r.score < 0.35).slice(0, 3).map((r) => r.item);
+ const fuzzy = getFuse().search(msg).filter(r => r.score < 0.45).slice(0, 3).map((r) => r.item);
 
   // unique + keep valid
   const combined = [...aliasHits, ...fuzzy].map((s) => normalizeText(s));
@@ -292,12 +300,26 @@ function buildAdviceReply(symptoms) {
     );
   }
 
-  const header = anyEmergency
+  const header = symptoms.length ? "" : "👋 Hi! I'm your pet care assistant 🐶\n\n";
+  const emergencyMsg  = anyEmergency
     ? "🚨 EMERGENCY WARNING: If symptoms are severe/worsening, contact a vet immediately.\n\n"
     : "";
 
-  return header + parts.join("\n\n--------------------\n\n");
-}
+  const followUp = `
+👉 Is your dog showing any other symptoms?
+
+💡 You can type things like:
+- vomiting
+- fever
+- not eating
+- breathing difficulty or any other symptoms 
+
+🐾 I'm here to help. Stay safe!
+`;  
+
+  return header + parts.join("\n\n--------------------\n\n")+ emergencyMsg + followUp;
+};
+
 
 
 /**
@@ -305,16 +327,16 @@ function buildAdviceReply(symptoms) {
  * Save unknown symptoms for review
  * --------------------------------
  */
-function saveUnknownSymptom(userMessage) {
-  const fs = require("fs");
-  const path = require("path");
-
-  const logPath = path.join(__dirname, "unknown_symptoms.txt");
-  const time = new Date().toISOString();
-
-  fs.appendFileSync(logPath, `${time} | ${userMessage}\n`);
+async function saveUnknownSymptom(userMessage) {
+  try {
+    await db.collection("unknown_symptoms").add({
+      message: userMessage,
+      timestamp: new Date()
+    });
+  } catch (error) {
+    console.error("Error saving unknown symptom:", error);
+  }
 }
-
 /**
  * --------------------------------
  * 6) HTTP Chatbot Endpoint
@@ -350,7 +372,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
       }
 
       // Handle greetings
-      const greetings = ["hi", "hello", "hey", "yo"];
+      const greetings = ["hi", "hello", "hey", "yo","Good mornging","Good evening","good mornging","good evening"];
 
       if (greetings.includes(msg)) {
         return res.json({
@@ -358,6 +380,16 @@ exports.chatbot = functions.https.onRequest((req, res) => {
           reply: "Hi 👋 Tell me your dog's symptoms and I’ll help you."
         });
       }
+
+      //handle goodbyes
+      const goodbyes = ["bye", "thanks", "thank you", "ok thanks", "bye bye"];
+
+        if (goodbyes.includes(msg)) {
+          return res.json({
+            found: false,
+            reply: "👋 Take care! If your pet needs help again, I’m here 🐾"
+          });
+        }
 
      
       if (!message) {
@@ -379,7 +411,7 @@ exports.chatbot = functions.https.onRequest((req, res) => {
 
       // still nothing → then fail
       if (symptoms.length === 0) {
-        saveUnknownSymptom(message);
+        await saveUnknownSymptom(message);
 
       return res.json({
         found: false,
