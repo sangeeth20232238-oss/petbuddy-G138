@@ -7,3 +7,6 @@ dist
 *.apk
 *.zip
 *.tar.gz
+.vercel
+android
+ios

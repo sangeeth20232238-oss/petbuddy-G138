@@ -377,7 +377,14 @@ export default function DashboardScreen({ navigation }) {
                             <MenuLink icon="file-document-outline" label="Terms & Conditions" onPress={() => { closeSidebar(); setTimeout(() => navigation.navigate('Terms'), 300); }} />
                         </View>
 
-                        <TouchableOpacity style={styles.logout} onPress={() => { closeSidebar(); setTimeout(() => navigation.navigate('Login'), 300); }}>
+                        <TouchableOpacity style={styles.logout} onPress={async () => { 
+                            closeSidebar(); 
+                            try {
+                                await auth.signOut();
+                            } catch (e) {
+                                Alert.alert('Error', 'Failed to log out.');
+                            }
+                        }}>
                             <Ionicons name="log-out-outline" size={24} color="#FF4D4D" />
                             <Text style={styles.logoutText}>Logout</Text>
                         </TouchableOpacity>

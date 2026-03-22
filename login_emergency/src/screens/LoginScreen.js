@@ -46,7 +46,9 @@ export default function LoginScreen({ navigation }) {
         }
         setLoading(true);
         signInWithEmailAndPassword(auth, email, password)
-            .then(() => navigation.replace('Dashboard'))
+            .then(() => {
+                // navigation.replace('Dashboard') - Removed: Let App.js auth listener handle this
+            })
             .catch(() => Alert.alert('Login Failed', 'Invalid email or password.'))
             .finally(() => setLoading(false));
     };

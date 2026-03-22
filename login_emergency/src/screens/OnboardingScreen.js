@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Image, Dimensions, TouchableOpacity, StatusBar } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -30,10 +31,13 @@ const onboardingData = [
 export default function OnboardingScreen({ navigation }) {
     const [currentStep, setCurrentStep] = useState(0);
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (currentStep < onboardingData.length - 1) {
             setCurrentStep(currentStep + 1);
         } else {
+            try {
+                await AsyncStorage.setItem('has_seen_onboarding', 'true');
+            } catch (e) {}
             navigation.navigate('Signup'); 
         }
     };
@@ -64,7 +68,12 @@ export default function OnboardingScreen({ navigation }) {
                 {currentStep === 2 && (
                     <View style={styles.footer}>
                         <Text style={[styles.footerText, {fontFamily: 'Fredoka-SemiBold'}]}>Already have an account? </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                        <TouchableOpacity onPress={async () => {
+                            try {
+                                await AsyncStorage.setItem('has_seen_onboarding', 'true');
+                            } catch (e) {}
+                            navigation.navigate('Login');
+                        }}>
                             <Text style={[styles.loginText, {fontFamily: 'Fredoka-Bold'}]}>LOGIN</Text>
                         </TouchableOpacity>
                     </View>

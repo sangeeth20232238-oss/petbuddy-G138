@@ -70,12 +70,8 @@ export default function VaccinationList({ onBack, navigate }) {
       return;
     }
 
-    // Query: collection 'vaccinations' filtered by userId
-    // Sorting happens locally to avoid Firebase Composite Index requirement
-    const q = query(
-      collection(db, "vaccinations"), 
-      where("userId", "==", auth.currentUser.uid)
-    );
+    // Query: collection 'vaccinations' from user's subcollection
+    const q = collection(db, "users", auth.currentUser.uid, "vaccinations");
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const records = [];
@@ -112,7 +108,10 @@ export default function VaccinationList({ onBack, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, 'vaccinations', id));
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (!user) return;
+              await deleteDoc(doc(db, 'users', user.uid, 'vaccinations', id));
             } catch (error) {
               Alert.alert('Error', 'Failed to delete record');
             }
@@ -197,13 +196,6 @@ export default function VaccinationList({ onBack, navigate }) {
           ))
         )}
       </ScrollView>
-
-      {/* --- FLOATING CHAT BUTTON --- */}
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -338,21 +330,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-
-  fabContainer: {
-    position: 'absolute',
-    bottom: 40,
-    width: '100%',
-    alignItems: 'center',
-  },
-
-  fab: {
-    backgroundColor: COLORS.primary,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 10,
-  }
 });

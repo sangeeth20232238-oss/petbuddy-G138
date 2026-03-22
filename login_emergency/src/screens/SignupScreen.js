@@ -50,7 +50,7 @@ export default function SignupScreen({ navigation }) {
         createUserWithEmailAndPassword(auth, email, password)
             .then(() => {
                 Alert.alert("Success", "Account created for PetBuddy!");
-                navigation.replace('Dashboard'); 
+                // navigation.replace('Dashboard') - Removed: Let App.js auth listener handle this
             })
             .catch(error => Alert.alert("Registration Failed", error.message));
     };

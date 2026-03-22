@@ -39,7 +39,7 @@ export default function PetBuddyPaywallScreen({ navigation }) {
     const checkPremiumStatus = async () => {
         try {
             const user = auth.currentUser;
-            if (!user) { navigation.replace('Login'); return; }
+            if (!user) { return; }
             const snap = await getDoc(doc(db, 'users', user.uid));
             if (snap.exists() && snap.data().petBuddyPremium === true) {
                 navigation.replace('PetBuddyRequest');
@@ -52,67 +52,38 @@ export default function PetBuddyPaywallScreen({ navigation }) {
         }
     };
 
-    const handlePayment = async () => {
+    const handlePayment = () => {
         const user = auth.currentUser;
         if (!user) { Alert.alert('Error', 'Please log in first.'); return; }
 
         setPaying(true);
 
-        // Build PayHere sandbox/live URL
-        // For testing use sandbox: https://sandbox.payhere.lk/pay/checkout
-        // For live use: https://www.payhere.lk/pay/checkout
-        const params = new URLSearchParams({
-            merchant_id: PAYHERE_MERCHANT_ID,
-            return_url: 'petbuddy://payment-success',
-            cancel_url: 'petbuddy://payment-cancel',
-            notify_url: 'https://petbuddy-138.web.app/payment-notify',
-            order_id: ORDER_ID,
-            items: 'Pet Buddy Premium Access',
-            currency: CURRENCY,
-            amount: AMOUNT,
-            first_name: user.displayName || 'PetBuddy',
-            last_name: 'User',
-            email: user.email || '',
-            phone: '0771234567',
-            address: 'Colombo',
-            city: 'Colombo',
-            country: 'Sri Lanka',
-        });
-
-        const payUrl = `https://sandbox.payhere.lk/pay/checkout?${params.toString()}`;
-
-        try {
-            await Linking.openURL(payUrl);
-        } catch (e) {
-            Alert.alert('Error', 'Could not open payment page.');
-            setPaying(false);
-            return;
-        }
-
-        // Listen for app returning from browser (deep link)
-        const subscription = Linking.addEventListener('url', async ({ url }) => {
-            subscription.remove();
-            setPaying(false);
-            if (url.includes('payment-success')) {
-                await unlockPremium(user.uid);
-            } else {
-                Alert.alert('Payment Cancelled', 'Your payment was not completed.');
-            }
-        });
-
-        setPaying(false);
+        // Simulate a payment gateway process
+        setTimeout(() => {
+            Alert.alert(
+                '💳 PetBuddy Dummy Payment',
+                'Successfully processed Rs. 399.00 payment.',
+                [
+                    {
+                        text: 'Continue to Network',
+                        onPress: async () => {
+                            await unlockPremium(user.uid);
+                            setPaying(false);
+                        }
+                    }
+                ],
+                { cancelable: false }
+            );
+        }, 2000);
     };
 
     const unlockPremium = async (uid) => {
         try {
             await updateDoc(doc(db, 'users', uid), { petBuddyPremium: true });
-            Alert.alert(
-                '🐾 Welcome to Pet Buddy Premium!',
-                'Your account has been unlocked. Enjoy full access!',
-                [{ text: "Let's Go!", onPress: () => navigation.replace('PetBuddyRequest') }]
-            );
+            navigation.replace('PetBuddyRequest');
         } catch (e) {
-            Alert.alert('Error', 'Payment done but could not unlock. Contact support.');
+            Alert.alert('Error', 'Payment processed but could not unlock features. Please contact support.');
+            setPaying(false);
         }
     };
 

@@ -51,8 +51,14 @@ export default function AddVaccination({ onBack, navigate }) {
 
     setLoading(true);
     try {
-      await addDoc(collection(db, 'vaccinations'), {
-        userId: auth.currentUser.uid,
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert('Error', 'You must be logged in to save');
+        return;
+      }
+
+      await addDoc(collection(db, 'users', user.uid, 'vaccinations'), {
         vaccineName: vaccineName.trim(),
         dateTaken: dateTaken.toLocaleDateString(),
         nextDueDate: nextDueDate.toLocaleDateString(),

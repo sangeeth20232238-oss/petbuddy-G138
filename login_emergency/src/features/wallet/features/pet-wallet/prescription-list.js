@@ -56,11 +56,8 @@ export default function PrescriptionList({ onBack, navigate }) {
       return;
     }
 
-    // Define query: filter by userId. Sorting happens locally to avoid Firebase Composite Index
-    const q = query(
-      collection(db, "prescriptions"), 
-      where("userId", "==", auth.currentUser.uid)
-    );
+    // Query: collection 'prescriptions' from user's subcollection
+    const q = collection(db, "users", auth.currentUser.uid, "prescriptions");
     
     // onSnapshot creates a persistent websocket connection to Firestore
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -92,7 +89,10 @@ export default function PrescriptionList({ onBack, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, 'prescriptions', id));
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (!user) return;
+              await deleteDoc(doc(db, 'users', user.uid, 'prescriptions', id));
             } catch (error) {
               Alert.alert('Error', 'Failed to delete record');
             }
@@ -107,8 +107,10 @@ export default function PrescriptionList({ onBack, navigate }) {
       id: item.id, 
       type: 'prescriptions',
       title: item.medName, 
+      medName: item.medName,
       dosage: item.dosage,
       date: item.startDate,
+      startDate: item.startDate,
       endDate: item.endDate
     });
   };
@@ -170,13 +172,6 @@ export default function PrescriptionList({ onBack, navigate }) {
           ))
         )}
       </ScrollView>
-
-      {/* FLOATING ACTION BUTTON (FAB): Centered bottom chat/AI button */}
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -247,19 +242,5 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 12,
     elevation: 1
-  },
-  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center', bottom: 40 },
-  fab: { 
-    backgroundColor: COLORS.primary, 
-    width: 70, 
-    height: 70, 
-    borderRadius: 35, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    elevation: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    shadowOffset: { width: 0, height: 4 }
   }
 });

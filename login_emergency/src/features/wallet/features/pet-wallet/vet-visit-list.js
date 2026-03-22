@@ -48,10 +48,8 @@ export default function VetVisitList({ onBack, navigate }) {
       return;
     }
 
-    const q = query(
-      collection(db, "vetVisits"), 
-      where("userId", "==", auth.currentUser.uid)
-    );
+    // Query: collection 'vetVisits' from user's subcollection
+    const q = collection(db, "users", auth.currentUser.uid, "vetVisits");
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -75,7 +73,9 @@ export default function VetVisitList({ onBack, navigate }) {
       id: item.id, 
       type: 'vetVisits',
       title: item.visitReason, 
+      visitReason: item.visitReason,
       date: item.visitDate,
+      visitDate: item.visitDate,
       veterinarian: item.veterinarian,
       notes: item.notes
     });
@@ -92,7 +92,10 @@ export default function VetVisitList({ onBack, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              await deleteDoc(doc(db, 'vetVisits', id));
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (!user) return;
+              await deleteDoc(doc(db, 'users', user.uid, 'vetVisits', id));
             } catch (error) {
               Alert.alert('Error', 'Failed to delete record');
             }
@@ -157,12 +160,6 @@ export default function VetVisitList({ onBack, navigate }) {
           ))
         )}
       </ScrollView>
-
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -234,15 +231,5 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 12,
     elevation: 1
-  },
-  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center', bottom: 40 },
-  fab: { 
-    backgroundColor: COLORS.primary, 
-    width: 70, 
-    height: 70, 
-    borderRadius: 35, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    elevation: 10 
   }
 });

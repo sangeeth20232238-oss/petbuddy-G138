@@ -10,6 +10,7 @@ import { COLORS } from '../../theme/colors';
 // --- FIREBASE IMPORTS ---
 import { db } from '../../services/firebaseConfig';
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
 
 /**
  * Reusable Component: RecordCard
@@ -55,8 +56,17 @@ export default function VaccinationDetails() {
    * Ensures the list updates immediately when a vaccine is added or edited.
    */
   useEffect(() => {
-    // Query: collection 'vaccinations' ordered by newest first
-    const q = query(collection(db, "vaccinations"), orderBy("createdAt", "desc"));
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const q = query(
+      collection(db, "users", user.uid, "vaccinations"), 
+      orderBy("createdAt", "desc")
+    );
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const records = [];
@@ -85,10 +95,14 @@ export default function VaccinationDetails() {
         id: record.id, 
         type: 'vaccinations',
         title: record.vaccineName, 
+        vaccineName: record.vaccineName,
         date: record.dateTaken,
+        dateTaken: record.dateTaken,
         pet: record.petName,
         dueDate: record.nextDueDate,
-        image: record.imageUri 
+        nextDueDate: record.nextDueDate,
+        image: record.imageUri,
+        imageUri: record.imageUri 
       }
     });
   };
@@ -150,12 +164,6 @@ export default function VaccinationDetails() {
         )}
       </ScrollView>
 
-      {/* --- FLOATING CHAT BUTTON --- */}
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab} activeOpacity={0.8}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -255,21 +263,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
-  fabContainer: {
-    position: 'absolute',
-    bottom: 40,
-    width: '100%',
-    alignItems: 'center',
-  },
-
-  fab: {
-    backgroundColor: COLORS.primary,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 10,
-  }
 });

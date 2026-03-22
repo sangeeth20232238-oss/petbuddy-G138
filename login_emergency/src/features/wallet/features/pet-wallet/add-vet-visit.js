@@ -29,15 +29,15 @@ export default function AddVetVisit({ onBack, navigate }) {
     }
 
     const auth = getAuth();
-    if (!auth.currentUser) {
-      Alert.alert('Error', 'You must be logged in to add a record.');
+    const user = auth.currentUser;
+    if (!user) {
+      Alert.alert('Error', 'You must be logged in to save');
       return;
     }
 
     setLoading(true);
     try {
-      await addDoc(collection(db, 'vetVisits'), {
-        userId: auth.currentUser.uid,
+      await addDoc(collection(db, 'users', user.uid, 'vetVisits'), {
         visitReason: visitReason.trim(),
         visitDate: visitDate.toLocaleDateString(),
         veterinarian: veterinarian.trim(),

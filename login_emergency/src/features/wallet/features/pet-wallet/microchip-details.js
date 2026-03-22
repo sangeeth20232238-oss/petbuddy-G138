@@ -7,8 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 
 // Firebase imports
-import { db, auth } from '../../services/firebaseConfig';
+import { db } from '../../services/firebaseConfig';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default function MicrochipDetails({ onBack }) {
   
@@ -22,6 +23,7 @@ export default function MicrochipDetails({ onBack }) {
 
   useEffect(() => {
     const loadMicrochipData = async () => {
+      const auth = getAuth();
       const user = auth.currentUser;
       if (!user) {
         setLoading(false);
@@ -63,11 +65,16 @@ export default function MicrochipDetails({ onBack }) {
       return;
     }
 
-    const user = auth.currentUser;
-    if (!user) return;
-
     setLoading(true);
     try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert('Error', 'You must be logged in to save details');
+        setLoading(false);
+        return;
+      }
+
       await setDoc(doc(db, 'users', user.uid, 'pet_data', 'microchip'), {
         chipId: chipId.trim(),
         petName: petName.trim(),
@@ -199,11 +206,6 @@ export default function MicrochipDetails({ onBack }) {
         </View>
       </ScrollView>
 
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -289,14 +291,4 @@ const styles = StyleSheet.create({
   },
   noteTitle: { fontSize: 18, fontWeight: '600', color: '#333', marginBottom: 10 },
   noteText: { fontSize: 14, color: '#666', lineHeight: 20 },
-  fabContainer: { position: 'absolute', width: '100%', alignItems: 'center', bottom: 40 },
-  fab: {
-    backgroundColor: COLORS.primary,
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 10
-  }
 });
