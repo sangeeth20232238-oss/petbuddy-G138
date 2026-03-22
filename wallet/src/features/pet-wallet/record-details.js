@@ -151,11 +151,6 @@ export default function RecordDetails({ onBack, params, navigate }) {
         </View>
       </ScrollView>
 
-      <View style={[styles.fabContainer, { bottom: insets.bottom + 20 }]}>
-        <TouchableOpacity style={styles.fab}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }

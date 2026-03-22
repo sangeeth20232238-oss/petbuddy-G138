@@ -148,6 +148,13 @@ export default function DashboardScreen({ navigation }) {
         } catch (e) { console.error('Error saving cleared IDs:', e); }
     };
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 12) return 'Good Morning';
+        if (hour >= 12 && hour < 17) return 'Good Afternoon';
+        return 'Good Evening';
+    };
+
     const services = [
         { id: 1, name: 'Emergency Vet', icon: 'alert-decagram-outline', color: '#FF4D4D' },
         { id: 2, name: 'Adoption', icon: 'dog-side', color: '#FF741C' },
@@ -179,7 +186,7 @@ export default function DashboardScreen({ navigation }) {
                     </TouchableOpacity>
                     <View>
                         <Text style={[styles.greeting, { fontFamily: 'Fredoka-SemiBold' }]}>Hello, {userData.name}</Text>
-                        <Text style={[styles.subGreeting, { fontFamily: 'Fredoka-Bold' }]}>Good Morning!</Text>
+                        <Text style={[styles.subGreeting, { fontFamily: 'Fredoka-Bold' }]}>{getGreeting()}!</Text>
                     </View>
                 </View>
                 <TouchableOpacity style={styles.notificationBtn} onPress={openNotif}>
@@ -370,7 +377,14 @@ export default function DashboardScreen({ navigation }) {
                             <MenuLink icon="file-document-outline" label="Terms & Conditions" onPress={() => { closeSidebar(); setTimeout(() => navigation.navigate('Terms'), 300); }} />
                         </View>
 
-                        <TouchableOpacity style={styles.logout} onPress={() => { closeSidebar(); setTimeout(() => navigation.navigate('Login'), 300); }}>
+                        <TouchableOpacity style={styles.logout} onPress={async () => { 
+                            closeSidebar(); 
+                            try {
+                                await auth.signOut();
+                            } catch (e) {
+                                Alert.alert('Error', 'Failed to log out.');
+                            }
+                        }}>
                             <Ionicons name="log-out-outline" size={24} color="#FF4D4D" />
                             <Text style={styles.logoutText}>Logout</Text>
                         </TouchableOpacity>
@@ -446,7 +460,7 @@ const styles = StyleSheet.create({
     grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', paddingHorizontal: 20 },
     card: { width: (width - 60) / 3, backgroundColor: '#FFF', borderRadius: 20, padding: 15, marginBottom: 20, alignItems: 'center', elevation: 5 },
     serviceText: { fontSize: 11, textAlign: 'center', marginTop: 5, color: '#444' },
-    fab: { position: 'absolute', bottom: 110, alignSelf: 'center', backgroundColor: '#FF741C', width: 75, height: 75, borderRadius: 37.5, justifyContent: 'center', alignItems: 'center', elevation: 10 },
+    fab: { position: 'absolute', bottom: 40, alignSelf: 'center', backgroundColor: '#FF741C', width: 75, height: 75, borderRadius: 37.5, justifyContent: 'center', alignItems: 'center', elevation: 10 },
     blogSection: { marginTop: 10, paddingBottom: 20 },
     blogHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 14 },
     blogTitle: { fontSize: 18, fontFamily: 'Fredoka-Bold', color: '#333' },

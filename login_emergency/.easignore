@@ -1,0 +1,12 @@
+node_modules
+.expo
+dist
+.git
+.next
+.DS_Store
+*.apk
+*.zip
+*.tar.gz
+.vercel
+android
+ios

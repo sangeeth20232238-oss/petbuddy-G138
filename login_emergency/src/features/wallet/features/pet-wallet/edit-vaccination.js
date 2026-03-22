@@ -9,24 +9,29 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 import { db } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default function EditVaccination({ onBack, params }) {
   
   const [vaccineName, setVaccineName] = useState(params?.vaccineName || '');
-  const [dateTaken, setDateTaken] = useState(() => {
-    if (params?.dateTaken) {
-      const date = new Date(params.dateTaken);
-      return isNaN(date.getTime()) ? new Date() : date;
+  const parseDate = (dateStr) => {
+    if (!dateStr) return new Date();
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) return d;
+    
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      const parsed = new Date(year, month, day);
+      if (!isNaN(parsed.getTime())) return parsed;
     }
     return new Date();
-  });
-  const [nextDueDate, setNextDueDate] = useState(() => {
-    if (params?.nextDueDate) {
-      const date = new Date(params.nextDueDate);
-      return isNaN(date.getTime()) ? new Date() : date;
-    }
-    return new Date();
-  });
+  };
+
+  const [dateTaken, setDateTaken] = useState(() => parseDate(params?.dateTaken));
+  const [nextDueDate, setNextDueDate] = useState(() => parseDate(params?.nextDueDate));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showDuePicker, setShowDuePicker] = useState(false);
   const [imageUri, setImageUri] = useState(params?.imageUri || null);
@@ -63,7 +68,14 @@ export default function EditVaccination({ onBack, params }) {
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'vaccinations', params.id), {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert('Error', 'You must be logged in to update');
+        return;
+      }
+
+      await updateDoc(doc(db, 'users', user.uid, 'vaccinations', params.id), {
         vaccineName: vaccineName.trim(),
         dateTaken: dateTaken.toLocaleDateString(),
         nextDueDate: nextDueDate.toLocaleDateString(),

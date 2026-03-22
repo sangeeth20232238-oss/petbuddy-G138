@@ -8,17 +8,28 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 import { db } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default function EditVetVisit({ onBack, params }) {
   
   const [visitReason, setVisitReason] = useState(params?.visitReason || '');
-  const [visitDate, setVisitDate] = useState(() => {
-    if (params?.visitDate) {
-      const date = new Date(params.visitDate);
-      return isNaN(date.getTime()) ? new Date() : date;
+  const parseDate = (dateStr) => {
+    if (!dateStr) return new Date();
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) return d;
+    
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      const parsed = new Date(year, month, day);
+      if (!isNaN(parsed.getTime())) return parsed;
     }
     return new Date();
-  });
+  };
+
+  const [visitDate, setVisitDate] = useState(() => parseDate(params?.visitDate));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [veterinarian, setVeterinarian] = useState(params?.veterinarian || '');
   const [notes, setNotes] = useState(params?.notes || '');
@@ -37,7 +48,14 @@ export default function EditVetVisit({ onBack, params }) {
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'vetVisits', params.id), {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert('Error', 'You must be logged in to update');
+        return;
+      }
+
+      await updateDoc(doc(db, 'users', user.uid, 'vetVisits', params.id), {
         visitReason: visitReason.trim(),
         visitDate: visitDate.toLocaleDateString(),
         veterinarian: veterinarian.trim(),

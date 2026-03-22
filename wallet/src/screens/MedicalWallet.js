@@ -96,9 +96,6 @@ export default function MedicalWallet() {
       {/* Bottom Navigation */}
       <View style={[styles.bottomTab, { paddingBottom: insets.bottom + 10 }]}>
         <TouchableOpacity onPress={() => router.push('/')}><Home color={COLORS.primary} size={28} /></TouchableOpacity>
-        <TouchableOpacity style={styles.fab}>
-          <MessageSquare color="white" size={30} fill="white" />
-        </TouchableOpacity>
         <TouchableOpacity><User color={COLORS.primary} size={28} /></TouchableOpacity>
       </View>
     </View>

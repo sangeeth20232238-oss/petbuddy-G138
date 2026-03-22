@@ -116,6 +116,7 @@
     const db   = getFirestore(app);
 
     let allBookings = [];
+    let userData    = {}; // Cache for user names
     let currentFilter = 'all';
 
     onAuthStateChanged(auth, async user => {
@@ -140,8 +141,26 @@
 
     function listenToBookings(email) {
         const q = collection(db, 'bookings');
-        onSnapshot(q, snapshot => {
-            allBookings = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        onSnapshot(q, async snapshot => {
+            const bookings = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            
+            // Fetch missing user data
+            for (const b of bookings) {
+                if (b.userId && !userData[b.userId]) {
+                    try {
+                        const uDoc = await getDoc(doc(db, 'users', b.userId));
+                        if (uDoc.exists()) {
+                            userData[b.userId] = uDoc.data().name || 'Unknown Pet Parent';
+                        } else {
+                            userData[b.userId] = 'Deleted Account';
+                        }
+                    } catch (e) {
+                        userData[b.userId] = 'Error Loading Name';
+                    }
+                }
+            }
+            
+            allBookings = bookings;
             renderBookings();
         });
     }
@@ -175,7 +194,7 @@
 
         grid.innerHTML = filtered.map(b => `
             <div class="card ${b.status}">
-                <h3>👤 Patient ID: ${b.userId.slice(0, 8)}...</h3>
+                <h3>👤 Customer: ${userData[b.userId] || 'Patient ' + b.userId.slice(0,6)}</h3>
                 <p>🏥 Clinic: ${b.clinicName || '—'}</p>
                 <p>👨‍⚕️ Doctor: ${b.doctorName || '—'}</p>
                 <p>📅 Date: ${b.date || '—'}</p>

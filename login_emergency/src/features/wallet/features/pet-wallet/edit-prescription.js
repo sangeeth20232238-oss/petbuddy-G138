@@ -8,25 +8,30 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { COLORS } from '../../theme/colors';
 import { db } from '../../services/firebaseConfig';
 import { doc, updateDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default function EditPrescription({ onBack, params }) {
   
   const [medName, setMedName] = useState(params?.medName || '');
   const [dosage, setDosage] = useState(params?.dosage || '');
-  const [startDate, setStartDate] = useState(() => {
-    if (params?.startDate) {
-      const date = new Date(params.startDate);
-      return isNaN(date.getTime()) ? new Date() : date;
+  const parseDate = (dateStr) => {
+    if (!dateStr) return new Date();
+    const d = new Date(dateStr);
+    if (!isNaN(d.getTime())) return d;
+    
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      const parsed = new Date(year, month, day);
+      if (!isNaN(parsed.getTime())) return parsed;
     }
     return new Date();
-  });
-  const [endDate, setEndDate] = useState(() => {
-    if (params?.endDate) {
-      const date = new Date(params.endDate);
-      return isNaN(date.getTime()) ? new Date() : date;
-    }
-    return new Date();
-  });
+  };
+
+  const [startDate, setStartDate] = useState(() => parseDate(params?.startDate));
+  const [endDate, setEndDate] = useState(() => parseDate(params?.endDate));
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,7 +49,14 @@ export default function EditPrescription({ onBack, params }) {
 
     setLoading(true);
     try {
-      await updateDoc(doc(db, 'prescriptions', params.id), {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        Alert.alert('Error', 'You must be logged in to update');
+        return;
+      }
+
+      await updateDoc(doc(db, 'users', user.uid, 'prescriptions', params.id), {
         medName: medName.trim(),
         dosage: dosage.trim(),
         startDate: startDate.toLocaleDateString(),

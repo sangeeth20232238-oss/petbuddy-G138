@@ -1,6 +1,8 @@
+```javascript
 import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeAuth, getAuth, getReactNativePersistence } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics, isSupported } from "firebase/analytics";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 // New configuration for project: petbuddy-138
 const firebaseConfig = {
@@ -16,15 +18,18 @@ const firebaseConfig = {
 // 1. Initialize Firebase (Singleton pattern to prevent re-initialization errors)
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// 2. Initialize Firestore Database
-const db = getFirestore(app);
-
-// 3. Safe Analytics (prevents errors during server-side rendering or non-browser environments)
-let analytics;
-if (typeof window !== "undefined") {
-  isSupported().then((supported) => {
-    if (supported) analytics = getAnalytics(app);
+// 2. Initialize Auth
+let auth;
+try {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
   });
+} catch (error) {
+  auth = getAuth(app);
 }
 
-export { db, analytics };
+// 3. Initialize Firestore Database
+const db = getFirestore(app);
+
+export { db, auth };
+```

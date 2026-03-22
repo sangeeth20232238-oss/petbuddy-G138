@@ -1,16 +1,27 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, Image, Dimensions, StatusBar } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 
 export default function SplashScreen({ navigation }) {
   useEffect(() => {
-    // Automatically move to Onboarding after 3 seconds
-    const timer = setTimeout(() => {
-      navigation.replace('Onboarding'); 
-    }, 3000);
-    return () => clearTimeout(timer);
+    const checkStatus = async () => {
+      try {
+        const hasSeen = await AsyncStorage.getItem('has_seen_onboarding');
+        setTimeout(() => {
+          if (hasSeen === 'true') {
+            navigation.replace('Login');
+          } else {
+            navigation.replace('Onboarding');
+          }
+        }, 2000); // Reduced to 2s for better UX
+      } catch (e) {
+        navigation.replace('Onboarding');
+      }
+    };
+    checkStatus();
   }, []);
 
   return (

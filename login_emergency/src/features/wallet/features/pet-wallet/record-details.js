@@ -2,11 +2,12 @@ import React from 'react';
 import { 
   StyleSheet, View, Text, TouchableOpacity, ScrollView, StatusBar, Image, Alert 
 } from 'react-native';
-import { Syringe, Pill, Stethoscope, FileText, Trash2 } from 'lucide-react-native';
+import { Syringe, Pill, Stethoscope, FileText, Trash2, Edit2 } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../theme/colors';
 import { db } from '../../services/firebaseConfig';
 import { doc, deleteDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 export default function RecordDetails({ onBack, params, navigate }) {
   // --- STATE MANAGEMENT ---
@@ -14,6 +15,11 @@ export default function RecordDetails({ onBack, params, navigate }) {
   const isVaccination = params?.type === 'vaccinations';
   const isPrescription = params?.type === 'prescriptions';
   const isVetVisit = params?.type === 'vetVisits';
+
+  const handleEdit = () => {
+    const editView = isVaccination ? 'edit-vaccination' : isPrescription ? 'edit-prescription' : 'edit-vet-visit';
+    navigate(editView, params);
+  };
 
   const handleDelete = () => {
     Alert.alert(
@@ -26,8 +32,14 @@ export default function RecordDetails({ onBack, params, navigate }) {
           style: 'destructive',
           onPress: async () => {
             try {
-              const collection = isVaccination ? 'vaccinations' : isPrescription ? 'prescriptions' : 'vetVisits';
-              await deleteDoc(doc(db, collection, params.id));
+              const auth = getAuth();
+              const user = auth.currentUser;
+              if (!user) {
+                Alert.alert('Error', 'You must be logged in to delete');
+                return;
+              }
+              const collectionName = isVaccination ? 'vaccinations' : isPrescription ? 'prescriptions' : 'vetVisits';
+              await deleteDoc(doc(db, 'users', user.uid, collectionName, params.id));
               Alert.alert('Success', 'Record deleted successfully', [
                 { text: 'OK', onPress: onBack }
               ]);
@@ -54,10 +66,13 @@ export default function RecordDetails({ onBack, params, navigate }) {
             {isVaccination ? 'Vaccination' : isPrescription ? 'Medication' : 'Vet Visit'}
           </Text>
         </View>
-        <TouchableOpacity onPress={handleDelete} style={styles.rightDeleteButton}>
-          <Trash2 color="#FF4444" size={20} />
-        </TouchableOpacity>
-      </View>
+          <TouchableOpacity onPress={handleEdit} style={styles.rightEditButton}>
+            <Edit2 color={COLORS.primary} size={20} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.rightDeleteButton}>
+            <Trash2 color="#FF4444" size={20} />
+          </TouchableOpacity>
+        </View>
 
       <View style={styles.headerBackground}>
         {/* Header background */}
@@ -181,6 +196,17 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 4,
+  },
+  rightEditButton: {
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 8,
+    marginRight: 10,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   rightDeleteButton: { 
     backgroundColor: '#FFE6E6', 

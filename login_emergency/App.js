@@ -57,6 +57,9 @@ import MedicalWalletScreen from './src/features/wallet/screens/MedicalWallet';
 // Chatbot Screen
 import ChatScreen from './src/features/chatbot/ChatScreen';
 
+import { auth } from './firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+
 SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
 
@@ -67,64 +70,85 @@ export default function App() {
     'Fredoka-Bold': Fredoka_700Bold,
   });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) await SplashScreen.hideAsync();
-  }, [fontsLoaded]);
+  const [initializing, setInitializing] = React.useState(true);
+  const [user, setUser] = React.useState(null);
 
-  if (!fontsLoaded) return null;
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      if (initializing) setInitializing(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded && !initializing) await SplashScreen.hideAsync();
+  }, [fontsLoaded, initializing]);
+
+  if (!fontsLoaded || initializing) return null;
 
   return (
     <NavigationContainer onReady={onLayoutRootView}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator 
+        screenOptions={{ headerShown: false }}
+        initialRouteName={user ? "Dashboard" : "Splash"}
+      >
         {/* Core */}
-        <Stack.Screen name="Splash" component={MySplashScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="Dashboard" component={DashboardScreen} />
+        {user ? (
+          <>
+            <Stack.Screen name="Dashboard" component={DashboardScreen} />
 
-        {/* Emergency Vet */}
-        <Stack.Screen name="ClinicList" component={ClinicListScreen} />
-        <Stack.Screen name="ClinicDetail" component={ClinicDetailScreen} />
-        <Stack.Screen name="DoctorList" component={DoctorListScreen} />
-        <Stack.Screen name="DoctorDetail" component={DoctorDetailScreen} />
-        <Stack.Screen name="BookingCalendar" component={BookingCalendarScreen} />
+            {/* Emergency Vet */}
+            <Stack.Screen name="ClinicList" component={ClinicListScreen} />
+            <Stack.Screen name="ClinicDetail" component={ClinicDetailScreen} />
+            <Stack.Screen name="DoctorList" component={DoctorListScreen} />
+            <Stack.Screen name="DoctorDetail" component={DoctorDetailScreen} />
+            <Stack.Screen name="BookingCalendar" component={BookingCalendarScreen} />
 
-        {/* Pet Buddy */}
-        <Stack.Screen name="PetBuddyRequest" component={PetBuddyRequestScreen} />
-        <Stack.Screen name="PetBuddyConfig" component={PetBuddyConfigScreen} />
-        <Stack.Screen name="PetBuddyTracking" component={PetBuddyTrackingScreen} />
-        <Stack.Screen name="VolunteerOnboarding" component={VolunteerOnboardingScreen} />
-        <Stack.Screen name="PetBuddyPaywall" component={PetBuddyPaywallScreen} />
+            {/* Pet Buddy */}
+            <Stack.Screen name="PetBuddyRequest" component={PetBuddyRequestScreen} />
+            <Stack.Screen name="PetBuddyConfig" component={PetBuddyConfigScreen} />
+            <Stack.Screen name="PetBuddyTracking" component={PetBuddyTrackingScreen} />
+            <Stack.Screen name="VolunteerOnboarding" component={VolunteerOnboardingScreen} />
+            <Stack.Screen name="PetBuddyPaywall" component={PetBuddyPaywallScreen} />
 
-        {/* Profile */}
-        <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-        <Stack.Screen name="Appointments" component={AppointmentsScreen} />
+            {/* Profile */}
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+            <Stack.Screen name="Appointments" component={AppointmentsScreen} />
+
+            {/* Adoption */}
+            <Stack.Screen name="Adoption" component={AdoptionHomeScreen} />
+            <Stack.Screen name="PetDetails" component={PetDetailScreen} />
+            <Stack.Screen name="AdoptionForm" component={AdoptionFormScreen} />
+
+            {/* Grooming */}
+            <Stack.Screen name="Grooming" component={GroomingMain} />
+            <Stack.Screen name="GroomingLocation" component={GroomingLocation} />
+            <Stack.Screen name="GroomingApt" component={GroomingApt} />
+            <Stack.Screen name="GroomingCheckout" component={GroomingCheckout} />
+
+            {/* Pet SOS */}
+            <Stack.Screen name="PetSOS" component={SOSHomeScreen} />
+            <Stack.Screen name="AllAlerts" component={AllAlertsScreen} />
+            <Stack.Screen name="AlertDetail" component={AlertDetailScreen} />
+            <Stack.Screen name="CreatePost" component={CreatePostScreen} />
+            <Stack.Screen name="ShareNotify" component={ShareNotifyScreen} />
+
+            {/* Wallet */}
+            <Stack.Screen name="Wallet" component={MedicalWalletScreen} />
+
+            {/* Chatbot */}
+            <Stack.Screen name="ChatBot" component={ChatScreen} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Splash" component={MySplashScreen} />
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+          </>
+        )}
         <Stack.Screen name="Terms" component={TermsScreen} />
-
-        {/* Adoption */}
-        <Stack.Screen name="Adoption" component={AdoptionHomeScreen} />
-        <Stack.Screen name="PetDetails" component={PetDetailScreen} />
-        <Stack.Screen name="AdoptionForm" component={AdoptionFormScreen} />
-
-        {/* Grooming */}
-        <Stack.Screen name="Grooming" component={GroomingMain} />
-        <Stack.Screen name="GroomingLocation" component={GroomingLocation} />
-        <Stack.Screen name="GroomingApt" component={GroomingApt} />
-        <Stack.Screen name="GroomingCheckout" component={GroomingCheckout} />
-
-        {/* Pet SOS */}
-        <Stack.Screen name="PetSOS" component={SOSHomeScreen} />
-        <Stack.Screen name="AllAlerts" component={AllAlertsScreen} />
-        <Stack.Screen name="AlertDetail" component={AlertDetailScreen} />
-        <Stack.Screen name="CreatePost" component={CreatePostScreen} />
-        <Stack.Screen name="ShareNotify" component={ShareNotifyScreen} />
-
-        {/* Wallet */}
-        <Stack.Screen name="Wallet" component={MedicalWalletScreen} />
-
-        {/* Chatbot */}
-        <Stack.Screen name="ChatBot" component={ChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
