@@ -14,9 +14,9 @@ const stemmer = natural.PorterStemmer;
 
 /**
  * ----------------------------
- * 1) Load CSV once (cold start)
+ * 1) Load CSV once 
  * ----------------------------
- * Put your CSV here:
+ * 
  * functions/data/dog_first_aid.csv
  */
 const DATA_PATH = path.join(__dirname, "data", "dog_first_aid.csv");
